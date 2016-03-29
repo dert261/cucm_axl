@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+				<div th:fragment="userFormContent" id="userFormContent" class="row">
+			    	<div class="col-lg-12">
+			    		<fieldset>
+							<legend>
+								<h1><th:block th:text="${user.isNew()} ? #{users.title.create} : #{users.title.update}" /></h1>
+								<p class="note"><th:block th:text="#{field.required.start}" />	<span class="required" style="color:red">*</span>	<th:block th:text="#{field.required.end}" /></p>
+								
+								<!-- Errors alerts field -->					
+								<div class="alert alert-block alert-danger" th:if="${#fields.hasErrors('*')}"><p th:text="#{field.validation.error.global.message}" >Please fix the following input errors:</p>
+									<ul>
+		    							<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+			        						<span th:text="${e.global}? '*' : #{field}+' \''+#{user.field+'.'+${e.fieldName}} +'\''">The field name</span> 
+			        						<span th:text="#{${e.message}}">The error message</span>
+		    							</li>
+									</ul>
+								</div>
+							</legend>
+							
+							<input type="hidden" th:field="*{id}" />
+							
+							<div th:include="fragment/fielddefinition :: textFormField('lname',true, text, 'user.field')">Last name</div>
+							<div th:include="fragment/fielddefinition :: textFormField('fname',true, text, 'user.field')">First name</div>
+							<div th:include="fragment/fielddefinition :: textFormField('mname',false, text, 'user.field')">Middle name</div>
+							<div th:include="fragment/fielddefinition :: textFormField('login',true, text, 'user.field')">Login</div>
+							<div th:include="fragment/fielddefinition :: textFormField('pass',true, password, 'user.field')">Password</div>
+																					
+							<h4>
+								<a class="extended-button" href="#"><span th:text="#{user.form.message.extended_settings}">Extended settings</span></a>
+							</h4>
+												
+							<div class="extended-form" style="display:none">
+								<div th:include="fragment/fielddefinition :: textFormField('email',false, text, 'user.field')">Email</div>
+										
+								<div th:include="fragment/fielddefinition :: selectEnumFormField('status', true, 'userStatus', 'user.field', 'ACTIVE', false, false)">User status</div>
+								
+								<!-- <div th:include="fragment/fielddefinition :: selectEnumFormField('roles', true, 'roles', 'user.field', 'USER')">User role</div> -->
+								
+																
+								<!-- USERROLE FIELD -->
+								<div	class="form-group" 
+										th:classappend="${#fields.hasErrors('roles')}? 'has-error'">
+									<label 	class="control-label"
+											th:classappend="${true} ? 'required'"
+											th:class="${#fields.hasErrors('roles')}? 'control-label error' : 'control-label'" 
+											for="roles" 
+											th:inline="text">[[#{user.field.roles}]] <span th:if="${true}" class="required" style="color:red">*</span>
+									</label>
+									
+									<select th:field="*{roles}" 
+											class="select2-chosen" 
+											multiple="multiple"
+											placeholder="select field" 
+											th:attr="placeholder=#{user.field.roles}">
+											<option th:each="data : ${userRole}" 
+							        				th:value="${data.id}" 
+							          				th:text="#{${data.roleName}}">
+							          		</option>
+									</select>
+									
+									<div th:if="${#fields.hasErrors('roles')}" class="help-block error">
+										<ul>
+											<li th:each="err : ${#fields.errors('roles')}" th:text="#{${err}}" />
+										</ul>
+									</div> 
+									
+									<script th:inline="javascript">
+									/*<![CDATA[*/
+										jQuery(function($) {
+											var selectedVals = [];
+ 											for(id in [[${user.roles}]]){
+												selectedVals.push([[${user.roles}]][id].id);
+											}
+ 											if (selectedVals.length === 0) {
+ 												
+ 												for(roles in [[${userRole}]]){
+ 													if([[${userRole}]][roles].roleName=="USER")
+ 														selectedVals.push([[${userRole}]][roles].id);
+ 												}
+ 												//selectedVals.push(1);
+ 											}
+ 											var roles = jQuery('#roles')
+								    		roles.select2({
+								    			'allowClear':false,
+								    			'width':'100%',
+								    			'placeholder': {
+								    			    'id': "",
+								    			    'placeholder': [[#{${i18nName}+'.'+${fieldName}}]]
+								    			},
+								    		});
+ 											roles.val(selectedVals);
+								    	});  
+									/*]]>*/
+									</script>
+								</div>
+									
+								<!-- USERROLE FIELD END-->
+														
+								
+								<div th:include="fragment/fielddefinition :: selectEnumFormField('localUserFlag', true, 'userType', 'user.field', *{localUserFlag}, false, false)">User type</div>
+								
+								<div th:include="fragment/fielddefinition :: textFormField('mobile',false, text, 'user.field')">Mobile</div>
+								<div th:include="fragment/fielddefinition :: textFormField('company',false, text, 'user.field')">Company</div>
+								<div th:include="fragment/fielddefinition :: textFormField('department',false, text, 'user.field')">Department</div>																				
+								<div th:include="fragment/fielddefinition :: textFormField('title',false, text, 'user.field')">Title</div>
+								<div th:include="fragment/fielddefinition :: textFormField('adLocation',false, text, 'user.field')">AD Location</div>
+								<div th:include="fragment/fielddefinition :: textFormField('streetAddress',false, text, 'user.field')">Street address</div>
+							</div>
+						</fieldset>
+						<div class="form-actions">
+            				<button class="btn btn-primary" type="submit" th:text="${user.isNew()} ? #{user.form.button.create.submit} : #{user.form.button.update.submit}">Submit</button>
+            				<button class="btn btn-default" type="reset" th:text="#{user.form.button.reset}">Reset</button>
+            			</div>	
+					</div>
+				</div>	
+</html>	

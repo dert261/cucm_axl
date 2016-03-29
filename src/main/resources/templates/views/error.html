@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+	<head th:include="fragment/header :: headerFragmentError" />
+		
+	<body>
+		<div id="wrapper">
+			<!-- Header -->
+			<div th:replace="fragment/header :: navbar_alt" > </div>
+			<br/>
+			<div id="page-wrapper">
+				<div class="row">
+					<div class="col-lg-12">
+						<h1 class="page-header">Что-то пошло не так!</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div th:replace="fragment/header :: scriptsError" > </div>	
+	</body>
+</html>

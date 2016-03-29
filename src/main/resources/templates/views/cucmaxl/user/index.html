@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+<!-- Modal -->
+<div id="cucmAxlUserModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+		
+			<div class="row">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.cucmaxluser}">Users</li>
+				</ol>
+				
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{cucmaxluser.ui.messages.index.title}">Filter management</h1>
+					
+				</div>
+				<div th:replace="cucmaxl/user/search :: cucmaxluser_search_form" > </div>
+			</div>
+			
+			 <div class="row">
+			 	<table id="cucmaxlusertable" class="display" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{cucmaxluser.field.sequence}">№ п/п</th>
+			                <th th:text="#{cucmaxluser.field.lastName}">Last Name</th>
+			                <th th:text="#{cucmaxluser.field.firstName}">First Name</th>
+			                <th th:text="#{cucmaxluser.field.userId}">UserID</th>
+			                <th th:text="#{cucmaxluser.field.cucmAxlPort}">AXL Port</th>
+			                <th th:text="#{cucmaxluser.field.phonebook.uploadPhone}">Use custom phone</th>
+			                <th th:text="#{cucmaxluser.field.phonebook.usecustomphone}">Use custom phone</th>
+			                <th th:text="#{cucmaxluser.field.phonebook.phone}">Phone</th>
+			                <th th:text="#{cucmaxlport.field.actions}">Actions</th>
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{cucmaxluser.field.sequence}">№ п/п</th>
+			                <th th:text="#{cucmaxluser.field.lastName}">Last Name</th>
+			                <th th:text="#{cucmaxluser.field.firstName}">First Name</th>
+			                <th th:text="#{cucmaxluser.field.userId}">UserID</th>
+			                <th th:text="#{cucmaxluser.field.cucmAxlPort}">AXL Port</th>
+			                <th th:text="#{cucmaxluser.field.phonebook.uploadPhone}">Use custom phone</th>
+			                <th th:text="#{cucmaxluser.field.phonebook.usecustomphone}">Use custom phone</th>
+			                <th th:text="#{cucmaxluser.field.phonebook.phone}">Phone</th>
+			                <th th:text="#{cucmaxlport.field.actions}">Actions</th>
+			                
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+				
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var myTable = $('#cucmaxlusertable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/cucmaxl/user/ajax/serverside/enduser.json",
+	        	"data": function ( d ) {
+	            	return $.extend( {}, d, {
+	                    "extra_search[id]": $('#search_id').val()!=undefined ? $('#search_id').val() : "null",
+	    
+	                });
+	            }
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "lastName" },
+	    	            { "data": "firstName" },
+	    	            { "data": "userId" },
+	    	            { "data": "cucmAxlPort.name" },
+	    	            { "data": "phoneBook.uploadPhone" },
+	    	            { "data": "phoneBook.useCustomPhone" },
+	    	            { "data": "phoneBook.phone" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50], [5, 10, 25, 50]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	var updateField = '<a class="update" href="/cucmaxl/user/update/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.edit}]]+'" data-original-title="'+[[#{ui.messages.table.edit}]]+'"> \
+							<i class="glyphicon glyphicon-pencil"></i></a>';
+		     	 		return "<center>"+updateField+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "phoneBookUploadPhone",
+		            "render": function (data, type, full, meta) {
+		            	return "<center>"+(data!=null ? data : "Не задан")+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-3],
+		         	"searchable": false,
+	    			"orderable": true,
+		            "data": "phoneBookPhone",
+		            "render": function (data, type, full, meta) {
+		            	var result = "";
+		            	if(data!=null){
+		            		result = data==true ? "Да" : "Нет"
+		            	}
+		            	return "<center>"+(data!=null ? result : "Не задан")+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-4],
+		         	"searchable": false,
+	    			"orderable": true,
+		            "data": "phoneBookUseCustomPhone",
+		            "render": function (data, type, full, meta) {
+		            	var result = "";
+		            	if(data!=null){
+		            		result = data==true ? "Да" : "Нет"
+		            	}
+		            	return "<center>"+(data!=null ? result : "Не задан")+"</center>";
+	           		}
+	           	}
+				
+	        ]
+	    });
+		
+		myTable.on('click','a.update',function() {
+			$('#cucmAxlUserModalContentWrapper').load(
+				jQuery(this).attr('href'), 
+				function(){
+					$('#phoneBook').modal('show');
+					$('#endUserPhoneBook').on('submit', function( event ) {
+						event.preventDefault();
+						 
+						var data = {};
+						var endUser = {};
+						data["id"] = $('#id').val();
+						data["phone"] = $('#phone').val();
+						data["useCustomPhone"] = $('#useCustomPhone1').is(':checked');
+						data["uploadPhone"] = $('#uploadPhone1').is(':checked');
+						endUser["id"] = $('#endUser\\.id').val();
+						data['endUser'] = endUser;
+						
+												
+						$.ajax({
+							type: 'PUT',
+							url: "update",
+							datatype:'json',
+							contentType: "application/json",
+							data: JSON.stringify(data),
+							}).done(function(data) {
+								myTable.draw();
+								$('#phoneBook').modal("hide");
+							});
+						return false;
+					});
+				}
+			);	
+			return false;
+	    })
+	    		
+	    $('#cucmaxluser-search-form').submit(function(){
+	      	myTable.draw();
+			return false;
+		});
+	});
+	
+	
+	/*]]>*/
+	</script>
+
+</body>
+</html>

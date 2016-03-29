@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="uploadFileModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row" id="breadcrumbs-div">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.uploadfile}">Users</li>
+				</ol>
+				<div class="col-lg-12">
+					<a class="uploadNewModal" href="/uploads/create" th:text="#{breadcrumbs.uploadfile.create}">Create</a>
+				</div>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{uploadfile.ui.messages.index.title}">Uploaded Files</h1>
+				</div>
+			</div>
+			
+			 <div class="row">
+			 	<table id="uploadfilestable" class="table" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{uploadfile.field.sequence}">№ п/п</th>
+			                <th th:text="#{uploadfile.field.name}">Name</th>
+			                <th th:text="#{uploadfile.field.description}">Description</th>
+			                <th th:text="#{cmerouters.field.actions}">Actions</th>
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{uploadfile.field.sequence}">№ п/п</th>
+			                <th th:text="#{uploadfile.field.name}">Name</th>
+			                <th th:text="#{uploadfile.field.description}">Description</th>
+			                <th th:text="#{cmerouters.field.actions}">Actions</th>
+			                
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		var operationStatus=[[${#vars['operationResult']}]];
+		if(operationStatus!=null)
+			alert(operationStatus);
+
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var uploadFilesTable = $('#uploadfilestable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	    	"serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/uploads/ajax/serverside/uploadfiles.json",
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "name" },
+	    	            { "data": "description" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	var isDeleteField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		     	 		var deleteField = isDeleteField ? '<a class="delete" href="/uploads/delete" data-delete="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.delete}]]+'" data-original-title="'+[[#{ui.messages.table.delete}]]+'"> \
+		         								<i class="glyphicon glyphicon-trash"></i> </a>' : ""; 	
+		         		return "<center>"+deleteField+"</center>";
+	           		}
+	           	}	           	
+	        ]
+	    });
+		
+		uploadFilesTable.on('click','a.delete',function() {
+			if(!confirm([[#{ui.messages.table.delete.uploadfile.confirmation}]])) return false;
+			
+			var deletedRow = uploadFilesTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-delete'),
+					_method: 'DELETE'
+				}),
+				}).done(function() {
+					deletedRow
+				        .remove()
+				        .draw(false);
+			});
+				
+			return false;
+	   	})
+	    
+	    $.fn.modal.Constructor.prototype.enforceFocus = function() {}; 
+	    
+	    $('#breadcrumbs-div').on('click','a.uploadNewModal',function() {
+		 	$('#uploadFileModalContentWrapper').load(
+				jQuery(this).attr('href'), 
+				function(){
+					$('#uploadFile').modal('show');
+					$('#uploadFileModalForm').on('submit', function( event ) {
+						event.preventDefault();
+						 
+						var form = document.getElementById("uploadFileModalForm");
+						var formData = new FormData(form);
+						
+						//var target = document.getElementById("uploadFileModalForm");
+						//var spinner = new Spinner().spin(target);
+							
+						//target.appendChild(spinner.el);
+						
+						
+						$('#uploadFileModalForm').spin();
+						
+						$.ajax({
+							type: 'POST',
+							url: "/uploads/create",
+							processData: false,
+    						contentType: false,
+							data: formData,
+							
+							}).done(function(data) {
+								$('#uploadFileModalForm').spin(false);
+								if(data.status==0){
+									uploadFilesTable.draw();
+									$('#uploadFile').modal("hide");
+								} else {
+									alert(data.message);
+								}
+							});
+						
+						return false;
+						
+					});
+				}
+			);	
+			return false;
+	    })
+	    
+	});
+	
+	/*]]>*/
+	</script>
+</body>
+</html>

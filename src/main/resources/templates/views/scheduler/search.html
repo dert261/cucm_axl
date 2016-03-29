@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<div th:fragment="schedulejob_search_form" class="col-lg-12">
+		
+		<a class="search-button" href="#" th:text="#{schedulejob.form.search.message}">Extended search</a>
+		
+		<div th:object="${scheduleJob}" class="search-form" style="display: none;">
+			<form action="#" th:action="@{/scheduler/search}" th:object="${scheduleJob}" th:method="GET" method="GET" id="schedulejob-search-form" class="well-search form">
+								
+				<div	class="form-group">
+					<label 	class="control-label"
+							for="id" 
+							th:text="#{schedulejob.field.name}"> 
+					</label>
+			
+					<select th:field="*{id}" 
+							class="select2-chosen" 
+							multiple="multiple">
+							
+							<option th:each="data : ${scheduleJobAll}" 
+	        						th:value="${data.id}" 
+	          						th:text="${data.name}">
+	          				</option>
+					</select>
+				</div>
+				
+				<div class="form-actions">
+					<button id="doSearch" class="btn btn-primary" name="doSearch" type="submit" th:text="#{schedulejob.searchform.button.search}">Search</button>
+				</div>
+			</form>
+		</div>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			    $(document).ready(function() {
+					$('.search-button').click(function(){
+						$('.search-form').toggle();
+						return false;
+					});
+				
+					jQuery(function($) {
+			    		jQuery('#id').select2({
+			    			allowClear:true,
+			    			width:'100%', 
+			    			minimumInputLength:'2', 
+			    			language: [[${#locale.language}]], 
+			    			placeholder: [[#{schedulejob.searchform.searchfield.placeholder.name}]],
+			    			ajax: {
+			    				delay: 500,
+			    				url: function (params) {
+			    					return '/scheduler/search';
+			    				},
+			    				data: function (params) {
+			    					var queryParameters = {
+			    					 	searchString: params.term
+			    					}
+			    					return queryParameters;
+			    				},
+			    				processResults: function (data) {
+			    					return {
+			    						results: data
+			    					};
+			    				},
+			    				
+			    				
+			    			}
+			    		
+			    		});
+			    	});
+			    });	
+			/*]]>*/
+		</script>
+	</div>
+</html>

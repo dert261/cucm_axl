@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<!-- TEXT FIELD TEMPLATE -->
+<div th:fragment="textFormField(fieldName,requiredFlag,inputType,i18nName)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				th:for="${fieldName}" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		<input 	class="form-control" 
+				th:classappend="${#fields.hasErrors(fieldName)}? 'error'"
+				th:field="*{__${fieldName}__}"
+				type="text"
+				th:type="${inputType}" 
+				placeholder="field" 
+				th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}"/>
+		 <div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div> 
+	</div>
+</div>
+
+
+<!-- DROPDOWN SELECT2 FIELD TEMPLATE -->
+<div th:fragment="select2FormField(fieldName, requiredFlag, objectName, dataSet, dataValue, dataText, i18nName, allowClearFlag, defaultValuei18nText)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				for="fieldName" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+				
+		<select th:field="*{__${fieldName}__}" 
+				class="select2-chosen"
+				data-placeholder="select value"
+				th:attr="data-placeholder=#{${i18nName}+'.'+${fieldName}}">
+				<option value="0" th:text="#{${i18nName}+'.'+${fieldName}+'.'+${defaultValuei18nText}}"></option>
+				<option th:each="data : ${__${dataSet}__}" 
+        				th:value="${data.__${dataValue}__}" 
+          				th:text="${data.__${dataText}__}"
+          				th:selected="${__${objectName}__.__${fieldName}__==data}"> 
+				</option>
+		</select>
+		<div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		jQuery(function($) {
+    		jQuery([['#'+${fieldName}]]).select2({
+    			'allowClear':[[${allowClearFlag}]],
+    			'width':'100%',
+    			'placeholder': {
+    			    'id': "",
+    			    'placeholder': [[#{${i18nName}+'.'+${fieldName}}]]
+    			},
+    		})//.select2('val', [[${activeValue}]]);
+    	});  
+	/*]]>*/
+	</script>
+</div>
+
+
+<!-- MM SELECT BOX FIELD TEMPLATE -->
+<div th:fragment="mmSelectBox(fieldName,dataSet,objectName,i18nName,availLabel,availSearchPlaceholder,selectedLabel,selectedSearchPlaceholder,size,valueParam,textParam)" th:remove="all">
+	<select th:field = "*{__${fieldName}__}"
+			class="form-control"
+			multiple="multiple"
+			th:size="${size}">
+			<option th:each="data : ${__${dataSet}__}" 
+					th:value="${data.__${valueParam}__}"
+					th:selected="${__${objectName}__.__${fieldName}__.contains(data)}" 
+					th:text="${data.__${textParam}__}">
+			</option>
+	</select>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		jQuery(function($) {
+						
+			$([['#'+${fieldName}]]).multiSelect({
+				dblClick: true,
+				keepRenderingSort: true,
+										
+				selectableHeader: "" +
+						"<div class='panel-heading'>" +
+							"<h3 class='panel-title'>"+[[${availLabel}]]+"</h3>" +
+						"</div>" +
+						"<div class='input-group'>" +
+							"<span class='input-group-addon'><i class='fa fa-search'></i></span>" +
+							"<input type='text' class='search-input form-control' autocomplete='off' placeholder=\""+[[${availSearchPlaceholder}]]+"\" ></input>" +
+						"</div>",
+				
+				selectionHeader: "" +
+						"<div class='panel-heading'>" +
+							"<h3 class='panel-title'>"+[[${selectedLabel}]]+"</h3>" +
+						"</div>" +
+						"<div class='input-group'>" +
+							"<span class='input-group-addon'><i class='fa fa-search'></i></span>" +
+							"<input type='text' class='search-input form-control' autocomplete='off' placeholder=\""+[[${selectedSearchPlaceholder}]]+"\" ></input>" +
+						"</div>",		
+							
+				afterInit: function(ms){
+				    var that = this,
+				        $selectableSearch = that.$selectableUl.prev().children().next(),
+				        $selectionSearch = that.$selectionUl.prev().children().next(),
+				        selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+				        selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+				    
+				    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+				    .on('keydown', function(e){
+				    if (e.which === 40){
+				        that.$selectableUl.focus();
+				        return false;
+				      }
+				    });
+
+				    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+				    .on('keydown', function(e){
+				      if (e.which == 40){
+				        that.$selectionUl.focus();
+				        return false;
+				      }
+				    });
+				  },
+				  afterSelect: function(){
+				    this.qs1.cache();
+				    this.qs2.cache();
+				    
+				  },
+				  afterDeselect: function(){
+				    this.qs1.cache();
+				    this.qs2.cache();
+				    
+				  }
+			});
+			
+    	});  
+	/*]]>*/
+	</script>
+</div>
+
+
+
+
+
+
+
+<!-- DATETIME PICKER FIELD TEMPLATE -->
+<div th:fragment="datetimepickerFormField(fieldName,requiredFlag,i18nName)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				th:for="${fieldName}" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		<div	class="input-group date"
+				th:id="*{__${fieldName}__}">
+			<input 	class="form-control input-small" 
+					th:classappend="${#fields.hasErrors(fieldName)}? 'error'"
+					th:field="*{__${fieldName}__}"
+					type="text"
+					th:type="${inputType}" 
+					placeholder="field" 
+					th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}"/>
+			<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+		</div>
+	</div>	
+	<script th:inline="javascript">
+		$(function () {
+			$([['#'+${fieldName}]]).datetimepicker({
+				locale: [[${#locale.language}]]
+			});
+		});
+	</script>
+</div>	
+		
+		
+		
+
+
+
+<!-- TIME PICKER FIELD TEMPLATE -->
+<div th:fragment="timepickerFormField(fieldName,requiredFlag,inputType,i18nName)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				th:for="${fieldName}" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		<div class="input-group bootstrap-timepicker timepicker">
+			<input 	class="form-control input-small" 
+					th:classappend="${#fields.hasErrors(fieldName)}? 'error'"
+					th:field="*{__${fieldName}__}"
+					type="text"
+					th:type="${inputType}" 
+					placeholder="field" 
+					th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}"/>
+			<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+		</div>
+		<div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div> 
+	</div>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		jQuery(function($) {
+			jQuery([['#'+${fieldName}]]).timepicker({
+						'disableFocus':true,
+						'showMeridian':false,
+						'defaultTime':"00:00"  
+			});
+    	});  
+	/*]]>*/
+	</script>
+</div>
+
+
+
+
+
+
+<!-- TEXT FIELD WITHOUT LABEL TEMPLATE -->
+<div th:fragment="textFormFieldWithoutLabel(fieldName,placeholder,inputType,i18nName)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<input 	class="form-control" 
+				th:classappend="${#fields.hasErrors(fieldName)}? 'error'"
+				th:field="*{__${fieldName}__}"
+				type="text"
+				th:type="${inputType}" 
+				placeholder="field" 
+				th:attr="placeholder=#{${i18nName}+'.'+${placeholder}}"/>
+		 <div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div> 
+	</div>
+</div>
+
+<!-- CHECKBOX ELEMENT -->
+<div th:fragment="checkboxFormField(fieldName,i18nName)" th:remove="all">
+	<div class="form-group">
+			<div class="checkbox">
+				<label>
+					<input 	th:field="*{__${fieldName}__}"
+							type="checkbox" th:utext="' '+#{${i18nName}+'.'+${fieldName}}">Label value
+					</input>
+				</label>
+			</div>	
+	</div>
+</div>
+
+<!-- CHECKBOX ELEMENT INLINE-->
+<div th:fragment="checkboxFormFieldInline(fieldName, placeholder,i18nName)" th:remove="all">
+	<div class="form-group">
+			<div class="checkbox">
+				<label>
+					<input 	th:field="*{__${fieldName}__}"
+							type="checkbox" th:utext="' '+#{${i18nName}+'.'+${placeholder}}">Label value
+					</input>
+				</label>
+			</div>	
+	</div>
+</div>
+
+<!-- DROPDOWN ENUM (SELECT) FIELD TEMPLATE -->
+<div th:fragment="selectEnumFormField(fieldName, requiredFlag, dataSet, i18nName, activeValue, multipleFlag, allowClearFlag)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				for="fieldName" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		
+		
+		<select th:if="${multipleFlag}"
+				th:field="*{__${fieldName}__}" 
+				class="select2-chosen"
+				multiple="multiple" 
+				placeholder="select value"
+				th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}">
+				<option th:each="data : ${__${dataSet}__}" 
+        				th:value="${data}" 
+          				th:text="#{${data}}">
+          		</option>
+		</select>
+		
+		<select th:unless="${multipleFlag}"
+				th:field="*{__${fieldName}__}" 
+				class="select2-chosen"
+				data-placeholder="select value"
+				th:attr="data-placeholder=#{${i18nName}+'.'+${fieldName}}">
+				<option th:each="data : ${__${dataSet}__}" 
+        				th:value="${data}" 
+          				th:text="#{${data}}">
+          		</option>
+		</select>
+		<div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		jQuery(function($) {
+    		jQuery([['#'+${fieldName}]]).select2({
+    			'allowClear':[[${allowClearFlag}]],
+    			'width':'100%',
+    			'placeholder': {
+    			    'id': "",
+    			    'placeholder': [[#{${i18nName}+'.'+${fieldName}}]]
+    			},
+    		})//.select2('val', [[${activeValue}]]);
+    	});  
+	/*]]>*/
+	</script>
+</div>
+
+<!-- DROPDOWN ENUM (SELECT) FIELD TEMPLATE -->
+<div th:fragment="selectFormField(fieldName, requiredFlag, dataSet, dataValue, dataText, i18nName, activeValue, allowClearFlag)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				for="fieldName" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+				
+		<select th:field="*{__${fieldName}__}" 
+				class="select2-chosen"
+				data-placeholder="select value"
+				th:attr="data-placeholder=#{${i18nName}+'.'+${fieldName}}">
+				<option th:each="data : ${__${dataSet}__}" 
+        				th:value="${data.__${dataValue}__}" 
+          				th:text="${data.__${dataText}__}">
+          		</option>
+		</select>
+		<div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		jQuery(function($) {
+    		jQuery([['#'+${fieldName}]]).select2({
+    			'allowClear':[[${allowClearFlag}]],
+    			'width':'100%',
+    			'placeholder': {
+    			    'id': "",
+    			    'placeholder': [[#{${i18nName}+'.'+${fieldName}}]]
+    			},
+    		})//.select2('val', [[${activeValue}]]);
+    	});  
+	/*]]>*/
+	</script>
+</div>
+
+<!-- DROPDOWN ENUM (SELECT) FIELD TEMPLATE -->
+<div th:fragment="selectEnumFormField2(fieldName, requiredFlag, dataSet, i18nName, activeValue, optval, opttext, selectedList)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				for="fieldName" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		
+		<select th:field="*{__${fieldName}__}" 
+				class="select2-chosen" 
+				placeholder="select field" 
+				th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}">
+				<option th:each="data : ${__${dataSet}__}" 
+        				th:value="${data.optval}" 
+          				th:text="#{${data.opttext}}">
+          		</option>
+		</select>
+		<div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		jQuery(function($) {
+			
+			var userRoles=[[${user.roles}]];
+			for(role in userRoles){
+				alert(userRoles[role].roleName);	
+			}           
+			//${__${#arrays.toArray(user.roles)})__}
+			
+			//var sds=[[${#strings.toString(user.roles)}]];
+			//var selectedListd = [[${__${selectedList}__}]];
+			
+			/*for (i = 0; i < theList.length; i++) {
+		        doSomething(theList[i]);
+		    }*/
+		    
+		    //alert(sds);
+    		jQuery([['#'+${fieldName}]]).select2({'allowClear':true,'width':'100%'}).select2('val', [[${activeValue}]]);
+    		
+    	});  
+	/*]]>*/
+	</script>
+</div>
+
+<!-- DROPDOWN ENUM (SELECT) FIELD TEMPLATE -->
+<div th:fragment="selectEnumFormField3(fieldName, requiredFlag, dataSet, i18nName, activeValue, selectedList)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				for="fieldName" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		
+		<select th:field="*{__${fieldName}__}" 
+				class="select2-chosen" 
+				multiple="multiple"
+				placeholder="select field" 
+				th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}">
+				<option th:each="data : ${__${dataSet}__}" 
+        				th:value="${data}" 
+          				th:text="#{${data}}">
+          		</option>
+		</select>
+		<div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div>
+	</div>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	    jQuery(function($) {
+			var selectedList = [[${selectedList}]];
+			
+			/*for (i = 0; i < theList.length; i++) {
+		        doSomething(theList[i]);
+		    }*/
+		    
+		    alert(selectedList);
+    		jQuery([['#'+${fieldName}]]).select2({'allowClear':true,'width':'100%'}).select2('val', selectedList);
+    		
+    	});  
+	/*]]>*/
+	</script>
+</div>
+
+
+<!-- TEXT AREA FIELD TEMPLATE -->
+<div th:fragment="textAreaFormField(fieldName,requiredFlag,rowSize,i18nName)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				th:for="${fieldName}" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		
+		<textarea	class="form-control"
+					th:classappend="${#fields.hasErrors(fieldName)}? 'error'"
+					th:field="*{__${fieldName}__}"
+					rows="3"
+					th:rows="${rowSize}"
+					placeholder="field" 
+					th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}">
+		</textarea>
+		<div th:if="${#fields.hasErrors(fieldName)}" class="help-block error">
+			<ul>
+				<li th:each="err : ${#fields.errors(fieldName)}" th:text="#{${err}}" />
+			</ul>
+		</div> 
+	</div>
+</div>
+
+</html>

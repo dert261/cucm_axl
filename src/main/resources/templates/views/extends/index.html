@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="changeNumModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+		  		<nav class="navbar navbar-default navbar-static-top">
+	  				<div class="container-fluid">
+	    				<div class="collapse navbar-collapse" id="navidation-div">
+		      				<ul class="nav navbar-nav">
+		        				<li class="dropdown">
+		          					<a href="#" class="dropdown-toggle" th:utext="#{extends.header.menu.dbwork}+' &lt;span class=\'caret\'&gt;&lt;/span&gt;'" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DB functions</a>
+		          					<ul class="dropdown-menu">
+							            <li><a href="changenum" class="changenum" th:text="#{extends.header.menu.dbwork.changenum}">Change numbers</a></li>
+							         </ul>
+		        				</li>
+		      				</ul>
+	      				</div>
+	  				</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {}; 
+	    
+	    $('#navidation-div').on('click','a.changenum',function() {
+		 	$('#changeNumModalContentWrapper').load(
+				jQuery(this).attr('href'), 
+				function(){
+					$('#changeNum').modal('show');
+					$('#changeNumModalForm').on('submit', function( event ) {
+						event.preventDefault();
+						 
+						var form = document.getElementById("changeNumModalForm");
+						var formData = new FormData(form);
+						
+						$('#changeNumModalForm').spin();
+						
+						$.ajax({
+							type: 'POST',
+							url: "/extends/changenum",
+							processData: false,
+    						contentType: false,
+							data: formData,
+							}).done(function(data) {
+								$('#changeNumModalForm').spin(false);
+								if(data.status==0){
+									$('#changeNum').modal("hide");
+								} else {
+									alert(data.message);
+								}
+							}).fail(function(){
+								$('#changeNumModalForm').spin(false);
+								alert("Что-то пошло не так!!!");
+							});
+						return false;
+					});
+				}
+			);	
+			return false;
+	    });
+	/*]]>*/
+	</script>
+</body>
+</html>

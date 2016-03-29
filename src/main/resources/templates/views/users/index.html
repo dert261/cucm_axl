@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+<!-- Modal -->
+<div id="userModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.users}">Users</li>
+				</ol>
+				<div sec:authorize="hasAnyRole('ROLE_ADMIN')" class="col-lg-12">
+					<a href="/users/create" th:text="#{breadcrumbs.users.create}">Create</a>
+				</div>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{user.ui.messages.index.title}">User management</h1>
+					
+				</div>
+				<!-- <div th:replace="users/search :: user_search_form" > </div>  -->
+			</div>
+			
+			 <div class="row">
+			 	<table id="userstable" class="display" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{user.field.sequence}">№ п/п</th>
+			                <th th:text="#{user.field.name}">Full name</th>
+			                <th th:text="#{user.field.login}">Login</th>
+			                <th th:text="#{user.field.ldapDirSyncParameters.fqdnName}">FQDN source</th>
+			                <th th:text="#{user.field.status}">State</th>
+			                <th th:text="#{user.field.blockDate}">Block date</th>
+			                <th th:text="#{user.field.telephoneNumber}">Telephone Number</th>
+			                <th th:text="#{user.field.phonebook.uploadPhone}">Use custom phone</th>
+			                <th th:text="#{user.field.phonebook.usecustomphone}">Use custom phone</th>
+			                <th th:text="#{user.field.phonebook.phone}">Phone</th>
+			                <th th:text="#{user.field.actions}">Actions</th>
+			                
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th>№ п/п</th>
+			                <th th:text="#{user.field.name}">Full name</th>
+			                <th th:text="#{user.field.login}">Login</th>
+			                <th th:text="#{user.field.ldapDirSyncParameters.fqdnName}">FQDN source</th>
+			                <th th:text="#{user.field.status}">State</th>
+			                <th th:text="#{user.field.blockDate}">Block date</th>
+			                <th th:text="#{user.field.telephoneNumber}">Telephone Number</th>
+			                <th th:text="#{user.field.phonebook.uploadPhone}">Use custom phone</th>
+			                <th th:text="#{user.field.phonebook.usecustomphone}">Use custom phone</th>
+			                <th th:text="#{user.field.phonebook.phone}">Phone</th>
+			                <th th:text="#{user.field.actions}">Actions</th>
+			                
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var myTable = $('#userstable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/users/ajax/serverside/userdata.json"
+	        	/*"data": function ( d ) {
+	            	return $.extend( {}, d, {
+	                    "extra_search[id]": $('#search_id').val()!=undefined ? $('#search_id').val() : "null",
+	    			});
+	            }*/
+	        },
+	       	        
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "name" },
+	    	            { "data": "login" },
+	    	            { "data": "ldapDirSyncParameters.fqdnName" },
+	    	            { "data": "status" },
+	    	            { "data": "blockDate" },
+	    	            { "data": "telephoneNumber" },
+	    	            { "data": "phoneBook.uploadPhone" },
+	    	            { "data": "phoneBook.useCustomPhone" },
+	    	            { "data": "phoneBook.phone" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	var updatePhoneBookBool = /*[[${#authorization.expression("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")}]]*/ false;
+		            	var updatePhoneBookField = updatePhoneBookBool ? '<a class="updatePhoneBook" href="/users/phoneBook/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.phonebook}]]+'" data-original-title="'+[[#{ui.messages.table.phonebook}]]+'"> \
+		     	 								<i class="glyphicon glyphicon-wrench"></i></a>' : "";
+		     	 		var updateBool = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		     	 		var updateField = updateBool ? '&nbsp;&nbsp;&nbsp;<a class="update" href="/users/update/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.edit}]]+'" data-original-title="'+[[#{ui.messages.table.edit}]]+'"> \
+		     	 								<i class="glyphicon glyphicon-pencil"></i></a>' : "";
+		     	 								
+		     	 		var deleteBool = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		     	 		var deleteField = deleteBool ? '&nbsp;&nbsp;&nbsp;<a class="delete" href="/users/delete" data-delete="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.delete}]]+'" data-original-title="'+[[#{ui.messages.table.delete}]]+'"> \
+		         								<i class="glyphicon glyphicon-trash"></i> </a>' : ""; 	 
+		         		
+		         		
+			            return "<center>"+updatePhoneBookField + updateField + deleteField+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "phoneBookUploadPhone",
+		            "render": function (data, type, full, meta) {
+		            	return "<center>"+(data!=null ? data : "Не задан")+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-3],
+		         	"searchable": false,
+	    			"orderable": true,
+		            "data": "phoneBookPhone",
+		            "render": function (data, type, full, meta) {
+		            	var result = "";
+		            	if(data!=null){
+		            		result = data==true ? "Да" : "Нет"
+		            	}
+		            	return "<center>"+(data!=null ? result : "Не задан")+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-4],
+		         	"searchable": false,
+	    			"orderable": true,
+		            "data": "phoneBookUseCustomPhone",
+		            "render": function (data, type, full, meta) {
+		            	var result = "";
+		            	if(data!=null){
+		            		result = data==true ? "Да" : "Нет"
+		            	}
+		            	return "<center>"+(data!=null ? result : "Не задан")+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-6],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "Block date",
+		            "render": function (data, type, full, meta) {
+		            	return "<center>"+dateFormatter(data)+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-7],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "Block date",
+		            "render": function (data, type, full, meta) {
+		            	var res = "";
+		            	switch(data){
+		            		case "ACTIVE": res = [[#{'ACTIVE'}]]; break;
+		            		case "NONACTIVE": res = [[#{'NONACTIVE'}]];  break;
+		            	}
+		            	return "<center>"+res+"</center>";
+	           		}
+	           	}	
+			]
+	    });
+		
+	    myTable.on('click','a.delete',function() {
+			if(!confirm([[#{ui.messages.table.delete.user.confirmation}]])) return false;
+			
+			var deletedRow = myTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-delete'),
+					_method: 'DELETE'
+				}),
+				}).done(function() {
+					deletedRow
+				        .remove()
+				        .draw(false);
+			});
+				
+			return false;
+	    });
+	    
+	    
+	    myTable.on('click','a.updatePhoneBook',function() {
+			$('#userModalContentWrapper').load(
+				jQuery(this).attr('href'), 
+				function(){
+					$('#phoneBook').modal('show');
+					$('#endUserPhoneBook').on('submit', function( event ) {
+						event.preventDefault();
+						 
+						var data = {};
+						var user = {};
+						data["id"] = $('#id').val();
+						data["phone"] = $('#phone').val();
+						data["useCustomPhone"] = $('#useCustomPhone1').is(':checked');
+						data["uploadPhone"] = $('#uploadPhone1').is(':checked');
+						user["id"] = $('#user\\.id').val();
+						data['user'] = user;
+						
+												
+						$.ajax({
+							type: 'PUT',
+							url: "phoneBook",
+							datatype:'json',
+							contentType: "application/json",
+							data: JSON.stringify(data),
+							}).done(function(data) {
+								myTable.draw();
+								$('#phoneBook').modal("hide");
+							});
+						return false;
+					});
+				}
+			);	
+			return false;
+	    })
+	    
+	    /*myTable.on( 'order.dt search.dt', function () {
+	    	myTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	            cell.innerHTML = i+1;
+	        } );
+	    } ).draw();*/
+	    
+	    $('#users-search-form').submit(function(){
+	      	myTable.draw();
+			return false;
+		});
+	    
+	 
+	});
+	
+	/*]]>*/
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!-- jQuery and Bootstrap -->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <link rel="../src/stylesheet" href="bootstrap-table-filter.css">
+    <script src="../src/bootstrap-table-filter.js"></script>
+  </head>
+
+<body>
+
+  <div id="filter-bar">
+  </div>
+
+  <pre style="margin-top: 30px" id="log"></pre>
+
+  <script type="text/javascript">
+    $(function() {
+      $('#filter-bar').bootstrapTableFilter({
+        filters:[
+          {
+            field: 'id',
+            label: 'ID',
+            type: 'range'
+          },
+          {
+            field: 'label',
+            label: 'Label',
+            type: 'ajaxSelect',
+            source: 'numbers.json',
+            enabled: true
+          },
+          {
+            field: 'role',
+            label: 'Role',
+            type: 'select',
+            values: [{id: 'ROLE_ANONYMOUS', label: 'Anonymous'}, {id: 'ROLE_USER', label: 'User'}, {id: 'ROLE_ADMIN', label: 'Admin'}],
+          }
+        ],
+        onAll: function(name, args) {
+          var d = new Date();
+          $('#log').prepend(d.toLocaleString() + ': ' + name + "\n");
+        },
+        onSubmit: function(data) {
+          var data = $('#filter-bar').bootstrapTableFilter('getData');
+          var d = new Date();
+          $('#log').prepend(d.toLocaleString() + ': ' + JSON.stringify(data) + "\n");
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://schemas.cisco.com/ast/soap" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://schemas.cisco.com/ast/soap" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <schema elementFormDefault="qualified" targetNamespace="http://schemas.cisco.com/ast/soap" xmlns="http://www.w3.org/2001/XMLSchema">
+			<element name="selectCmDevice">
+				<complexType>
+					<sequence>
+						<element name="StateInfo" type="xsd:string"/>
+						<element name="CmSelectionCriteria" type="tns:CmSelectionCriteria"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="SelectItem">
+				<sequence>
+					<element name="Item" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfSelectItem">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="item" type="tns:SelectItem"/>
+				</sequence>
+			</complexType>
+			<complexType name="CmSelectionCriteria">
+				<sequence>
+					<element name="MaxReturnedDevices" nillable="true" type="xsd:unsignedInt"/>
+					<element name="DeviceClass" nillable="true" type="xsd:string"/>
+					<element name="Model" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Status" nillable="true" type="xsd:string"/>
+					<element name="NodeName" nillable="true" type="xsd:string"/>
+					<element name="SelectBy" nillable="true" type="xsd:string"/>
+					<element name="SelectItems" nillable="true" type="tns:ArrayOfSelectItem"/>
+				</sequence>
+			</complexType>
+			<element name="selectCmDeviceResponse">
+				<complexType>
+					<sequence>
+						<element name="selectCmDeviceResponse" type="tns:selectCmDeviceReturn"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="selectCmDeviceReturn">
+				<sequence>
+					<element name="SelectCmDeviceResult" type="tns:SelectCmDeviceResult"/>
+					<element name="StateInfo" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<complexType name="CmDevice">
+				<sequence>
+					<element name="Name" nillable="true" type="xsd:string"/>
+					<element name="IpAddress" nillable="true" type="xsd:string"/>
+					<element name="DirNumber" nillable="true" type="xsd:string"/>
+					<element name="DeviceClass" nillable="true" type="tns:DeviceClass"/>
+					<element name="Model" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Product" nillable="true" type="xsd:unsignedInt"/>
+					<element name="BoxProduct" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Httpd" nillable="true" type="tns:CmDevHttpd"/>
+					<element name="RegistrationAttempts" nillable="true" type="xsd:unsignedInt"/>
+					<element name="IsCtiControllable" type="xsd:boolean"/>
+					<element name="LoginUserId" nillable="true" type="xsd:string"/>
+					<element name="Status" nillable="true" type="tns:CmDevRegStat"/>
+					<element name="StatusReason" nillable="true" type="xsd:unsignedInt"/>
+					<element name="PerfMonObject" nillable="true" type="xsd:unsignedInt"/>
+					<element name="DChannel" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Description" nillable="true" type="xsd:string"/>
+					<element name="H323Trunk" nillable="true" type="tns:H323Trunk"/>
+					<element name="TimeStamp" nillable="true" type="xsd:unsignedInt"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfCmDevice">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="CmDevice" type="tns:CmDevice"/>
+				</sequence>
+			</complexType>
+			<complexType name="CmNode">
+				<sequence>
+					<element name="ReturnCode" nillable="true" type="tns:RisReturnCode"/>
+					<element name="Name" nillable="true" type="xsd:string"/>
+					<element name="NoChange" type="xsd:boolean"/>
+					<element name="CmDevices" nillable="true" type="tns:ArrayOfCmDevice"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfCmNode">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="CmNode" type="tns:CmNode"/>
+				</sequence>
+			</complexType>
+			<complexType name="SelectCmDeviceResult">
+				<sequence>
+					<element name="TotalDevicesFound" nillable="true" type="xsd:unsignedInt"/>
+					<element name="CmNodes" nillable="true" type="tns:ArrayOfCmNode"/>
+				</sequence>
+			</complexType>
+			<element name="selectCtiItem">
+				<complexType>
+					<sequence>
+						<element name="StateInfo" type="xsd:string"/>
+						<element name="CtiSelectionCriteria" type="tns:CtiSelectionCriteria"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="SelectAppItem">
+				<sequence>
+					<element name="AppItem" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfSelectAppItem">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="SelectAppItem" type="tns:SelectAppItem"/>
+				</sequence>
+			</complexType>
+			<complexType name="SelectDevName">
+				<sequence>
+					<element name="DevName" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfSelectDevName">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="SelectDevName" type="tns:SelectDevName"/>
+				</sequence>
+			</complexType>
+			<complexType name="SelectDirNumber">
+				<sequence>
+					<element name="DirNumber" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfSelectDirNumber">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="item" type="tns:SelectDirNumber"/>
+				</sequence>
+			</complexType>
+			<complexType name="CtiSelectionCriteria">
+				<sequence>
+					<element name="MaxReturnedItems" nillable="true" type="xsd:unsignedInt"/>
+					<element name="CtiMgrClass" nillable="true" type="tns:CtiMgrClass"/>
+					<element name="Status" nillable="true" type="tns:CtiStatus"/>
+					<element name="NodeName" nillable="true" type="xsd:string"/>
+					<element name="SelectAppBy" nillable="true" type="tns:CtiSelectAppBy"/>
+					<element name="AppItems" nillable="true" type="tns:ArrayOfSelectAppItem"/>
+					<element name="DevNames" nillable="true" type="tns:ArrayOfSelectDevName"/>
+					<element name="DirNumbers" nillable="true" type="tns:ArrayOfSelectDirNumber"/>
+				</sequence>
+			</complexType>
+			<element name="selectCtiItemResponse">
+				<complexType>
+					<sequence>
+						<element name="selectCtiItemReturn" type="tns:selectCtiItemReturn"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="selectCtiItemReturn">
+				<sequence>
+					<element name="SelectCtiItemResult" type="tns:SelectCtiItemResult"/>
+					<element name="StateInfo" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<complexType name="CtiItem">
+				<sequence>
+					<element name="AppId" nillable="true" type="xsd:string"/>
+					<element name="UserId" nillable="true" type="xsd:string"/>
+					<element name="AppIpAddr" nillable="true" type="xsd:string"/>
+					<element name="AppStatus" nillable="true" type="tns:CtiStatus"/>
+					<element name="AppStatusReason" nillable="true" type="xsd:unsignedInt"/>
+					<element name="AppTimeStamp" nillable="true" type="xsd:unsignedInt"/>
+					<element name="CtiDevice" nillable="true" type="tns:CtiDevice"/>
+					<element name="CtiLine" nillable="true" type="tns:CtiLine"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfCtiItem">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="CtiItems" type="tns:CtiItem"/>
+				</sequence>
+			</complexType>
+			<complexType name="CtiNode">
+				<sequence>
+					<element name="ReturnCode" nillable="true" type="tns:RisReturnCode"/>
+					<element name="Name" nillable="true" type="xsd:string"/>
+					<element name="NoChange" type="xsd:boolean"/>
+					<element name="CtiItems" nillable="true" type="tns:ArrayOfCtiItem"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfCtiNode">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="CtiNodes" type="tns:CtiNode"/>
+				</sequence>
+			</complexType>
+			<complexType name="SelectCtiItemResult">
+				<sequence>
+					<element name="TotalItemsFound" nillable="true" type="xsd:unsignedInt"/>
+					<element name="CtiNodes" nillable="true" type="tns:ArrayOfCtiNode"/>
+				</sequence>
+			</complexType>
+			<element name="executeCCMSQLStatement">
+				<complexType>
+					<sequence>
+						<element name="ExecuteSQLInputData" type="xsd:string"/>
+						<element name="GetColumns" type="tns:ColumnType"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="ColumnType">
+				<sequence>
+					<element maxOccurs="unbounded" name="ColumnName" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="executeCCMSQLStatementResponse">
+				<complexType>
+					<sequence>
+						<element maxOccurs="unbounded" name="ExecuteSQLOutputData" type="tns:ColumnValueType"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="ColumnValueType">
+				<sequence>
+					<element name="Name" nillable="true" type="tns:ColumnNType"/>
+					<element name="Value" nillable="true" type="tns:ColumnVType"/>
+				</sequence>
+			</complexType>
+			<element name="getServerInfo">
+				<complexType>
+					<sequence>
+						<element name="Hosts" type="tns:Hosts"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="Hosts">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="Name" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="getServerInfoResponse">
+				<complexType>
+					<sequence>
+						<element maxOccurs="unbounded" name="ServerInformation" type="tns:ServerInformation"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="ServerInformation">
+				<sequence>
+					<element name="HostName" nillable="true" type="xsd:string"/>
+					<element name="os-name" nillable="true" type="xsd:string"/>
+					<element name="os-version" nillable="true" type="xsd:string"/>
+					<element name="os-arch" nillable="true" type="xsd:string"/>
+					<element name="java-runtime-version" nillable="true" type="xsd:string"/>
+					<element name="java-vm-vendor" nillable="true" type="xsd:string"/>
+					<element name="call-manager-version" nillable="true" type="xsd:string"/>
+					<element name="Active_Versions" nillable="true" type="xsd:string"/>
+					<element name="In_Active_Versions" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="selectCmDeviceSIP">
+				<complexType>
+					<sequence>
+						<element name="StateInfo" type="xsd:string"/>
+						<element name="CmSelectionCriteriaSIP" type="tns:CmSelectionCriteriaSIP"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="CmSelectionCriteriaSIP">
+				<sequence>
+					<element name="MaxReturnedDevices" nillable="true" type="xsd:unsignedInt"/>
+					<element name="DeviceClass" nillable="true" type="xsd:string"/>
+					<element name="Model" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Status" nillable="true" type="xsd:string"/>
+					<element name="NodeName" nillable="true" type="xsd:string"/>
+					<element name="SelectBy" nillable="true" type="xsd:string"/>
+					<element name="SelectItems" nillable="true" type="tns:ArrayOfSelectItem"/>
+					<element name="Protocol" nillable="true" type="tns:ProtocolType"/>
+				</sequence>
+			</complexType>
+			<element name="selectCmDeviceSIPResponse">
+				<complexType>
+					<sequence>
+						<element name="selectCmDeviceSIPResponse" type="tns:selectCmDeviceSIPReturn"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="selectCmDeviceSIPReturn">
+				<sequence>
+					<element name="SelectCmDeviceResultSIP" type="tns:SelectCmDeviceResultSIP"/>
+					<element name="StateInfo" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<complexType name="CmDevSingleLineStatus">
+				<sequence>
+					<element name="DirectoryNumber" nillable="true" type="xsd:string"/>
+					<element name="Status" nillable="true" type="tns:CmSingleLineStatus"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfCmDevSingleLineStatus">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="item" type="tns:CmDevSingleLineStatus"/>
+				</sequence>
+			</complexType>
+			<complexType name="CmDeviceSIP">
+				<sequence>
+					<element name="Name" nillable="true" type="xsd:string"/>
+					<element name="IpAddress" nillable="true" type="xsd:string"/>
+					<element name="DirNumber" nillable="true" type="xsd:string"/>
+					<element name="DeviceClass" nillable="true" type="tns:DeviceClass"/>
+					<element name="Model" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Product" nillable="true" type="xsd:unsignedInt"/>
+					<element name="BoxProduct" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Httpd" nillable="true" type="tns:CmDevHttpd"/>
+					<element name="RegistrationAttempts" nillable="true" type="xsd:unsignedInt"/>
+					<element name="IsCtiControllable" type="xsd:boolean"/>
+					<element name="LoginUserId" nillable="true" type="xsd:string"/>
+					<element name="Status" nillable="true" type="tns:CmDevRegStat"/>
+					<element name="StatusReason" nillable="true" type="xsd:unsignedInt"/>
+					<element name="PerfMonObject" nillable="true" type="xsd:unsignedInt"/>
+					<element name="DChannel" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Description" nillable="true" type="xsd:string"/>
+					<element name="H323Trunk" nillable="true" type="tns:H323Trunk"/>
+					<element name="TimeStamp" nillable="true" type="xsd:unsignedInt"/>
+					<element name="Protocol" nillable="true" type="tns:ProtocolType"/>
+					<element name="NumOfLines" nillable="true" type="xsd:unsignedInt"/>
+					<element name="LinesStatus" nillable="true" type="tns:ArrayOfCmDevSingleLineStatus"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfCmDeviceSIP">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="item" type="tns:CmDeviceSIP"/>
+				</sequence>
+			</complexType>
+			<complexType name="CmNodeSIP">
+				<sequence>
+					<element name="ReturnCode" nillable="true" type="tns:RisReturnCode"/>
+					<element name="Name" nillable="true" type="xsd:string"/>
+					<element name="NoChange" type="xsd:boolean"/>
+					<element name="CmDevices" nillable="true" type="tns:ArrayOfCmDeviceSIP"/>
+				</sequence>
+			</complexType>
+			<complexType name="ArrayOfCmNodeSIP">
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="CmNodeSIP" type="tns:CmNodeSIP"/>
+				</sequence>
+			</complexType>
+			<complexType name="SelectCmDeviceResultSIP">
+				<sequence>
+					<element name="TotalDevicesFound" nillable="true" type="xsd:unsignedInt"/>
+					<element name="CmNodes" nillable="true" type="tns:ArrayOfCmNodeSIP"/>
+				</sequence>
+			</complexType>
+			<simpleType name="RisReturnCode">
+				<restriction base="xsd:string">
+					<enumeration value="Ok"/>
+					<enumeration value="NotFound"/>
+					<enumeration value="InvalidRequest"/>
+					<enumeration value="InternalError"/>
+					<enumeration value="NodeNotResponding"/>
+					<enumeration value="InvalidNodeName"/>
+				</restriction>
+			</simpleType>
+			<simpleType name="DeviceClass">
+				<restriction base="xsd:string">
+					<enumeration value="Any"/>
+					<enumeration value="Phone"/>
+					<enumeration value="Gateway"/>
+					<enumeration value="H323"/>
+					<enumeration value="Cti"/>
+					<enumeration value="VoiceMail"/>
+					<enumeration value="MediaResources"/>
+					<enumeration value="Unknown"/>
+					<enumeration value="HuntList"/>
+					<enumeration value="SIP Trunk"/>
+				</restriction>
+			</simpleType>
+			<simpleType name="CmDevHttpd">
+				<restriction base="xsd:string">
+					<enumeration value="Yes"/>
+					<enumeration value="No"/>
+					<enumeration value="Unknown"/>
+				</restriction>
+			</simpleType>
+			<simpleType name="CmDevRegStat">
+				<restriction base="xsd:string">
+					<enumeration value="Any"/>
+					<enumeration value="Registered"/>
+					<enumeration value="UnRegistered"/>
+					<enumeration value="Rejected"/>
+					<enumeration value="PartiallyRegistered"/>
+					<enumeration value="Unknown"/>
+				</restriction>
+			</simpleType>
+			<complexType name="H323Trunk">
+				<sequence>
+					<element name="ConfigName" nillable="true" type="xsd:string"/>
+					<element name="TechPrefix" nillable="true" type="xsd:string"/>
+					<element name="Zone" nillable="true" type="xsd:string"/>
+					<element name="RemoteCmServer1" nillable="true" type="xsd:string"/>
+					<element name="RemoteCmServer2" nillable="true" type="xsd:string"/>
+					<element name="RemoteCmServer3" nillable="true" type="xsd:string"/>
+					<element name="AltGkList" nillable="true" type="xsd:string"/>
+					<element name="ActiveGk" nillable="true" type="xsd:string"/>
+					<element name="CallSignalAddr" nillable="true" type="xsd:string"/>
+					<element name="RasAddr" nillable="true" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<simpleType name="CtiMgrClass">
+				<restriction base="xsd:string">
+					<enumeration value="Provider"/>
+					<enumeration value="Device"/>
+					<enumeration value="Line"/>
+				</restriction>
+			</simpleType>
+			<simpleType name="CtiStatus">
+				<restriction base="xsd:string">
+					<enumeration value="Any"/>
+					<enumeration value="Open"/>
+					<enumeration value="Closed"/>
+					<enumeration value="OpenFailed"/>
+					<enumeration value="Unknown"/>
+				</restriction>
+			</simpleType>
+			<simpleType name="CtiSelectAppBy">
+				<restriction base="xsd:string">
+					<enumeration value="AppId"/>
+					<enumeration value="AppIpAddress"/>
+					<enumeration value="UserId"/>
+				</restriction>
+			</simpleType>
+			<complexType name="CtiDevice">
+				<sequence>
+					<element name="AppControlsMedia" type="xsd:boolean"/>
+					<element name="DeviceName" nillable="true" type="xsd:string"/>
+					<element name="DeviceStatus" nillable="true" type="tns:CtiStatus"/>
+					<element name="DeviceStatusReason" nillable="true" type="xsd:unsignedInt"/>
+					<element name="DeviceTimeStamp" nillable="true" type="xsd:unsignedInt"/>
+				</sequence>
+			</complexType>
+			<complexType name="CtiLine">
+				<sequence>
+					<element name="DirNumber" nillable="true" type="xsd:string"/>
+					<element name="LineStatus" nillable="true" type="tns:CtiStatus"/>
+					<element name="LineStatusReason" nillable="true" type="xsd:unsignedInt"/>
+					<element name="LineTimeStamp" nillable="true" type="xsd:unsignedInt"/>
+				</sequence>
+			</complexType>
+			<complexType name="ColumnNType">
+				<simpleContent>
+					<extension base="xsd:string"/>
+				</simpleContent>
+			</complexType>
+			<complexType name="ColumnVType">
+				<simpleContent>
+					<extension base="xsd:string"/>
+				</simpleContent>
+			</complexType>
+			<simpleType name="ProtocolType">
+				<restriction base="xsd:string">
+					<enumeration value="Any"/>
+					<enumeration value="SCCP"/>
+					<enumeration value="SIP"/>
+					<enumeration value="Unknown"/>
+				</restriction>
+			</simpleType>
+			<simpleType name="CmSingleLineStatus">
+				<restriction base="xsd:string">
+					<enumeration value="Any"/>
+					<enumeration value="Registered"/>
+					<enumeration value="UnRegistered"/>
+					<enumeration value="Rejected"/>
+					<enumeration value="Unknown"/>
+				</restriction>
+			</simpleType>
+		</schema>
+  </wsdl:types>
+  <wsdl:message name="getServerInfoRequest">
+    <wsdl:part name="parameters" element="tns:getServerInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeCCMSQLStatementRequest">
+    <wsdl:part name="parameters" element="tns:executeCCMSQLStatement">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="selectCtiItemResponse">
+    <wsdl:part name="parameters" element="tns:selectCtiItemResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="selectCmDeviceResponse">
+    <wsdl:part name="parameters" element="tns:selectCmDeviceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="selectCmDeviceSIPRequest">
+    <wsdl:part name="parameters" element="tns:selectCmDeviceSIP">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServerInfoResponse">
+    <wsdl:part name="parameters" element="tns:getServerInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="selectCmDeviceSIPResponse">
+    <wsdl:part name="parameters" element="tns:selectCmDeviceSIPResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="selectCtiItemRequest">
+    <wsdl:part name="parameters" element="tns:selectCtiItem">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="selectCmDeviceRequest">
+    <wsdl:part name="parameters" element="tns:selectCmDevice">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeCCMSQLStatementResponse">
+    <wsdl:part name="parameters" element="tns:executeCCMSQLStatementResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RisPortType">
+    <wsdl:operation name="selectCmDevice">
+      <wsdl:input name="selectCmDeviceRequest" message="tns:selectCmDeviceRequest">
+    </wsdl:input>
+      <wsdl:output name="selectCmDeviceResponse" message="tns:selectCmDeviceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="selectCtiItem">
+      <wsdl:input name="selectCtiItemRequest" message="tns:selectCtiItemRequest">
+    </wsdl:input>
+      <wsdl:output name="selectCtiItemResponse" message="tns:selectCtiItemResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeCCMSQLStatement">
+      <wsdl:input name="executeCCMSQLStatementRequest" message="tns:executeCCMSQLStatementRequest">
+    </wsdl:input>
+      <wsdl:output name="executeCCMSQLStatementResponse" message="tns:executeCCMSQLStatementResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServerInfo">
+      <wsdl:input name="getServerInfoRequest" message="tns:getServerInfoRequest">
+    </wsdl:input>
+      <wsdl:output name="getServerInfoResponse" message="tns:getServerInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="selectCmDeviceSIP">
+      <wsdl:input name="selectCmDeviceSIPRequest" message="tns:selectCmDeviceSIPRequest">
+    </wsdl:input>
+      <wsdl:output name="selectCmDeviceSIPResponse" message="tns:selectCmDeviceSIPResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RisBinding" type="tns:RisPortType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="selectCmDevice">
+      <wsdlsoap:operation soapAction="selectCmDevice"/>
+      <wsdl:input name="selectCmDeviceRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="selectCmDeviceResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="selectCtiItem">
+      <wsdlsoap:operation soapAction="selectCtiItem"/>
+      <wsdl:input name="selectCtiItemRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="selectCtiItemResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeCCMSQLStatement">
+      <wsdlsoap:operation soapAction="executeCCMSQLStatement"/>
+      <wsdl:input name="executeCCMSQLStatementRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="executeCCMSQLStatementResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServerInfo">
+      <wsdlsoap:operation soapAction="getServerInfo"/>
+      <wsdl:input name="getServerInfoRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getServerInfoResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="selectCmDeviceSIP">
+      <wsdlsoap:operation soapAction="selectCmDeviceSIP"/>
+      <wsdl:input name="selectCmDeviceSIPRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="selectCmDeviceSIPResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RISService">
+    <wsdl:port name="RisPort" binding="tns:RisBinding">
+      <wsdlsoap:address location="https://10.18.210.210:8443/realtimeservice2/services/RISService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

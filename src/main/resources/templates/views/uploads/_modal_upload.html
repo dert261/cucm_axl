@@ -1,0 +1,47 @@
+<!-- Modal -->
+
+<div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	            <h3 class="modal-title" id="myModalLabel"  th:text="#{uploadfile.create.ui.messages.index.title}"></h3>
+	        </div>
+	        <form class="form-horizontal" action="#" enctype="multipart/form-data" id="uploadFileModalForm"  th:object="${uploadFile}">
+	        	<div class="modal-body" id="myModalBody" >   
+	        		<fieldset>
+	        							
+	        			<div class="form-group col-sm-12">
+							<label class="col-sm-3 control-label" for="name" th:text="#{uploadfile.field.name}">	</label>
+							<div class="col-sm-9">
+								<input class="form-control" th:field="*{name}"></input>
+							</div>	
+						</div>
+						
+						<div class="form-group col-sm-12">
+							<label class="col-sm-3 control-label" for="description" th:text="#{uploadfile.field.description}">	</label>
+							<div class="col-sm-9">
+								<input class="form-control" th:field="*{description}"></input>
+							</div>	
+						</div>
+						
+						<div class="form-group col-sm-12">
+							<label class="col-sm-3 control-label" for="file" th:text="#{uploadfile.field.file}">	</label>
+							<div class="col-sm-9">
+								<input type="file" th:field="*{uploadedfile}"></input>
+							</div>	
+						</div>
+							
+						
+					</fieldset>
+				</div>
+	        	     	
+	            <div class="modal-footer">
+	            	<button type="submit" class="btn btn-default" th:text="#{uploadfile.create.form.button.upload}">Upload</button>
+	                <button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{uploadfile.create.form.button.close}">Close</button>
+	            </div>
+	        </form>
+	        
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="sccpPhoneModalContentWrapper" class="row"> </div>
+	<div id="sipPhoneModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+				<ol class="breadcrumb">
+					<li><a href="/cme/routers/" th:text="#{breadcrumbs.cmerouters}">Routers</a></li>
+					<li class="active" th:text="#{breadcrumbs.cmerouters.detail}">Detail</li>
+				</ol>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{cmerouters.ui.messages.view.title}">Detail</h1>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+				
+					<!-- PANEL ONE - GLOBAL SETTINGS -->
+			  		<div class="panel panel-primary">
+			    		<div class="panel-heading" role="tab" id="headingOne">
+			      			<h4 class="panel-title">
+			        			<a role="button" th:text="#{cmerouters.title.cmeGlobal}" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			          				Global SCCP Settings
+			        			</a>
+			      			</h4>
+			    		</div>
+			    		<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+			      			<div class="panel-body">
+			        			<div class="row">
+			        				<div class="col-lg-6">
+				        				<table class="table table-bordered">
+	  										<tr>
+	  											<th th:text="#{cmerouters.label.parameter}">Parameter</th>
+	  											<th th:text="#{cmerouters.label.value}">Value</th>
+	  										</tr>
+	  										<tr>
+	  											<td>Name</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.name}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>IP-address</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.address}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Port</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.portNumber}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Mode</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.mode}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Version</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.version}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Voice Mail</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.voiceMail}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Service Engine</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.serviceEngine}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Keep alive interval</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.keepAliveInterval}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>URL Services</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.urlServices}"></td>
+	  										</tr>
+	  									</table>
+									</div>
+									<div class="col-lg-6">
+				        				<table class="table table-bordered">
+	  										<tr>
+	  											<th th:text="#{cmerouters.label.parameter}">Parameter</th>
+	  											<th th:text="#{cmerouters.label.value}">Value</th>
+	  										</tr>
+	  										<tr>
+	  											<td>Configured Device</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.configuredDevice}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Configured Extension</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.configuredExtension}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Device Registered</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.deviceRegistered}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Max Conference</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.maxConference}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Max DN</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.maxDN}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Max Ephone</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.maxEphone}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Max Redirect</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.maxRedirect}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Peak Device Registered</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.peakDeviceRegistered}"></td>
+	  										</tr>
+	  										<tr>
+	  											<td>Peak Device Registered Time</td>
+	  											<td th:text="${cmeRouter.cmeGlobal.peakDeviceRegisteredTime}"></td>
+	  										</tr>
+	  									</table>
+									</div>
+			 					</div>
+			      			</div>
+			    		</div>
+			  		</div>
+			  		
+			  		
+			  		<!-- PANEL TWO - GLOBAL SIP SETTINGS -->			  					  		
+			  		<div class="panel panel-primary">
+			    		<div class="panel-heading" role="tab" id="headingTwo">
+			      			<h4 class="panel-title">
+			        			<a role="button" th:text="#{cmerouters.title.cmeSipGlobal}" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			          				Global SIP Settings
+			        			</a>
+			      			</h4>
+			    		</div>
+			    		<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+			      			<div class="panel-body">
+			        			<table class="table table-bordered">
+	  								<tr>
+	  									<th th:text="#{cmerouters.label.parameter}">Parameter</th>
+	  									<th th:text="#{cmerouters.label.value}">Value</th>
+	  								</tr>
+	  								<tr>
+	  									<td>IP-address</td>
+	  									<td th:text="${cmeRouter.cmeSipGlobal.address}"></td>
+	  								</tr>
+	  								<tr>
+	  									<td>Max DN</td>
+	  									<td th:text="${cmeRouter.cmeSipGlobal.maxDN}"></td>
+	  								</tr>
+	  								<tr>
+	  									<td>Max pool</td>
+	  									<td th:text="${cmeRouter.cmeSipGlobal.maxPool}"></td>
+	  								</tr>
+	  								<tr>
+	  									<td>Max redirect</td>
+	  									<td th:text="${cmeRouter.cmeSipGlobal.maxRedirect}"></td>
+	  								</tr>
+	  								<tr>
+	  									<td>Mode</td>
+	  									<td th:text="${cmeRouter.cmeSipGlobal.mode}"></td>
+	  								</tr>
+	  								<tr>
+	  									<td>Port number</td>
+	  									<td th:text="${cmeRouter.cmeSipGlobal.portNumber}"></td>
+	  								</tr>
+	  								<tr>
+	  									<td>Version</td>
+	  									<td th:text="${cmeRouter.cmeSipGlobal.version}"></td>
+	  								</tr>
+	  							</table>
+			      			</div>
+			    		</div>
+			  		</div>
+			  					  		
+			  					  		
+					<!-- PANEL THREE - HUNT-GROUPS -->			  					  		
+			  		<div class="panel panel-primary">
+			    		<div class="panel-heading" role="tab" id="headingThree">
+			      			<h4 class="panel-title">
+			        			<a role="button" th:text="#{cmerouters.title.voiceHuntGroups}" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+			          				Hunt Groups
+			        			</a>
+			      			</h4>
+			    		</div>
+			    		<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+			      			<div class="panel-body">
+			      				<table id="huntgroupstable" style="width:100%">
+								   	<thead>
+								        <tr>
+								            <th th:text="#{cmevoicehuntgroup.field.groupID}">Group ID</th>
+								            <th th:text="#{cmevoicehuntgroup.field.pilotNumber}">Pilot number</th>
+								            <th th:text="#{cmevoicehuntgroup.field.type}">Type</th>
+								            <th th:text="#{cmevoicehuntgroup.field.timeout}">Timeout</th>
+								            <th th:text="#{cmevoicehuntgroup.field.numbers}">Numbers</th>
+								            <th th:text="#{cmevoicehuntgroup.field.finalNum}">Final Number</th>
+								        </tr>
+								    </thead>
+								 
+								    <tfoot>
+								        <tr>
+								            <th th:text="#{cmevoicehuntgroup.field.groupID}">Group ID</th>
+								            <th th:text="#{cmevoicehuntgroup.field.pilotNumber}">Pilot number</th>
+								            <th th:text="#{cmevoicehuntgroup.field.type}">Type</th>
+								            <th th:text="#{cmevoicehuntgroup.field.timeout}">Timeout</th>
+								            <th th:text="#{cmevoicehuntgroup.field.numbers}">Numbers</th>
+								            <th th:text="#{cmevoicehuntgroup.field.finalNum}">Final Number</th>
+								        </tr>
+									</tfoot>
+								</table>
+							</div>
+			    		</div>
+			  		</div>
+			  		
+			  		
+			  		
+			  		
+			  		<!-- PANEL FOUR - SCCP-TELEPHONES -->
+			  		<div class="panel panel-primary">
+			    		<div class="panel-heading" role="tab" id="headingFour">
+			      			<h4 class="panel-title">
+			        			<a role="button" th:text="#{cmerouters.title.sccpDevices}" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+			          				SCCP-Phones
+			        			</a>
+			      			</h4>
+			    		</div>
+			    		<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+			      			<div class="panel-body">
+			        			<table id="sccpdevicestable" style="width:100%">
+								   	<thead>
+								        <tr>
+								        	<th th:text="#{cmesccpdevices.field.name}">MAC</th>
+								            <th th:text="#{cmesccpdevices.field.configType}">Type</th>
+								            <th th:text="#{cmesccpdevices.field.address}">Address</th>
+								            <th th:text="#{cmesccpdevices.field.lines}">Lines</th>
+								            <th th:text="#{cmesccpdevices.field.phoneIsActive}">Phone is active</th>
+								            <th th:text="#{cmesccpdevices.field.customNumbers}">Custom numbers</th>
+								            <th th:text="#{cmesccpdevices.field.customExternalPhoneNumberMask}">External Phone Number Mask</th>
+								            <th th:text="#{cmesccpdevices.field.phoneLabel}">Label</th>
+								            <th th:text="#{cmesccpdevices.field.actions}">Actions</th>
+								        </tr>
+								    </thead>
+								 
+								    <tfoot>
+								        <tr>
+								        	<th th:text="#{cmesccpdevices.field.name}">MAC</th>
+								            <th th:text="#{cmesccpdevices.field.configType}">Type</th>
+								            <th th:text="#{cmesccpdevices.field.address}">Address</th>
+								            <th th:text="#{cmesccpdevices.field.lines}">Lines</th>
+								            <th th:text="#{cmesccpdevices.field.phoneIsActive}">Phone is active</th>
+								            <th th:text="#{cmesccpdevices.field.customNumbers}">Custom numbers</th>
+								            <th th:text="#{cmesccpdevices.field.customExternalPhoneNumberMask}">External Phone Number Mask</th>
+								            <th th:text="#{cmesccpdevices.field.phoneLabel}">Label</th>
+								            <th th:text="#{cmesccpdevices.field.actions}">Actions</th>
+								        </tr>
+									</tfoot>
+								</table>
+			      			</div>
+			    		</div>
+			  		</div>
+			  		
+			  		<!-- PANEL FIVE - SIP-TELEPHONES -->
+			  		<div class="panel panel-primary">
+			    		<div class="panel-heading" role="tab" id="headingFive">
+			      			<h4 class="panel-title">
+			        			<a role="button" th:text="#{cmerouters.title.sipDevices}" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+			          				SIP-Phones
+			        			</a>
+			      			</h4>
+			    		</div>
+			    		<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+			      			<div class="panel-body">
+			      				<table id="sipdevicestable" style="width:100%">
+								   	<thead>
+								        <tr>
+								        	<th th:text="#{cmesipdevices.field.name}">MAC</th>
+								           	<th th:text="#{cmecustomsipdevice.field.phoneType}">PhoneType</th>
+								            <th th:text="#{cmesipdevices.field.lines}">Lines</th>
+								           	<th th:text="#{cmesipdevices.field.phoneIsActive}">Phone is active</th>
+								            <th th:text="#{cmesipdevices.field.customNumbers}">Custom numbers</th>
+								            <th th:text="#{cmesipdevices.field.customExternalPhoneNumberMask}">External Phone Number Mask</th>
+								            <th th:text="#{cmesipdevices.field.phoneLabel}">Label</th>
+								            <th th:text="#{cmesipdevices.field.actions}">Actions</th>
+								        </tr>
+								    </thead>
+								 
+								    <tfoot>
+								        <tr>
+								           	<th th:text="#{cmesipdevices.field.name}">MAC</th>
+								           	<th th:text="#{cmecustomsipdevice.field.phoneType}">PhoneType</th>
+								            <th th:text="#{cmesipdevices.field.lines}">Lines</th>
+								           	<th th:text="#{cmesipdevices.field.phoneIsActive}">Phone is active</th>
+								            <th th:text="#{cmesipdevices.field.customNumbers}">Custom numbers</th>
+								            <th th:text="#{cmesipdevices.field.customExternalPhoneNumberMask}">External Phone Number Mask</th>
+								            <th th:text="#{cmesipdevices.field.phoneLabel}">Label</th>
+								            <th th:text="#{cmesipdevices.field.actions}">Actions</th>
+								        </tr>
+									</tfoot>
+								</table>
+			      			</div>
+			    		</div>
+			  		</div>
+				</div>
+			</div>	
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var huntGroupsTable = $('#huntgroupstable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	    	"serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/cme/routers/ajax/serverside/"+[[${cmeRouter.id}]]+"/cmehuntgroups.json",
+	        },
+	    	"columns": [
+	    	            { "data": "groupID" },
+	    	            { "data": "pilotNumber" },
+	    	            { "data": "type" },
+	    	            { "data": "timeout" },
+	    	            { "data": "numbers.number" },
+	    	            { "data": "finalNum" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+				{
+	           		"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": false,
+		            "data": "numbers.number",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.numbers.forEach(function(entry){
+	           				returnStatement=returnStatement+entry.number+", ";
+	           			});
+	           			return returnStatement.substring(0,returnStatement.length-2);
+	           		}
+	           	}
+	        ]
+	    });
+		
+		
+		var sccpdevicestable = $('#sccpdevicestable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	    	"serverSide": true,
+	    	"select": true,
+	    	"ajax": {
+	        	"method": "GET",
+	        	"url": "/cme/routers/ajax/serverside/"+[[${cmeRouter.id}]]+"/cmesccpdevices.json",
+	        },
+	        
+	    	"columns": [
+						{ "data": "name" },
+	    	            { "data": "configType" },
+	    	            { "data": "address" },
+	    	            { "data": "lines.extension.number" },
+	    	            { "data": "customDevice.enable" },
+	    	            { "data": "lines.extension.customExtension.number" },
+	    	            { "data": "lines.extension.customExtension.externalPhoneNumberMask" },
+	    	            { "data": "customDevice.user.name" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+					"searchable": true,
+					"orderable": true,
+					"targets": [0]
+				},
+				{
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            							
+		     	 		var sccpPhoneModal = '<a class="updateSccpPhone" href="/cme/routers/phone/sccp/'+data+'" data-sccp-phone='+data+' data-toggle="tooltip" title="'+[[#{ui.messages.table.phonebook}]]+'" data-original-title="'+[[#{ui.messages.table.phonebook}]]+'"> \
+							<i class="glyphicon glyphicon-wrench"></i></a>'						
+		     	 		return "<center>"+sccpPhoneModal+"</center>";
+	           		}
+	           	},
+				{
+	           		"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "user",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.lines.forEach(function(entry){
+		           			if(entry.extension.customExtension.enable){
+		           				if(entry.extension.customExtension.label!=null && entry.extension.customExtension.label.length>0){
+		           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.label+"<br>";
+		           				} else if(data!=undefined){
+		           					returnStatement=returnStatement+entry.lineId+". "+data+"<br>";
+		           				}	
+		           					
+		           			}	
+		           		});
+	           			return returnStatement;
+					}
+	           	},
+	           	{
+	           		"targets": [-3],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "externalPhoneNumberMask",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.lines.forEach(function(entry){
+	           				if(entry.extension.customExtension.enable & (entry.extension.customExtension.externalPhoneNumberMask != null && entry.extension.customExtension.externalPhoneNumberMask.length>0)){
+	           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.externalPhoneNumberMask+"<br>";
+	           				}	
+	           			});
+	           			return returnStatement.substring(0,returnStatement.length-4);
+					}
+	           	},
+	           	{
+	           		"targets": [-4],
+		         	"searchable": true,
+	    			"orderable": false,
+		            "data": "extension.customExtension.number",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.lines.forEach(function(entry){
+	           				if(entry.extension.customExtension.enable & (entry.extension.customExtension.number != null && entry.extension.customExtension.number.length>0)){
+	           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.number+"<br>";
+	           				}	
+	           			});
+	           			return returnStatement.substring(0,returnStatement.length-4);
+	           		}
+	           	},
+	           	{
+	           		"targets": [-5],
+		         	"searchable": true,
+	    			"orderable": false,
+		            "data": "customDevice.enable",
+	           		"render": function (data, type, full, meta) {
+	           			return (data ? "Да" : "Нет");
+	           		}
+	           	},				
+	           	{
+	           		"targets": [-6],
+		         	"searchable": true,
+	    			"orderable": false,
+		            "data": "extension.number",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.lines.forEach(function(entry){
+	           				returnStatement=returnStatement+entry.lineId+". "+entry.extension.number+"<br>";
+	           			});
+	           			return returnStatement.substring(0,returnStatement.length-4);
+	           		}
+	           	}
+	        ],
+	        
+		});
+		
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {}; 
+		 
+		 sccpdevicestable.on('click','a.updateSccpPhone',function() {
+			 	var sccpPhoneId=jQuery(this).data('sccp-phone');
+				$('#sccpPhoneModalContentWrapper').load(
+					jQuery(this).attr('href'), 
+					function(){
+						$('#sccpPhone').modal('show');
+						$('#sccpPhoneModalForm').on('submit', function( event ) {
+							event.preventDefault();
+							 
+							var data = jQuery('#sccpPhoneModalForm').serializeObject()
+																
+							$.ajax({
+								type: 'PUT',
+								url: "/cme/routers/phone/sccp",
+								datatype:'json',
+								contentType: "application/json",
+								data: JSON.stringify(data),
+								
+								}).done(function(data) {
+									sccpdevicestable.draw();
+									$('#sccpPhone').modal("hide");
+								});
+							return false;
+							
+						});
+					}
+				);	
+				return false;
+		    })
+		
+				
+		var sipdevicestable = $('#sipdevicestable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	    	"serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/cme/routers/ajax/serverside/"+[[${cmeRouter.id}]]+"/cmesipdevices.json",
+	        },
+	                
+	    	"columns": [
+	    	            { "data": "name" },
+	    	            { "data": "customSipDevice.phoneType" },
+	    	            { "data": "lines" },
+	    	            { "data": "customSipDevice.enable" },
+	    	            { "data": "lines.extension.customSipExtension.number" },
+	    	            { "data": "lines.extension.customSipExtension.externalPhoneNumberMask" },
+	    	            { "data": "customSipDevice.user.name" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": true,
+	    			"orderable": true,
+	    			"targets": [0]
+				},
+				{
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            							
+		     	 		var sipPhoneModal = '<a class="updateSipPhone" href="/cme/routers/phone/sip/'+data+'" data-sip-phone='+data+' data-toggle="tooltip" title="'+[[#{ui.messages.table.phonebook}]]+'" data-original-title="'+[[#{ui.messages.table.phonebook}]]+'"> \
+							<i class="glyphicon glyphicon-wrench"></i></a>'						
+		     	 		return "<center>"+sipPhoneModal+"</center>";
+	           		}
+	           	},
+	           	{
+	           		"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "user",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.lines.forEach(function(entry){
+		           			if(entry.extension.customSipExtension.enable){
+		           				if(entry.extension.customSipExtension.label!=null && entry.extension.customSipExtension.label.length>0){
+		           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customSipExtension.label+"<br>";
+		           				} else if(data!=undefined){
+		           					returnStatement=returnStatement+entry.lineId+". "+data+"<br>";
+		           				}	
+		           					
+		           			}	
+		           		});
+	           			return returnStatement;
+					}
+	           	},
+	           	{
+	           		"targets": [-3],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "externalPhoneNumberMask",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.lines.forEach(function(entry){
+	           				if(entry.extension.customSipExtension.enable & (entry.extension.customSipExtension.externalPhoneNumberMask != null && entry.extension.customSipExtension.externalPhoneNumberMask.length>0)){
+	           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customSipExtension.externalPhoneNumberMask+"<br>";
+	           				}	
+	           			});
+	           			return returnStatement.substring(0,returnStatement.length-4);
+					}
+	           	},
+	           	{
+	           		"targets": [-4],
+		         	"searchable": true,
+	    			"orderable": false,
+		            "data": "extension.customSipExtension.number",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			full.lines.forEach(function(entry){
+	           				if(entry.extension.customSipExtension.enable && (entry.extension.customSipExtension.number != null && entry.extension.customSipExtension.number.length>0)){
+	           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customSipExtension.number+"<br>";
+	           				}	
+	           			});
+	           			return returnStatement.substring(0,returnStatement.length-4);
+	           		}
+	           	},
+	           	{
+	           		"targets": [-5],
+		         	"searchable": true,
+	    			"orderable": false,
+		            "data": "customDevice.enable",
+	           		"render": function (data, type, full, meta) {
+	           			return (data ? "Да" : "Нет");
+	           		}
+	           	},
+	           	
+	           	
+	           	
+	           	{
+	           		"targets": [-6],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "lines",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			data.forEach(function(entry){
+	           				returnStatement=returnStatement+entry.lineId+". "+entry.extension.number+"<br>";
+	           			});
+	           			return returnStatement.substring(0,returnStatement.length-4);
+	           		}
+	           	},
+	           	{
+	           		"targets": [-7],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "phoneType",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement="";
+	           			
+	           			if(data!=undefined){
+	           				returnStatement = full.customSipDevice.phoneTypeLocalized;
+	           			}
+	           			return returnStatement;
+						
+	           		}
+	           	},
+	        ]
+	    });
+	
+	
+		sipdevicestable.on('click','a.updateSipPhone',function() {
+		 	var sipPhoneId=jQuery(this).data('sip-phone');
+			$('#sipPhoneModalContentWrapper').load(
+				jQuery(this).attr('href'), 
+				function(){
+					$('#sipPhone').modal('show');
+					$('#sipPhoneModalForm').on('submit', function( event ) {
+						event.preventDefault();
+						 
+						var data = jQuery('#sipPhoneModalForm').serializeObject()
+															
+						$.ajax({
+							type: 'PUT',
+							url: "/cme/routers/phone/sip",
+							datatype:'json',
+							contentType: "application/json",
+							data: JSON.stringify(data),
+							
+							}).done(function(data) {
+								sipdevicestable.draw();
+								$('#sipPhone').modal("hide");
+							});
+						return false;
+						
+					});
+				}
+			);	
+			return false;
+	    })
+	
+	});
+	/*]]>*/
+	</script>
+
+</body>
+</html>

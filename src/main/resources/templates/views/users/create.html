@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragment/header :: headerFragment" />
+<!-- <div ddl:bundle-includes="select2,users-form" />  -->
+
+<body>
+<div id="wrapper">
+	<!-- Header -->
+	<div th:replace="fragment/header :: navbar_alt" > </div>
+		
+	<br/>
+	<div id="page-wrapper">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/users/index.html"><th:block th:text="#{breadcrumbs.users}" /></a></li>
+				<li class="active"><th:block th:text="#{breadcrumbs.users.create}" /></li>
+			</ol>
+		</div> 
+		<div class="row">
+			
+			<form action="#" th:action="@{/users/create}" th:object="${user}" th:method="POST" method="POST" class="well form">
+				<head th:replace="users/form :: userFormContent" />			
+			</form>
+		</div>
+	</div>
+</div>
+
+<div th:replace="fragment/header :: scripts" > </div>
+<script src="/static/assets/views/users/js/form.js" th:href="@{/static/assets/views/users/js/form.js}" > </script>
+
+</body>
+</html>

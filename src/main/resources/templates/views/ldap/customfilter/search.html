@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<div th:fragment="ldapcustomfilter_search_form" class="col-lg-12">
+		
+		<a class="search-button" href="#" th:text="#{ldapcustomfilter.form.search.message}">Extended search</a>
+		
+		<div th:object="${ldapCustomFilter}" class="search-form" style="display: none;">
+			<form action="#" th:action="@{/ldap/customfilter/search}" th:object="${ldapCustomFilter}" th:method="GET" method="GET" id="ldapcustomfilter-search-form" class="well-search form">
+								
+				<div	class="form-group">
+					<label 	class="control-label"
+							for="id" 
+							th:text="#{ldapcustomfilter.field.name}"> 
+					</label>
+			
+					<select th:field="*{id}" 
+							class="select2-chosen" 
+							multiple="multiple">
+							
+							<option th:each="data : ${ldapCustomFilterAll}" 
+	        						th:value="${data.id}" 
+	          						th:text="${data.name}">
+	          				</option>
+					</select>
+				</div>
+				
+				<div class="form-actions">
+					<button id="doSearch" class="btn btn-primary" name="doSearch" type="submit" th:text="#{ldapcustomfilter.searchform.button.search}">Search</button>
+				</div>
+			</form>
+		</div>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			    $(document).ready(function() {
+					$('.search-button').click(function(){
+						$('.search-form').toggle();
+						return false;
+					});
+				
+					jQuery(function($) {
+			    		jQuery('#id').select2({
+			    			allowClear:true,
+			    			width:'100%', 
+			    			minimumInputLength:'2', 
+			    			language: [[${#locale.language}]], 
+			    			placeholder: [[#{ldapcustomfilter.searchform.searchfield.placeholder.name}]],
+			    			ajax: {
+			    				delay: 500,
+			    				url: function (params) {
+			    					return '/ldap/customfilter/search';
+			    				},
+			    				data: function (params) {
+			    					var queryParameters = {
+			    					 	searchString: params.term
+			    					}
+			    					return queryParameters;
+			    				},
+			    				processResults: function (data) {
+			    					return {
+			    						results: data
+			    					};
+			    				},
+			    				
+			    				
+			    			}
+			    		
+			    		});
+			    	});
+			    });	
+			/*]]>*/
+		</script>
+	</div>
+</html>

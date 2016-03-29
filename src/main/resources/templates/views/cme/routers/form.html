@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+				<div th:fragment="cmeRouterFormContent" id="cmeRouterFormContent" class="row">
+			    	<div class="col-lg-12">
+			    		<fieldset>
+							<legend>
+								<h1><th:block th:text="${cmeRouter.isNew()} ? #{cmerouters.title.create} : #{cmerouters.title.update}" /></h1>
+								<p class="note"><th:block th:text="#{field.required.start}" />	<span class="required" style="color:red">*</span>	<th:block th:text="#{field.required.end}" /></p>
+								
+								<!-- Errors alerts field -->					
+								<div class="alert alert-block alert-danger" th:if="${#fields.hasErrors('*')}"><p th:text="#{field.validation.error.global.message}" >Please fix the following input errors:</p>
+									<ul>
+		    							<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+			        						<span th:text="${e.global}? '*' : #{field}+' \''+#{cmerouters.field+'.'+${e.fieldName}} +'\''">The field name</span> 
+			        						<span th:text="#{${e.message}}">The error message</span>
+		    							</li>
+									</ul>
+								</div>
+							</legend>
+							
+							<input type="hidden" th:field="*{id}" />
+							
+							<div th:include="fragment/fielddefinition :: textFormField('name',true, text, 'cmerouters.field')">Name</div>
+							<div th:include="fragment/fielddefinition :: textFormField('description',false, text, 'cmerouters.field')">Description</div>
+							<div th:include="fragment/fielddefinition :: textFormField('ipAddress',true, text, 'cmerouters.field')">IP Address</div>
+							<div th:include="fragment/fielddefinition :: textFormField('username',true, text, 'cmerouters.field')">Username</div>
+							<div th:include="fragment/fielddefinition :: textFormField('password',true, password, 'cmerouters.field')">Password</div>
+														
+							<!-- LOCATION FIELD -->
+							<div	class="form-group" 
+									th:classappend="${#fields.hasErrors('location')}? 'has-error'">
+									<label 	class="control-label"
+											th:classappend="${true} ? 'required'"
+											th:class="${#fields.hasErrors('location')}? 'control-label error' : 'control-label'" 
+											for="location" 
+											th:inline="text">[[#{cmerouters.field.location}]] <span th:if="${true}" class="required" style="color:red">*</span>
+									</label>
+												
+									<select th:field="*{location}">
+											<option value="">Не задан</option>
+											<option th:each="data : ${locationsAll}" 
+													th:value="${data.id}" 
+													th:text="${data.name}">
+											</option>
+									</select>
+												
+									<div th:if="${#fields.hasErrors('location')}" class="help-block error">
+										<ul>
+											<li th:each="err : ${#fields.errors('location')}" th:text="#{${err}}" />
+										</ul>
+									</div> 
+												
+									<script th:inline="javascript">
+									/*<![CDATA[*/
+										jQuery(function($) {
+											var locationSelect = jQuery('#location');
+											locationSelect.select2({ 
+												'allowClear':true,
+												'width':'100%', 
+												'placeholder':[[#{cmerouters.field.location}]] 
+											});
+											//var $option = $("<option selected></option>").val([[${cmeRouter.isNew()} ? '': (${cmeRouter.location!=null} ? ${cmeRouter.location.id} : '')]]).text([[${cmeRouter.isNew()} ? '': (${cmeRouter.location!=null} ? ${cmeRouter.location.name} : '')]]);
+											locationSelect.val([[${cmeRouter.isNew()} ? '': (${cmeRouter.location!=null} ? ${cmeRouter.location.id} : '')]]).trigger('change');
+										});  
+									/*]]>*/
+									</script> 
+							</div>
+							<!-- LOCATION FIELD END-->
+										
+						</fieldset>
+						<div class="form-actions">
+            				<button class="btn btn-primary" type="submit" th:text="${cmeRouter.isNew()} ? #{cmerouters.form.button.create.submit} : #{cmerouters.form.button.update.submit}">Submit</button>
+            				<button class="btn btn-default" type="reset" th:text="#{cmerouters.form.button.reset}">Reset</button>
+            			</div>	
+					</div>
+				</div>	
+</html>	

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+	<div th:fragment="ldapAuthParamsFormContent" id="ldapAuthParamsFormContent" class="row">
+		<div class="col-lg-12">
+			<fieldset>
+				<legend>
+					<h1 class="page-header" th:text="#{ldap.authentication.index.title}">LDAP authentication</h1>
+					<p class="note"><th:block th:text="#{field.required.start}" />	<span class="required" style="color:red">*</span>	<th:block th:text="#{field.required.end}" /></p>
+								
+					<!-- Errors alerts field -->					
+					<div class="alert alert-block alert-danger" th:if="${#fields.hasErrors('*')}"><p th:text="#{field.validation.error.global.message}" >Please fix the following input errors:</p>
+						<ul>
+							<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+								<span th:text="${e.global}? '*' : #{field}+' \''+#{ldapAuthenticationParameters.field+'.'+${e.fieldName.replaceAll('\[\d+\]','')}} +'\''">The field name</span>
+								<span th:text="#{${e.message}}">The error message</span>
+		    				</li>
+						</ul>
+					</div>  
+				</legend>
+				<input type="hidden" th:field="*{id}" />
+				<div th:include="fragment/fielddefinition :: checkboxFormField('active', 'ldapAuthenticationParameters.field')">Active</div>
+				<div th:include="fragment/fielddefinition :: textFormField('distinguishedName',true, text, 'ldapAuthenticationParameters.field')">Distinguished name</div>	
+				<div th:include="fragment/fielddefinition :: textFormField('password',true, password, 'ldapAuthenticationParameters.field')">Password</div>
+				<div th:include="fragment/fielddefinition :: textFormField('passwordConfirm',true, password, 'ldapAuthenticationParameters.field')">Password Confirm</div>
+				<div th:include="fragment/fielddefinition :: textFormField('searchBase',true, text, 'ldapAuthenticationParameters.field')">Search Base</div>
+						
+				<!-- <head th:replace="ldap/authentication/ldapAuthServers :: ldapAuthServersContent" />-->
+				
+				<div id="ldapAuthServersContent" class="ldapAuthServerPart">			
+					<div class="panel panel-default" th:fragment="ldapAuthServersContent">
+					<form th:object="${ldapAuthParams}">
+						<div class="panel-heading" th:text="#{ldapAuthenticationServers.form.tab.header}"> Servers </div>
+						<div class="panel-body">
+							
+							<div class="table-responsive">
+								<table class="table" width="100%">
+									<thead>
+										<tr>
+											<th></th>
+											<th th:utext="#{ldapAuthenticationServers.field.host}+' &lt;span class=\'required\' style=\'color:red\'&gt;*&lt;/span&gt;'">Server *</th>
+											<th th:utext="#{ldapAuthenticationServers.field.port}+' &lt;span class=\'required\' style=\'color:red\'&gt;*&lt;/span&gt;'">Port *</th>
+											<th th:utext="#{ldapAuthenticationServers.field.useSSL}">Use SSL</th>
+										</tr>	
+									</thead>
+									<tbody>
+										<tr th:each="row,rowStat : *{ldapServers}">
+		      								<!--  <td th:text="${rowStat.count}">1</td>-->
+		      								<td>
+		        								<button th:if="${rowStat.index}!=0" class="btn btn-default remove-server" type="button" name="removeServer" th:value="${rowStat.index}" th:text="#{ldapAuthenticationServers.form.button.delserver}" >Remove row</button>
+		      								</td>
+		      								<td>
+		        								<div th:include="fragment/fielddefinition :: textFormFieldWithoutLabel('ldapServers[__${rowStat.index}__].host', 'host', text, 'ldapAuthenticationServers.field')">Host</div>
+		      								</td>
+		      								<td>
+		      									<div th:include="fragment/fielddefinition :: textFormFieldWithoutLabel('ldapServers[__${rowStat.index}__].port', 'port', text, 'ldapAuthenticationServers.field')">Host</div>
+		      								</td>
+		      								<td>
+		      									<div th:include="fragment/fielddefinition :: checkboxFormFieldInline('ldapServers[__${rowStat.index}__].useSSL', 'useSSL', 'ldapAuthenticationServers.field')">Active</div>
+		      								</td>
+		      							</tr>
+		  								<tr>
+											<td colspan="4">
+												<button id="addserver" class="btn btn-default add-server" type="button" th:text="#{ldapAuthenticationServers.form.button.addserver}">Add redundant LDAP server</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</fieldset>
+			<div class="form-actions">
+            	<button class="btn btn-primary" type="submit" th:text="#{user.form.button.update.submit}">Submit</button>
+            	<button class="btn btn-default" type="reset" th:text="#{user.form.button.reset}">Reset</button>
+            </div>
+		</div>	
+	</div>
+</html>	

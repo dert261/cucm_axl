@@ -1,0 +1,7 @@
+target/
+config/
+libraries/
+logs/
+operations/
+upload/
+certs/

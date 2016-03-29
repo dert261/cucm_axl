@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="headerFragment">
+    <title>Обелиск</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="shortcut icon" href="/static/assets/my/img/phoneicon.png" th:href="@{/static/assets/my/img/phoneicon.png}" type="image/x-icon" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ 	<link rel="stylesheet" href="/static/assets/bootstrap-table-master/dist/bootstrap-table.min.css" media="screen" th:href="@{/static/assets/bootstrap-table-master/dist/bootstrap-table.min.css}" />
+	<link rel="stylesheet" src="/static/assets/startbootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css" th:href="@{/static/assets/startbootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	<link rel="stylesheet" src="/static/assets/startbootstrap/dist/css/timeline.css" th:href="@{/static/assets/startbootstrap/dist/css/timeline.css}" />
+	<link rel="stylesheet" src="/static/assets/startbootstrap/dist/css/sb-admin-2.css" th:href="@{/static/assets/startbootstrap/dist/css/sb-admin-2.css}" />
+	<link rel="stylesheet" src="/static/assets/startbootstrap/bower_components/morrisjs/morris.css" th:href="@{/static/assets/startbootstrap/bower_components/morrisjs/morris.css}" />
+	<link rel="stylesheet" src="/static/assets/font-awesome/4.4.0/css/font-awesome.min.css" th:href="@{/static/assets/font-awesome/4.4.0/css/font-awesome.min.css}" />
+	<link rel="stylesheet" src="/static/assets/extensions/bootstrap-timepicker/css/bootstrap-timepicker.min.css" th:href="@{/static/assets/extensions/bootstrap-timepicker/css/bootstrap-timepicker.min.css}" />
+	<link rel="stylesheet" src="/static/assets/extensions/bootstrap-datetimepicker-4.17.37/css/bootstrap-datetimepicker.min.css" th:href="@{/static/assets/extensions/bootstrap-datetimepicker-4.17.37/css/bootstrap-datetimepicker.min.css}" />
+	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/integr/css/datatables.min.css" th:href="@{/static/assets/data-tables-1.10.6/integr/css/datatables.min.css}" />
+	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/css/select.dataTables.min.css" th:href="@{/static/assets/data-tables-1.10.6/css/select.dataTables.min.css}" />
+	<link rel="stylesheet" src="/static/assets/select2/4.0.1/css/select2.css" th:href="@{/static/assets/select2/4.0.1/css/select2.css}" />
+	<link rel="stylesheet" src="/static/assets/metisMenu/2.0.1/metisMenu.min.css" th:href="@{/static/assets/metisMenu/2.0.1/metisMenu.min.css}" />
+	<script src="/static/assets/jquery-1.11.2.min.js" th:href="@{/static/assets/jquery-1.11.2.min.js}" > </script>  
+</head>
+
+<head th:fragment="headerFragmentError">
+    <title>Обелиск</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="shortcut icon" href="/static/assets/my/img/phoneicon.png" th:href="@{/static/assets/my/img/phoneicon.png}" type="image/x-icon" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ 	<link rel="stylesheet" src="/static/assets/startbootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css" th:href="@{/static/assets/startbootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	<link rel="stylesheet" src="/static/assets/startbootstrap/dist/css/timeline.css" th:href="@{/static/assets/startbootstrap/dist/css/timeline.css}" />
+	<link rel="stylesheet" src="/static/assets/startbootstrap/dist/css/sb-admin-2.css" th:href="@{/static/assets/startbootstrap/dist/css/sb-admin-2.css}" />
+	<link rel="stylesheet" src="/static/assets/startbootstrap/bower_components/morrisjs/morris.css" th:href="@{/static/assets/startbootstrap/bower_components/morrisjs/morris.css}" />
+	<link rel="stylesheet" src="/static/assets/font-awesome/4.4.0/css/font-awesome.min.css" th:href="@{/static/assets/font-awesome/4.4.0/css/font-awesome.min.css}" />
+	<script src="/static/assets/jquery-1.11.2.min.js" th:href="@{/static/assets/jquery-1.11.2.min.js}" > </script>  
+	<link rel="stylesheet" src="/static/assets/metisMenu/2.0.1/metisMenu.min.css" th:href="@{/static/assets/metisMenu/2.0.1/metisMenu.min.css}" />
+</head>
+
+<body>
+<!-- Alternate Navbar -->
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" th:fragment="navbar_alt">
+        	<div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/" th:text="#{header.top.title}">Obelisk</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                
+                <li class="dropdown">
+                    <a 	class="dropdown-toggle" 
+                    	data-toggle="dropdown" 
+                    	href="#"
+                    	th:utext="'&lt;i class=\'fa fa-user fa-fw\'&gt;&lt;/i&gt; '+(${myuser} ? ${myuser.fname}+' '+${myuser.lname})+' &lt;i class=\'fa fa-caret-down\'&gt;&lt;/i&gt;'">
+                    		<i class="fa fa-user fa-fw"></i> User <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                    	<li>
+                        	<a href="/login.html" th:utext="'&lt;i class=\'fa fa-sign-out fa-fw\'&gt;&lt;/i&gt; '+#{header.top.logout}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+			
+			
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                       	
+                        <li>
+                            <a href="#" th:utext="'&lt;i class=\'fa fa-cog fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>Settings<span class="fa arrow"></span></a>
+	                        <ul class="nav nav-second-level">
+	                        	<li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+	                        		<a href="/users/" th:utext="'&lt;i class=\'fa fa-users fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.users}">Users</a>
+	                            </li>
+	                            <li sec:authorize="hasRole('ROLE_ADMIN')">
+	                        		<a href="#" th:utext="'&lt;i class=\'fa fa-hdd-o  fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.ldap}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>LDAP<span class="fa arrow"></span></a> 
+	                        		<ul class="nav nav-third-level">
+	                        			<li>
+	                        				<a href="/ldap/dirsync/" th:utext="'&lt;i class=\'fa fa-key fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.ldap.dirsync}">LDAP DirSync</a>
+	                        			</li>
+	                        			<li>
+	                        				<a href="/ldap/customfilter/" th:utext="'&lt;i class=\'fa fa-filter fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.ldap.customfilter}">LDAP Custom Filter</a>
+	                        			</li>
+	                        			
+	                        		</ul>
+	                        	</li>
+	                        	
+	                        	<li sec:authorize="hasRole('ROLE_ADMIN')">
+			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-cloud fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cucmaxl}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>LDAP<span class="fa arrow"></span></a> 
+			                    	<ul class="nav nav-third-level">
+				                		<li>	
+				                    		<a href="/cucmaxl/port/" th:utext="'&lt;i class=\'fa fa-plug fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cucmaxl.port}">CUCM AXL Port</a>
+				                    	</li>
+				                    	<li>
+	                        				<a href="/cucmaxl/partitionfilter/" th:utext="'&lt;i class=\'fa fa-filter fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cucmaxl.partitionfilter}">CUCM Partition Filter</a>
+	                        			</li>
+				                    </ul>	
+				                </li>
+				                        
+				                <li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-cubes fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cme}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>LDAP<span class="fa arrow"></span></a> 
+			                    	<ul class="nav nav-third-level">
+				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
+				                    		<a href="/cme/locations/" th:utext="'&lt;i class=\'fa fa-map-marker fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cme.locations}">CME Locations</a>
+				                    	</li>
+				                    	<li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+			                        		<a href="/cme/routers/" th:utext="'&lt;i class=\'fa fa-server fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cme.routers}">CME Routers</a>
+			                            </li>
+			                        </ul>	
+				                </li>
+				                        
+				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			                    	<a href="/uploads/" th:utext="'&lt;i class=\'fa fa-cloud-upload fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.uploadfile}">Uploaded files</a>
+				                </li>
+				                
+				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			                    	<a href="/extends/" th:utext="'&lt;i class=\'fa fa-briefcase fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.extends}">Extends</a>
+				                </li>
+				                
+				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			                    	<a href="/jobs/" th:utext="'&lt;i class=\'fa fa-random fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.jobs}">Jobs</a>
+				                </li>
+				                 
+				            </ul>
+                        </li>
+                    </ul> 
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+<footer id="footer" th:fragment="footer">
+	<!-- <div id="footer" th:fragment="footer"> -->
+		Copyright &copy; 2015 by Obelisk Inc.<br/>
+		All Rights Reserved.<br/>
+	<!--  </div> -->
+</footer>
+<div th:fragment="scripts">	
+  	<script src="/static/assets/data-tables-1.10.6/integr/js/datatables.min.js" th:src="@{/static/assets/data-tables-1.10.6/integr/js/datatables.min.js}" > </script>
+  	<script src="/static/assets/data-tables-1.10.6/js/dataTables.select.min.js" th:src="@{/static/assets/data-tables-1.10.6/js/dataTables.select.min.js}" > </script> 
+  	<script src="/static/assets/metisMenu/2.0.1/metisMenu.min.js" th:src="@{/static/assets/metisMenu/2.0.1/metisMenu.min.js}" > </script>
+	<script src="/static/assets/select2/4.0.1/js/select2.full.min.js" th:src="@{/static/assets/select2/4.0.1/js/select2.full.min.js}" > </script>
+	<script th:src="@{/static/assets/select2/4.0.1/js/i18n/__${#locale.language}__.js}" > </script>
+	<script src="/static/assets/extensions/masked-input/jquery.maskedinput.min.js" th:src="@{/static/assets/extensions/masked-input/jquery.maskedinput.min.js}" > </script>
+	<script src="/static/assets/bootstrap/js/bootstrap.min.js" th:src="@{/static/assets/bootstrap/js/bootstrap.min.js}" > </script> 
+	<script src="/static/assets/extensions/spin.min.js" th:src="@{/static/assets/extensions/spin.min.js}" > </script>
+	<script src="/static/assets/extensions/jquery.spin.js" th:src="@{/static/assets/extensions/jquery.spin.js}" > </script>
+	<script src="/static/assets/bootstrap-table-master/dist/bootstrap-table.min.js" th:src="@{/static/assets/bootstrap-table-master/dist/bootstrap-table.min.js}" > </script> 
+	<script src="/static/assets/bootstrap-table-master/dist/locale/bootstrap-table-ru-RU.min.js" th:src="@{/static/assets/bootstrap-table-master/dist/locale/bootstrap-table-ru-RU.min.js}" ></script>
+	<script src="/static/assets/bootstrap-table-master/dist/extensions/export/bootstrap-table-export.min.js" th:src="@{/static/assets/bootstrap-table-master/dist/extensions/export/bootstrap-table-export.min.js}"></script>
+	<script src="/static/assets/bootstrap-table-master/dist/extensions/filter/bootstrap-table-filter.min.js" th:src="@{/static/assets/bootstrap-table-master/dist/extensions/filter/bootstrap-table-filter.min.js}"></script>
+	<script src="/static/assets/tableExport.jquery.plugin-master/jquery.base64.js" th:src="@{/static/assets/tableExport.jquery.plugin-master/jquery.base64.js}" > </script>
+	<script src="/static/assets/tableExport.jquery.plugin-master/tableExport.js" th:src="@{/static/assets/tableExport.jquery.plugin-master/tableExport.js}" > </script>
+	<script src="/static/assets/bootstrap-table-filter-master/src/bootstrap-table-filter.js" th:src="@{/static/assets/bootstrap-table-filter-master/src/bootstrap-table-filter.js}" ></script>
+	<script src="/static/assets/my/my.js" th:src="@{/static/assets/my/my.js}" > </script>
+	<script src="/static/assets/extensions/bootstrap-timepicker/js/bootstrap-timepicker.js" th:src="@{/static/assets/extensions/bootstrap-timepicker/js/bootstrap-timepicker.js}" > </script>
+	<script src="/static/assets/moment-with-locales.js" th:src="@{/static/assets/moment-with-locales.js}" > </script>
+	<script src="/static/assets/extensions/bootstrap-datetimepicker-4.17.37/js/bootstrap-datetimepicker.min.js" th:src="@{/static/assets/extensions/bootstrap-datetimepicker-4.17.37/js/bootstrap-datetimepicker.min.js}" > </script>
+	<script src="/static/assets/startbootstrap/bower_components/raphael/raphael-min.js" th:src="@{/static/assets/startbootstrap/bower_components/raphael/raphael-min.js}" > </script>
+	<script src="/static/assets/startbootstrap/dist/js/sb-admin-2.js" th:src="@{/static/assets/startbootstrap/dist/js/sb-admin-2.js}" > </script>
+</div>	
+
+<div th:fragment="scriptsError">	
+	<script src="/static/assets/metisMenu/2.0.1/metisMenu.min.js" th:src="@{/static/assets/metisMenu/2.0.1/metisMenu.min.js}" > </script>
+	<script src="/static/assets/bootstrap/js/bootstrap.min.js" th:src="@{/static/assets/bootstrap/js/bootstrap.min.js}" > </script> 
+	<script src="/static/assets/startbootstrap/bower_components/raphael/raphael-min.js" th:src="@{/static/assets/startbootstrap/bower_components/raphael/raphael-min.js}" > </script>
+	<script src="/static/assets/startbootstrap/dist/js/sb-admin-2.js" th:src="@{/static/assets/startbootstrap/dist/js/sb-admin-2.js}" > </script>
+	<script src="/static/assets/moment-with-locales.js" th:src="@{/static/assets/moment-with-locales.js}" > </script>
+</div>	
+	
+</body>
+</html>

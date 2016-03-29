@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+<body>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.ldapdirsync}">LDAP DirSync</li>
+				</ol>
+				<div class="col-lg-12">
+					<a href="/ldap/dirsync/create" th:text="#{breadcrumbs.ldapdirsync.create}">Create</a>
+				</div>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{ldapdirsync.ui.messages.index.title}">Ldap Dir Sync</h1>
+					
+				</div>
+				<div th:replace="ldap/dirsync/search :: ldapdirsync_search_form" > </div>
+			</div>
+			
+			 <div class="row">
+			 	<table id="ldapdirsynctable" class="display" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{ldapdirsync.field.sequence}">№ п/п</th>
+			                <th th:text="#{ldapdirsync.field.configName}">Configuration name</th>
+			                <th th:text="#{ldapdirsync.field.fqdnName}">FQDN Name</th>
+			                <th th:text="#{ldapdirsync.field.distinguishedName}">Distinguished Name</th>
+			                <th th:text="#{ldapdirsync.field.searchBase}">Role</th>
+			                <th th:text="#{user.field.actions}">Actions</th>
+			                
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{ldapdirsync.field.sequence}">№ п/п</th>
+			                <th th:text="#{ldapdirsync.field.configName}">Configuration name</th>
+			                <th th:text="#{ldapdirsync.field.fqdnName}">FQDN Name</th>
+			                <th th:text="#{ldapdirsync.field.distinguishedName}">Distinguished Name</th>
+			                <th th:text="#{ldapdirsync.field.searchBase}">Role</th>
+			                <th th:text="#{user.field.actions}">Actions</th>
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		var myTable = $('#ldapdirsynctable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/ldap/dirsync/ajax/serverside/ldapdirsyncdata.json",
+	        	"data": function ( d ) {
+	            	return $.extend( {}, d, {
+	                    "extra_search[id]": $('#id').val()!=undefined ? $('#id').val() : "null",
+	    
+	                });
+	            }
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "configName" },
+	    	            { "data": "fqdnName" },
+	    	            { "data": "distinguishedName" },
+	    	            { "data": "searchBase" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	var updateField = '<a class="update" href="/ldap/dirsync/update/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.edit}]]+'" data-original-title="'+[[#{ui.messages.table.edit}]]+'"> \
+		     	 								<i class="glyphicon glyphicon-pencil"></i></a>';
+		     	 		var deleteField = '<a class="delete" href="/ldap/dirsync/delete" data-delete="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.delete}]]+'" data-original-title="'+[[#{ui.messages.table.delete}]]+'"> \
+		         								<i class="glyphicon glyphicon-trash"></i> </a>';
+		         		var resync = '<a class="resync-base" href="/ldap/dirsync/resync" data-resync="'+data+'" data-toggle="tooltip" title="'+[[#{ldapdirsync.title.resync}]]+'" data-original-title="'+[[#{ldapdirsync.title.resync}]]+'"> \
+		         								<i class="glyphicon glyphicon-refresh"></i> </a>';
+		         		var downloadPhoneBook = '<a class="download-dir" href="/downloads/downloaddir/'+data+'" data-toggle="tooltip" title="'+[[#{ldapdirsync.title.downloadphonebook}]]+'" data-original-title="'+[[#{ldapdirsync.title.downloadphonebook}]]+'"> \
+		         								<i class="glyphicon glyphicon-download-alt"></i> </a>';
+			            return "<center>"+downloadPhoneBook+"&nbsp;&nbsp;&nbsp;"+resync+"&nbsp;&nbsp;&nbsp;"+updateField+"&nbsp;&nbsp;&nbsp;"+deleteField+"</center>";
+	           		}
+	           	}
+	        ]
+	    });
+		
+	    myTable.on('click','a.delete',function() {
+			if(!confirm([[#{ui.messages.table.delete.ldapdirsync.confirmation}]])) return false;
+			
+			var deletedRow = myTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-delete'),
+					_method: 'DELETE'
+				}),
+				}).done(function() {
+					deletedRow
+				        .remove()
+				        .draw(false);
+			});
+				
+			return false;
+	    })
+	    
+	    //Handle for reinit db button 
+	    myTable.on('click','a.resync-base',function() {
+			if(!confirm([[#{ui.messages.table.resync.ldapdirsync.confirmation}]])) return false;
+					
+			$.ajax({
+				type: 'GET',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-resync'),
+					_method: 'GET'
+				}),
+				}).done(function() {
+					
+			});
+				
+			return false;
+	    })
+	    
+	    	    
+	    $('#ldapdirsync-search-form').submit(function(){
+	      	myTable.draw();
+			return false;
+		});
+	    
+	 
+	});
+	
+	/*]]>*/
+	</script>
+
+</body>
+</html>

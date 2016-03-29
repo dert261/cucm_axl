@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+<body>
+<div id="wrapper">
+	<!-- Header -->
+	<div th:replace="fragment/header :: navbar_alt" > </div>
+		
+	<br/>
+	<div id="page-wrapper">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li class="active" th:text="#{breadcrumbs.ldap.authentication}">LDAP authentication</li>
+			</ol>
+		</div>
+		<div class="row">
+			<form action="#" th:action="@{/ldap/authentication/index.html}" th:object="${ldapAuthParams}" id="ldapAuthParams" th:method="PUT" method="PUT" class="well form">
+				<div th:replace="ldap/authentication/form :: ldapAuthParamsFormContent" />
+			</form>
+		</div>
+	</div>
+</div>
+
+<div th:replace="fragment/header :: scripts" > </div>
+<script src="/static/assets/views/ldap/authentication/js/form.js" th:href="@{/static/assets/views/ldap/authentication/js/form.js}"> </script>
+<script type="text/javascript" th:inline="javascript">
+	var operationStatus=[[${#vars['operationResult']}]];
+	if(operationStatus!=null)
+		alert(operationStatus);
+
+	$('.ldapAuthServerPart').on('click', '.add-server', function (){
+		
+		if($('.remove-server').size() > 1){
+			alert([[#{ldapAuthenticationServers.form.addserver.exception}]]);
+			return false;
+		}	
+		
+		$.ajax({
+			type: 'GET',
+			url: "/ldap/authentication/ajax/addserver?"+$('#ldapAuthParams').serialize(),
+		}).done(function(result) {
+			$('#ldapAuthServersContent').html(result);
+		});
+				
+		return false;
+	});
+	
+	$('.ldapAuthServerPart').on('click', '.remove-server', function (){
+		$.ajax({
+			type: 'GET',
+			url: "/ldap/authentication/ajax/delserver?"+$('#ldapAuthParams').serialize(),
+			data: ({
+				index: $(this).val(),
+			}),
+		}).done(function(result) {
+			$('#ldapAuthServersContent').html(result);
+		});
+				
+		return false;
+	});
+</script>
+
+</body>
+</html>

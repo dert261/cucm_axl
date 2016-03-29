@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<div th:fragment="ldapdirsync_search_form" class="col-lg-12">
+		
+		<a class="search-button" href="#" th:text="#{ldapdirsync.form.search.message}">Extended search</a>
+		
+		<div th:object="${ldapDirSyncParams}" class="search-form" style="display: none;">
+			<form action="#" th:action="@{/ldap/dirsync/search}" th:object="${ldapDirSyncParams}" th:method="GET" method="GET" id="ldapdirsync-search-form" class="well-search form">
+								
+				<div	class="form-group">
+					<label 	class="control-label"
+							for="id" 
+							th:text="#{ldapdirsync.field.configName}"> 
+					</label>
+			
+					<select th:field="*{id}" 
+							class="select2-chosen" 
+							multiple="multiple">
+							
+							<option th:each="data : ${ldapDirSyncParamsAll}" 
+	        						th:value="${data.id}" 
+	          						th:text="${data.configName}">
+	          				</option>
+					</select>
+				</div>
+				
+				<div class="form-actions">
+					<button id="doSearch" class="btn btn-primary" name="doSearch" type="submit" th:text="#{ldapdirsync.searchform.button.search}">Search</button>
+				</div>
+			</form>
+		</div>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			    $(document).ready(function() {
+					$('.search-button').click(function(){
+						$('.search-form').toggle();
+						return false;
+					});
+				
+					jQuery(function($) {
+			    		jQuery('#id').select2({
+			    			allowClear:true,
+			    			width:'100%', 
+			    			minimumInputLength:'2', 
+			    			language: [[${#locale.language}]], 
+			    			placeholder: [[#{ldapdirsync.searchform.searchfield.placeholder.name}]],
+			    			ajax: {
+			    				delay: 500,
+			    				url: function (params) {
+			    					return '/ldap/dirsync/search';
+			    				},
+			    				data: function (params) {
+			    					var queryParameters = {
+			    					 	searchString: params.term
+			    					}
+			    					return queryParameters;
+			    				},
+			    				processResults: function (data) {
+			    					return {
+			    						results: data
+			    					};
+			    				},
+			    				
+			    				
+			    			}
+			    		
+			    		});
+			    	});
+			    });	
+			/*]]>*/
+		</script>
+	</div>
+</html>

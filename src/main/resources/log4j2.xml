@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+	<Configuration status="FATAL" name="web" packages="obelisk" monitorInterval="0">
+	
+	<Properties>
+		<Property name="pathToLogFile">logs/</Property>
+		<Property name="logFileName">cucm_axl.log</Property>
+		<Property name="filename">${pathToLogFile}${logFileName}</Property>
+		<Property name="rollingFilenameProperty">${pathToLogFile}${logFileName}-%d{MM-dd-yyyy}.log.gz</Property>
+	</Properties>
+	
+		<Appenders>
+			<RollingFile name="RollingFile" fileName="${filename}" filePattern="${rollingFilenameProperty}" ignoreExceptions="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+			<TimeBasedTriggeringPolicy />
+			</RollingFile>
+			
+			<Console name="STDOUT" target="SYSTEM_OUT" ignoreExceptions="false">
+				<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+			</Console>
+			
+			<Failover name="Failover" primary="RollingFile">
+				<Failovers>
+					<AppenderRef ref="STDOUT"/>
+				</Failovers>
+			</Failover>	
+		</Appenders>
+		
+		<Loggers>
+			<Root level="INFO">
+				<AppenderRef ref="Failover" />
+			</Root>
+						
+            <logger name="org.hibernate" level="WARN" />
+            <logger name="org.springframework" level="INFO" />
+            <logger name="com.cisco.cme.xml" level="WARN" />
+            
+            
+        </Loggers>
+	</Configuration>

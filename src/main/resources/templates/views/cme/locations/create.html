@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragment/header :: headerFragment" />
+<!-- <div ddl:bundle-includes="select2,users-form" />  -->
+
+<body>
+<div id="wrapper">
+	<!-- Header -->
+	<div th:replace="fragment/header :: navbar_alt" > </div>
+		
+	<br/>
+	<div id="page-wrapper">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/cme/locations/"><th:block th:text="#{breadcrumbs.cmelocations}" /></a></li>
+				<li class="active"><th:block th:text="#{breadcrumbs.cmelocations.create}" /></li>
+			</ol>
+		</div> 
+		<div class="row">
+			
+			<form action="#" th:action="@{/cme/locations/create}" th:object="${cmeLocation}" th:method="POST" method="POST" class="well form">
+				<head th:replace="cme/locations/form :: cmeLocationFormContent" />			
+			</form>
+		</div>
+	</div>
+</div>
+
+<div th:replace="fragment/header :: scripts" > </div>
+<script src="/static/assets/views/cme/locations/js/form.js" th:href="@{/static/assets/views/cme/locations/js/form.js}" > </script>
+
+</body>
+</html>

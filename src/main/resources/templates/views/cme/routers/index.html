@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="exportRouterModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.cmerouters}">Users</li>
+				</ol>
+				<div class="col-lg-12">
+					<a href="/cme/routers/create" th:text="#{breadcrumbs.cmerouters.create}">Create</a>
+				</div>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{cmerouters.ui.messages.index.title}">CME-Routers</h1>
+				</div>
+			</div>
+			
+			 <div class="row">
+			 	<table id="cmerouterstable" class="table" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{cmerouters.field.sequence}">№ п/п</th>
+			                <th th:text="#{cmerouters.field.name}">Name</th>
+			                <th th:text="#{cmerouters.field.description}">Description</th>
+			                <th th:text="#{cmerouters.field.ipAddress}">IP address</th>
+			                <th th:text="#{cmerouters.field.location}">Location</th>
+			                <th th:text="#{cmerouters.field.syncStatus}">Location</th>
+			                <th th:text="#{cmerouters.field.actions}">Actions</th>
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{cmerouters.field.sequence}">№ п/п</th>
+			                <th th:text="#{cmerouters.field.name}">Name</th>
+			                <th th:text="#{cmerouters.field.description}">Description</th>
+			                <th th:text="#{cmerouters.field.ipAddress}">IP address</th>
+			               	<th th:text="#{cmerouters.field.location}">Location</th>
+			                <th th:text="#{cmerouters.field.syncStatus}">SyncStatus</th>
+			                <th th:text="#{cmerouters.field.actions}">Actions</th>
+			                
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var myTable = $('#cmerouterstable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	    	"serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/cme/routers/ajax/serverside/cmerouters.json",
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "name" },
+	    	            { "data": "description" },
+	    	            { "data": "ipAddress" },
+	    	            { "data": "location.name" },
+	    	            { "data": "syncStatus" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	
+		            	var isImportField = /*[[${#authorization.expression("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")}]]*/ false;
+		            	var importField = isImportField && full.syncStatus=="NONSYNC" ? '<a class="import" href="/cme/routers/import" data-import="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.import}]]+'" data-original-title="'+[[#{ui.messages.table.import}]]+'"> \
+												<i class="glyphicon glyphicon-import"></i></a>&nbsp;&nbsp;&nbsp;' : "";
+												
+						var isExportField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+						var exportField = isExportField ? '<a class="export" href="/cme/routers/export/'+data+'" data-export="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.import}]]+'" data-original-title="'+[[#{ui.messages.table.import}]]+'"> \
+												<i class="glyphicon glyphicon-export"></i></a>&nbsp;&nbsp;&nbsp;' : "";						
+						var isViewField = /*[[${#authorization.expression("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")}]]*/ false;						
+		            	var viewField = isViewField && full.sync ? '<a class="view" href="/cme/routers/view/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.view}]]+'" data-original-title="'+[[#{ui.messages.table.view}]]+'"> \
+												<i class="glyphicon glyphicon-eye-open"></i></a>&nbsp;&nbsp;&nbsp;' : '';
+						var isUpdateField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;						
+						var updateField = isUpdateField ? '<a class="update" href="/cme/routers/update/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.edit}]]+'" data-original-title="'+[[#{ui.messages.table.edit}]]+'"> \
+		     	 								<i class="glyphicon glyphicon-pencil"></i></a>' : "";
+		     	 		var isDeleteField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		     	 		var deleteField = isDeleteField ? '<a class="delete" href="/cme/routers/delete" data-delete="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.delete}]]+'" data-original-title="'+[[#{ui.messages.table.delete}]]+'"> \
+		         								<i class="glyphicon glyphicon-trash"></i> </a>' : ""; 	
+		         		return "<center>"+exportField+importField+viewField+updateField+"&nbsp;&nbsp;&nbsp;"+deleteField+"</center>";
+	           		}
+	           	},
+	           	{
+	           		"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "syncState",
+	           		"render": function (data, type, full, meta) {
+	           			var returnStatement = data;
+	           			if(data!="NONSYNC"){
+	           					
+		           			var percent = 0;
+		           			var localizedStatus = "";
+		           			switch(data){
+		           				case "NONSYNC" : 				percent = 0; 	localizedStatus=[[#{'NONSYNC'}]];					break;
+		           				case "SYNC_GLOBAL_STATUS" : 	percent = 20; 	localizedStatus=[[#{'SYNC_GLOBAL_STATUS'}]];		break;
+		           				case "SYNC_SIP_GLOBAL_STATUS" : percent = 40; 	localizedStatus=[[#{'SYNC_SIP_GLOBAL_STATUS'}]];	break;
+		           				case "SYNC_SCCP_EXTENSIONS" : 	percent = 50; 	localizedStatus=[[#{'SYNC_SCCP_EXTENSIONS'}]];		break;
+		           				case "SYNC_SCCP_DEVICES" : 		percent = 60; 	localizedStatus=[[#{'SYNC_SCCP_DEVICES'}]];			break;
+		           				case "SYNC_SIP_EXTENSIONS" :	percent = 70; 	localizedStatus=[[#{'SYNC_SIP_EXTENSIONS'}]];		break;
+		           				case "SYNC_SIP_DEVICES" : 		percent = 80; 	localizedStatus=[[#{'SYNC_SIP_DEVICES'}]];			break;
+		           				case "SYNC_HUNT_GROUPS" : 		percent = 100; 	localizedStatus=[[#{'SYNC_HUNT_GROUPS'}]];			break;
+		           				default : percent = 0; localizedStatus=[[#{'NONSYNC'}]]; break;
+		           			}
+		           				
+		           			var progressBar = '	<span >'+localizedStatus+'</span> \
+		           								<div class="progress"> \
+		           		  							<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="'+percent+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percent+'%"> </div> \
+		           								</div>';
+		           			returnStatement = progressBar;	
+	           			} else {
+	           				returnStatement = [[#{'cmerouters.label.lastUpdateTime'}]]+": "+(full.lastUpdateTime!=null ? full.lastUpdateTime : " --- ");
+	           			}
+	           			return returnStatement;
+	           		}
+	           	}
+	        ]
+	    });
+		
+	    myTable.on('click','a.delete',function() {
+			if(!confirm([[#{ui.messages.table.delete.cmerouters.confirmation}]])) return false;
+			
+			var deletedRow = myTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-delete'),
+					_method: 'DELETE'
+				}),
+				}).done(function() {
+					deletedRow
+				        .remove()
+				        .draw(false);
+			});
+				
+			return false;
+	    })
+	    
+	    
+	   /* var $table = $('#activeChannelTable');
+    	var refreshTimeout=5;
+    	    	
+    	function setRefreshTimeout() {
+    		refreshTimeout=document.getElementById("refreshPeriod").value; 
+    	}
+    	
+    	var timer = setTimeout(function run() {
+    		var $table = $('#peersTable');
+    		$table.bootstrapTable('refresh');
+    		timer = setTimeout(run, refreshTimeout*1000);
+    	}, refreshTimeout*1000);
+*/	    
+	    
+	    myTable.on('click','a.import',function() {
+			if(!confirm([[#{ui.messages.table.import.cmerouters.confirmation}]])) return false;
+			
+			var deletedRow = myTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-import'),
+					_method: 'POST'
+				}),
+				}).done(function() {
+					
+			});
+				
+			return false;
+	    })
+	    
+	    /*myTable.on('click','a.export',function() {
+			if(!confirm([[#{ui.messages.table.import.cmerouters.confirmation}]])) return false;
+			
+			var deletedRow = myTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-export'),
+					_method: 'POST'
+				}),
+				}).done(function() {
+					
+			});
+				
+			return false;
+	    })*/
+	    
+	    
+	    $.fn.modal.Constructor.prototype.enforceFocus = function() {}; 
+		 
+	    myTable.on('click','a.export',function() {
+			 	var sccpPhoneId=jQuery(this).data('router-id');
+				$('#exportRouterModalContentWrapper').load(
+					jQuery(this).attr('href'), 
+					function(){
+						$('#exportRouter').modal('show');
+						$('#exportRouterModalForm').on('submit', function( event ) {
+							event.preventDefault();
+							 
+							var data = jQuery('#exportRouterModalForm').serializeObject()
+																
+							$.ajax({
+								type: 'PUT',
+								url: "/cme/routers/exporttocucm",
+								datatype:'json',
+								contentType: "application/json",
+								data: JSON.stringify(data),
+								
+								}).done(function(data) {
+									$('#exportRouter').modal("hide");
+								});
+							return false;
+							
+						});
+					}
+				);	
+				return false;
+		    })
+	    	    
+	    $('#cmerouters-search-form').submit(function(){
+	      	myTable.draw();
+			return false;
+		});
+	    
+	 
+	});
+	
+	/*]]>*/
+	</script>
+
+</body>
+</html>

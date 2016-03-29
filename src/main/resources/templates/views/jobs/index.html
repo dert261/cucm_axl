@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="jobsModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row" id="breadcrumbs-div">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.jobs}">Users</li>
+				</ol>
+				
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{jobs.ui.messages.index.title}">Uploaded Files</h1>
+				</div>
+			</div>
+			
+			 <div class="row">
+			 	<table id="jobstable" class="table" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{jobs.field.sequence}">№ п/п</th>
+			                <th th:text="#{jobs.field.name}">Name</th>
+			                <th th:text="#{jobs.field.description}">Description</th>
+			                <th th:text="#{jobs.field.createdate}">Create date</th>
+			                <th th:text="#{jobs.field.status}">Status</th>
+			                <th th:text="#{jobs.field.user}">User</th>
+			                <th th:text="#{jobs.field.actions}">Actions</th>
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{jobs.field.sequence}">№ п/п</th>
+			                <th th:text="#{jobs.field.name}">Name</th>
+			                <th th:text="#{jobs.field.description}">Description</th>
+			                <th th:text="#{jobs.field.createdate}">Create date</th>
+			                <th th:text="#{jobs.field.status}">Status</th>
+			                <th th:text="#{jobs.field.user}">User</th>
+			                <th th:text="#{jobs.field.actions}">Actions</th>
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		var operationStatus=[[${#vars['operationResult']}]];
+		if(operationStatus!=null)
+			alert(operationStatus);
+
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var jobsTable = $('#jobstable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	    	"serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/jobs/ajax/serverside/jobs.json",
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "name" },
+	    	            { "data": "description" },
+	    	            { "data": "createDate" },
+	    	            { "data": "status" },
+	    	            { "data": "user.name" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	var isRunJobField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		         		var runJobField = isRunJobField ? '<a class="runjob" href="/jobs/run" data-run="'+data+'" data-toggle="tooltip" title="'+[[#{jobs.ui.messages.table.run}]]+'" data-original-title="'+[[#{jobs.ui.messages.table.run}]]+'"> \
+		         								<i class="glyphicon glyphicon-play"></i> </a>' : "";
+		         								
+		         		var isStopJobField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		         		var stopJobField = isStopJobField ? '<a class="stopjob" href="/jobs/stop" data-stop="'+data+'" data-toggle="tooltip" title="'+[[#{jobs.ui.messages.table.stop}]]+'" data-original-title="'+[[#{jobs.ui.messages.table.stop}]]+'"> \
+		         								<i class="glyphicon glyphicon-stop"></i> </a>' : "";						
+		         		
+		         		var operationJobField = full.status=='RUN' ? stopJobField : runJobField; 						
+		         								
+		            	var isDeleteField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		     	 		var deleteField = isDeleteField ? '<a class="delete" href="/jobs/delete" data-delete="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.delete}]]+'" data-original-title="'+[[#{ui.messages.table.delete}]]+'"> \
+		         								<i class="glyphicon glyphicon-trash"></i> </a>' : "";
+		         			         								
+		         		return "<center>"+operationJobField+"&nbsp;&nbsp;&nbsp;"+deleteField+"</center>";
+	           		}
+	           	},
+				{
+		         	"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "user",
+		            "render": function (data, type, full, meta) {
+		            	return data!=null ? data : "";
+	           		}
+	           	},	           	
+	           	{
+		         	"targets": [-6],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "name",
+		            "render": function (data, type, full, meta) {
+		            	return data!=null ? "<a href='/jobs/detail/"+full.id+"'>"+data+"</a>" : "";
+	           		}
+	           	}
+	        ]
+	    });
+		
+		jobsTable.on('click','a.delete',function() {
+			if(!confirm([[#{ui.messages.table.delete.jobs.confirmation}]])) return false;
+			
+			var deletedRow = jobsTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-delete'),
+					_method: 'DELETE'
+				}),
+				}).done(function() {
+					deletedRow
+				        .remove()
+				        .draw(false);
+			});
+				
+			return false;
+	   	})
+	   	
+	   	jobsTable.on('click','a.runjob',function() {
+			if(!confirm([[#{ui.messages.table.run.jobs.confirmation}]])) return false;
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-run')
+				}),
+			}).done(function(data) {
+				if(data.status==0){
+					jobsTable.draw();
+				} else {
+					alert(data.message);
+				}
+			});
+				
+			return false;
+	   	});
+	   	
+		jobsTable.on('click','a.stopjob',function() {
+			if(!confirm([[#{ui.messages.table.stop.jobs.confirmation}]])) return false;
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-stop')
+				}),
+			}).done(function(data) {
+				if(data.status==0){
+					jobsTable.draw();
+				} else {
+					alert(data.message);
+				}
+			});
+				
+			return false;
+	   	})
+		
+	    $.fn.modal.Constructor.prototype.enforceFocus = function() {}; 
+	});
+	
+	/*]]>*/
+	</script>
+</body>
+</html>

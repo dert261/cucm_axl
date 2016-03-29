@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+				<div th:fragment="cucmAxlPortFormContent" id="cucmAxlPortFormContent" class="row">
+			    	<div class="col-lg-12">
+			    		<fieldset>
+							<legend>
+								<h1><th:block th:text="${cucmAxlPort.isNew()} ? #{cucmaxlport.title.create} : #{cucmaxlport.title.update}" /></h1>
+								<p class="note"><th:block th:text="#{field.required.start}" />	<span class="required" style="color:red">*</span>	<th:block th:text="#{field.required.end}" /></p>
+								
+								<!-- Errors alerts field -->					
+								<div class="alert alert-block alert-danger" th:if="${#fields.hasErrors('*')}"><p th:text="#{field.validation.error.global.message}" >Please fix the following input errors:</p>
+									<ul>
+		    							<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+			        						<span th:text="${e.global}? '*' : #{field}+' \''+#{cucmaxlport.field+'.'+${e.fieldName}} +'\''">The field name</span> 
+			        						<span th:text="#{${e.message}}">The error message</span>
+		    							</li>
+									</ul>
+								</div>
+							</legend>
+							
+							<input type="hidden" th:field="*{id}" />
+							
+							<div th:include="fragment/fielddefinition :: textFormField('name',true, text, 'cucmaxlport.field')">Name</div>
+							<div th:include="fragment/fielddefinition :: textFormField('description',false, text, 'cucmaxlport.field')">Description</div>
+							<div th:include="fragment/fielddefinition :: textFormField('fqdnName',true, text, 'cucmaxlport.field')">FQDN name</div>
+							<div th:include="fragment/fielddefinition :: checkboxFormField('ldapSyncFlag', 'cucmaxlport.field')">LDAP Sync Flag</div>
+							<div th:include="fragment/fielddefinition :: textFormField('axlUrl',true, text, 'cucmaxlport.field')">AXL URL</div>
+							<div th:include="fragment/fielddefinition :: textFormField('axlUser',true, text, 'cucmaxlport.field')">AXL User</div>
+							<div th:include="fragment/fielddefinition :: textFormField('axlPassword',true, password, 'cucmaxlport.field')">Password</div>
+							<div th:include="fragment/fielddefinition :: textFormField('axlPasswordConfirm',true, password, 'cucmaxlport.field')">Password Confirm</div>
+							
+							
+							<div class="form-group">
+								<label class="control-label" for="partitionFilter" th:text="#{cucmaxlport.field.partitionFilter}">	</label>
+								<select class="form-control" th:field="*{partitionFilter.id}" th:id="partitiotionFilterId"></select>
+								<script th:inline="javascript">
+								/*<![CDATA[*/
+								           jQuery(function($) {
+												var partitionFilterMap = [[${partitionFiltersMap}]];
+												var partitionFilterData=[];
+												partitionFilterData.push({"id":"0", "text":"Не задан"});
+												for(var k in partitionFilterMap){
+													partitionFilterData.push({"id":k, "text":partitionFilterMap[k]});
+												}       
+											           
+												$partitionFilter = jQuery('#partitiotionFilterId');
+												$partitionFilter.select2({
+													allowClear:false,
+													width:'100%', 
+													multiple:false,
+													language: [[${#locale.language}]], 
+													data: partitionFilterData
+												});
+												
+												var partitionFilterSelected = [[${cucmAxlPort.partitionFilter}]];
+												if(partitionFilterSelected.new==false){
+													$partitionFilter.val(partitionFilterSelected.id);
+													$partitionFilter.trigger('change');
+												
+												}	
+												
+								           });	
+								/*]]>*/
+								</script>
+							</div>			
+							
+										
+							
+							<div class="panel panel-default">
+								<div class="panel-heading" th:text="#{ldapdirsync.form.tab.syncoptions.header}"> Sync options </div>
+								<div class="panel-body">
+									<div th:include="fragment/fielddefinition :: checkboxFormField('resyncFlag', 'cucmaxlport.field')">Sync flag</div>
+									<div class="row">
+										<div class="col-lg-3">
+											<div th:include="fragment/fielddefinition :: textFormField('resyncInterval',true, text, 'cucmaxlport.field')">Sync interval</div>
+										</div>	
+										<div class="col-lg-3">
+											<div th:include="fragment/fielddefinition :: selectEnumFormField('resyncUnit', false, 'resyncUnits', 'cucmaxlport.field', *{resyncUnit}, false, false)">Resync Unit</div>
+										</div>
+									</div>
+									<div>
+										<p th:text="#{cucmaxlport.form.tab.syncoptions.resync.info}+': '+${nextFireTime}">Next sync:</p>
+									</div>	
+								</div>
+							</div>
+							
+						
+						</fieldset>
+						<div class="form-actions">
+            				<button class="btn btn-primary" type="submit" th:text="${cucmAxlPort.isNew()} ? #{cucmaxlport.form.button.create.submit} : #{cucmaxlport.form.button.update.submit}">Submit</button>
+            				<button class="btn btn-default" type="reset" th:text="#{cucmaxlport.form.button.reset}">Reset</button>
+            			</div>	
+					</div>
+				</div>	
+				
+</html>	

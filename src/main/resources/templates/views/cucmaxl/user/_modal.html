@@ -1,0 +1,34 @@
+<!-- Modal -->
+<div class="modal fade" id="phoneBook" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+	        <form action="#" th:object="${endUserPhoneBook}" id="endUserPhoneBook">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel"  th:text="#{enduserphonebook.ui.messages.index.title}"></h4>
+	            </div>
+	            <div class="modal-body" id="myModalBody" >
+	            	
+			    <input type="hidden" th:field="*{id}" />
+			    <input type="hidden" th:field="*{endUser.id}" />
+			    <div th:include="fragment/fielddefinition :: checkboxFormField('uploadPhone', 'enduserphonebook.field')">Use custom phone</div>
+				<div th:include="fragment/fielddefinition :: checkboxFormField('useCustomPhone', 'enduserphonebook.field')">Use custom phone</div>
+			    <div th:include="fragment/fielddefinition :: textFormField('phone',false, text, 'enduserphonebook.field')">Custom Phone</div>
+		            
+	            </div>	
+	            <div class="modal-footer">
+	            	<button type="submit" class="btn btn-default" th:text="#{enduserphonebook.form.button.save}">Save</button>
+	                <button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{enduserphonebook.form.button.close}">Close</button>
+	            </div>
+	        </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+	/*$('form').on('submit', function( event ) {
+		alert($(this).serialize());
+		$('#phoneBook').modal("hide");
+		return false;
+	});*/
+</script>

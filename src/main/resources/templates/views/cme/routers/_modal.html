@@ -1,0 +1,218 @@
+<!-- Modal -->
+
+<div class="modal fade" id="sccpPhone" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	            <h3 class="modal-title" id="myModalLabel"  th:text="#{cmecustomdevice.ui.messages.index.title}"></h3>
+	        </div>
+	        <form class="form-horizontal" action="#" id="sccpPhoneModalForm"  th:object="${device}">
+	        	<div class="modal-body" id="myModalBody" >   
+	        		<fieldset>
+	        			<legend><h4 th:text="#{cmecustomdevice.ui.messages.phoneinfo}">Phone information</h4></legend>
+	        			<input type="hidden" th:field="*{id}" />
+	        			<input type="hidden" th:field="*{customDevice.id}" />
+	        			
+	        			<div class="form-group col-sm-12">
+	        				<label>
+		  						<input  class="phone-active-checkbox" id="phone_active" autocomplete="off" th:attr= "checked=${device.customDevice.enable}"
+										type="checkbox" th:utext="' '+#{cmecustomdevice.field.enable}">Label value
+								</input>
+								<input type="hidden" th:field="*{customDevice.enable}" />
+							</label>
+						</div>
+	        					
+				    	<div class="form-group">
+							<label class="col-sm-2 control-label" for="user" th:text="#{cmecustomdevice.field.user}">	</label>
+							<div class="col-sm-10">
+								<select th:field="*{customDevice.user.id}" th:id="user"></select>
+							</div>	
+						</div>
+					</fieldset>
+					
+					<fieldset>
+						<legend><h4 th:text="#{cmecustomdevice.ui.messages.extensioninfo}">Extensions information</h4></legend>
+						
+						<!-- <div class="row">
+							<div class="col-sm-12">
+								<p class="text-right">
+									<button id="add_new_extension" type="button" class="btn btn-default btn-sm">
+  										<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add new extension
+									</button>
+								</p>
+							</div>
+						</div> -->
+						
+						
+						<div id="deviceLinesPart" class="deviceLinesPart">			
+							
+						<div th:fragment="deviceLinesContent" th:object="${device}">
+						
+						<div class="panel panel-default extension" th:each="line, stat : ${device.lines}">
+	  						<div class="panel-heading">
+	  							<!-- <button type="button" th:attr="data-line-id=${device.lines[__${stat.index}__].lineId}, data-device-id=${device.id}" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+	  							<label>
+		  							<input  class="active-checkbox" th:id="'active'+__${stat.index}__" autocomplete="off" th:attr= "data-active-id=${__${stat.index}__}, checked=${device.lines[__${stat.index}__].extension.customExtension.enable}"
+											type="checkbox" th:utext="' '+#{cmecustomextension.field.lineId}+': '+${device.lines[__${stat.index}__].lineId}">Label value
+									</input>
+									<input type="hidden" th:field="*{lines[__${stat.index}__].extension.customExtension.enable}" />
+								</label>
+	  							
+	    					</div>
+	  						<div class="panel-body">
+	    						
+								<div class="row">	
+									<div class="col-lg-6 form-group">
+										<label class="col-sm-4 control-label" th:text="#{cmecustomextension.field.number}">	</label>
+										<div class="col-sm-8">
+										<input type="hidden" th:field="*{lines[__${stat.index}__].lineId}" />
+	    								<input type="hidden" th:field="*{lines[__${stat.index}__].extension.id}" />
+											<input class="form-control" th:field="*{lines[__${stat.index}__].extension.customExtension.number}"></input>
+										</div>	
+									</div>
+									<div class="col-lg-6 form-group">
+										<label class="col-sm-4 control-label" for="user" th:text="#{cmecustomextension.field.externalPhoneNumberMask}">	</label>
+										<div class="col-sm-8">
+											<input class="form-control masked" th:id="'externalPhoneNumberMask'+__${stat.index}__" th:field="*{lines[__${stat.index}__].extension.customExtension.externalPhoneNumberMask}"></input>
+											<!-- <script th:inline="javascript">
+												$('#externalPhoneNumberMask'+[[__${stat.index}__]]).mask("(999) 999-9999");
+											</script>-->
+										</div>	
+									</div>
+								</div>	
+								<div class="row">
+									<div class="col-lg-6 form-group">
+										<label class="col-sm-4 control-label" for="user" th:text="#{cmecustomextension.field.label}">	</label>
+										<div class="col-sm-8">
+											<input class="form-control" th:field="*{lines[__${stat.index}__].extension.customExtension.label}"></input>
+										</div>	
+									</div>
+									<div class="col-lg-6 form-group">
+										<label class="col-sm-4 control-label" for="user" th:text="#{cmecustomextension.field.pickupGroup}">	</label>
+										<div class="col-sm-8">
+											<input class="form-control" th:field="*{lines[__${stat.index}__].extension.customExtension.pickupGroup}"></input>
+										</div>	
+									</div>
+								</div>	 
+	  						</div>
+	  						
+	  		
+    
+	  						
+	  						
+	  						
+						</div>	
+								
+						</div>
+						</div>
+						
+						
+					</fieldset>	
+				</div>
+	        	     	
+	            <div class="modal-footer">
+	            	<button type="submit" class="btn btn-default" th:text="#{enduserphonebook.form.button.save}">Save</button>
+	                <button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{enduserphonebook.form.button.close}">Close</button>
+	            </div>
+	        </form>
+	        
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    
+/*	/* $('#add_new_extension').click(function (){
+		var dev_id = $('#id').val();
+		$.ajax({
+			type: 'PUT',
+			datatype:'json',
+			url: "/cme/routers/phone/sccp/"+dev_id+"/lines",
+			contentType: "application/json",
+			data: JSON.stringify(jQuery('#sccpPhoneModalForm').serializeObject()) 
+		}).done(function(result) {
+			$('#deviceLinesPart').html(result);
+		});
+		return false;
+	});
+	
+	
+	$("#deviceLinesPart").on("click", ".panel-heading .close", function(){
+		var deletedLine = $(this).data('line-id');
+		var deviceId = $(this).data('device-id');
+		if(!confirm("Do your realy want to delete line with ID "+deletedLine+" on device ID "+deviceId+"?")) return false;
+				
+		$.ajax({
+			type: 'PUT',
+			datatype:'json',
+			url: "/cme/routers/phone/sccp/"+deviceId+"/lines/"+deletedLine,
+			contentType: "application/json",
+			data: JSON.stringify(jQuery('#sccpPhoneModalForm').serializeObject()),
+		}).done(function(result) {
+			$('#deviceLinesPart').html(result);
+		});
+			
+		return false;
+    	  
+    });   */
+    
+    $('.masked').mask("(999) 999-9999");
+    $(".active-checkbox").on("click", "", function(){
+		var activeId = $(this).data('active-id');
+		$("input[name='lines["+activeId+"].extension.customExtension.enable']").val($(this).is(":checked") ? 'true' : 'false');
+	});
+    
+    $(".phone-active-checkbox").on("click", "", function(){
+		$("input[name='customDevice.enable']").val($(this).is(":checked") ? 'true' : 'false');
+	});
+	
+                
+	$sccpPhoneUserSelect = jQuery('#user');
+	$sccpPhoneUserSelect.select2({
+		allowClear:true,
+		width:'100%', 
+		multiple:false,
+		minimumInputLength:2,
+		language: [[${#locale.language}]], 
+		placeholder: [[#{user.searchform.searchfield.placeholder.name}]],
+		ajax: {
+			delay: 250,
+			dataType: "json",
+			url: function (params) {
+				return '/users/search/cucmusers';
+			},
+			data: function (params) {
+				var queryParameters = {
+				 	searchString: params.term
+				}
+				return queryParameters;
+			},
+			processResults: function (data) {
+				return {
+					results: data
+				};
+			},
+		}
+	});
+												
+	var $option = $('<option></option>').val(0);
+	$sccpPhoneUserSelect.append($option);
+	
+	var user_id = [[${device.customDevice.user.id}]];
+	if(user_id!=null){
+		$.ajax({ // make the request for the selected data object
+			type: 'GET',
+			url: '/users/search/user/' + user_id,
+			dataType: 'json'
+		}).then(function (data) {
+			// Here we should have the data object
+			data1 = data[0];
+			$option.text(data1.text).val(data1.id); // update the text that is displayed (and maybe even the value)
+			$option.removeData(); // remove any caching data that might be associated
+			$sccpPhoneUserSelect.trigger('change'); // notify JavaScript components of possible changes
+		});
+	}	
+/*]]>*/
+</script>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+	<div th:fragment="ldapDirSyncFormContent" id="ldapDirSyncFormContent" class="row">
+		<div class="col-lg-12">
+			<fieldset>
+				<legend>
+					<h1 class="page-header" th:text="#{ldap.authentication.index.title}">LDAP authentication</h1>
+					<p class="note"><th:block th:text="#{field.required.start}" />	<span class="required" style="color:red">*</span>	<th:block th:text="#{field.required.end}" /></p>
+								
+					<!-- Errors alerts field -->					
+					<div class="alert alert-block alert-danger" th:if="${#fields.hasErrors('*')}"><p th:text="#{field.validation.error.global.message}" >Please fix the following input errors:</p>
+						<ul>
+							<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+								<span th:text="${e.global}? '*' : #{field}+' \''+#{ldapdirsync.field+'.'+${e.fieldName.replaceAll('\[\d+\]','')}} +'\''">The field name</span>
+								<span th:text="#{${e.message}}">The error message</span>
+		    				</li>
+						</ul>
+					</div>  
+				</legend>
+				<input type="hidden" th:field="*{id}" />
+				<div th:include="fragment/fielddefinition :: textFormField('configName',true, text, 'ldapdirsync.field')">Configuration name</div>
+				<div th:include="fragment/fielddefinition :: textFormField('fqdnName',true, text, 'ldapdirsync.field')">FQDN name</div>
+				<div th:include="fragment/fielddefinition :: textFormField('distinguishedName',true, text, 'ldapdirsync.field')">Distinguished name</div>	
+				<div th:include="fragment/fielddefinition :: textFormField('password',true, password, 'ldapdirsync.field')">Password</div>
+				<div th:include="fragment/fielddefinition :: textFormField('passwordConfirm',true, password, 'ldapdirsync.field')">Password Confirm</div>
+				<div th:include="fragment/fielddefinition :: textFormField('searchBase',true, text, 'ldapdirsync.field')">Search Base</div>
+				
+				<!-- FILTER FIELD -->
+				<div	class="form-group" 
+						th:classappend="${#fields.hasErrors('ldapCustomFilter')}? 'has-error'">
+						<label 	class="control-label"
+								th:classappend="${true} ? 'required'"
+								th:class="${#fields.hasErrors('ldapCustomFilter')}? 'control-label error' : 'control-label'" 
+								for="ldapCustomFilter" 
+								th:inline="text">[[#{ldapdirsync.field.ldapCustomFilter}]] <span th:if="${true}" class="required" style="color:red">*</span>
+						</label>
+									
+						<select th:field="*{ldapCustomFilter}" 
+								class="select2-chosen" 
+								placeholder="select field" 
+								th:attr="placeholder=#{ldapdirsync.field.ldapCustomFilter}">
+								<option value="">Не задан</option>
+								<option th:each="data : ${ldapCustomFilterAll}" 
+										th:value="${data.id}" 
+										th:text="${data.name}">
+								</option>
+						</select>
+									
+						<div th:if="${#fields.hasErrors('ldapCustomFilter')}" class="help-block error">
+							<ul>
+								<li th:each="err : ${#fields.errors('ldapCustomFilter')}" th:text="#{${err}}" />
+							</ul>
+						</div> 
+									
+						<script th:inline="javascript">
+						/*<![CDATA[*/
+							jQuery(function($) {
+								
+								
+								
+								var filterSelect = jQuery('#ldapCustomFilter');
+								filterSelect.select2({ 
+									'allowClear':false,
+									'width':'100%' 
+								});
+								
+								filterSelect.val([[${ldapDirSyncParams.isNew()} ? '': (${ldapDirSyncParams.ldapCustomFilter!=null} ? ${ldapDirSyncParams.ldapCustomFilter.id} : '')]]).trigger('change');
+								
+								
+							});  
+						/*]]>*/
+						</script> 
+				</div>
+				<!-- FILTER FIELD END-->	
+				
+				<div th:include="fragment/fielddefinition :: textFormField('countOnResultPage', true, text, 'ldapdirsync.field')">Count on result page</div>
+				
+				<div th:include="fragment/fielddefinition :: selectEnumFormField('phoneBookSyncSource', false, 'phoneBookSyncSources', 'ldapdirsync.field', *{phoneBookSyncSource}, false, false)">Resync Unit</div>
+						
+				<div class="panel panel-default">
+					<div class="panel-heading" th:text="#{ldapdirsync.form.tab.syncoptions.header}"> Sync options </div>
+					<div class="panel-body">
+						<div th:include="fragment/fielddefinition :: checkboxFormField('resyncFlag', 'ldapdirsync.field')">Sync flag</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<div th:include="fragment/fielddefinition :: textFormField('resyncInterval',true, text, 'ldapdirsync.field')">Sync interval</div>
+							</div>	
+							<div class="col-lg-3">
+								<div th:include="fragment/fielddefinition :: selectEnumFormField('resyncUnit', false, 'resyncUnits', 'ldapdirsync.field', *{resyncUnit}, false, false)">Resync Unit</div>
+							</div>
+						</div>	
+						<div>
+							<p th:text="#{ldapdirsync.form.tab.syncoptions.resync.info}+': '+${nextFireTime}">Next sync:</p>
+						</div>	
+					</div>
+				</div>
+				
+				<div id="ldapDirSyncServersContent" class="ldapDirSyncServerPart">			
+					<div class="panel panel-default" th:fragment="ldapDirSyncServersContent">
+					<form th:object="${ldapDirSyncParams}">
+						<div class="panel-heading" th:text="#{ldapdirsyncserver.form.tab.header}"> Servers </div>
+						<div class="panel-body">
+							
+							<div class="table-responsive">
+								<table class="table" width="100%">
+									<thead>
+										<tr>
+											<th></th>
+											<th th:utext="#{ldapdirsyncserver.field.host}+' &lt;span class=\'required\' style=\'color:red\'&gt;*&lt;/span&gt;'">Server *</th>
+											<th th:utext="#{ldapdirsyncserver.field.port}+' &lt;span class=\'required\' style=\'color:red\'&gt;*&lt;/span&gt;'">Port *</th>
+											<th th:utext="#{ldapdirsyncserver.field.useSSL}">Use SSL</th>
+										</tr>	
+									</thead>
+									<tbody>
+										<tr th:each="row,rowStat : *{ldapDirSyncServers}">
+		      								<!-- <td th:text="${rowStat.count}">1</td> -->
+		      								<td>
+		        								<button th:if="${rowStat.index}!=0" class="btn btn-default remove-server" type="button" name="removeServer" th:value="${rowStat.index}" th:text="#{ldapdirsyncserver.form.button.delserver}" >Remove row</button>
+		      								</td>
+		      								<td>
+		        								<div th:include="fragment/fielddefinition :: textFormFieldWithoutLabel('ldapDirSyncServers[__${rowStat.index}__].host', 'host', text, 'ldapdirsyncserver.field')">Host</div>
+		      								</td>
+		      								<td>
+		      									<div th:include="fragment/fielddefinition :: textFormFieldWithoutLabel('ldapDirSyncServers[__${rowStat.index}__].port', 'port', text, 'ldapdirsyncserver.field')">Host</div>
+		      								</td>
+		      								<td>
+		      									<div th:include="fragment/fielddefinition :: checkboxFormFieldInline('ldapDirSyncServers[__${rowStat.index}__].useSSL', 'useSSL', 'ldapdirsyncserver.field')">Active</div>
+		      								</td>
+		      							</tr>
+		  								<tr>
+											<td colspan="4">
+												<button id="addserver" class="btn btn-default add-server" type="button" th:text="#{ldapdirsyncserver.form.button.addserver}">Add redundant LDAP server</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</fieldset>
+			<div class="form-actions">
+            	<button class="btn btn-primary" type="submit" th:text="#{ldapdirsync.form.button.update.submit}">Submit</button>
+            	<button class="btn btn-default" type="reset" th:text="#{ldapdirsync.form.button.reset}">Reset</button>
+            </div>
+		</div>	
+		<script type="text/javascript" th:inline="javascript">
+	var operationStatus=[[${#vars['operationResult']}]];
+	if(operationStatus!=null)
+		alert(operationStatus);
+
+	$('.ldapDirSyncServerPart').on('click', '.add-server', function (){
+		
+		if($('.remove-server').size() > 1){
+			alert([[#{ldapdirsyncserver.form.addserver.exception}]]);
+			return false;
+		}	
+		
+		$.ajax({
+			type: 'GET',
+			url: "/ldap/dirsync/ajax/addserver?"+$('#ldapDirSyncParams').serialize(),
+		}).done(function(result) {
+			$('#ldapDirSyncServersContent').html(result);
+		});
+				
+		return false;
+	});
+	
+	$('.ldapDirSyncServerPart').on('click', '.remove-server', function (){
+		$.ajax({
+			type: 'GET',
+			url: "/ldap/dirsync/ajax/delserver?"+$('#ldapDirSyncParams').serialize(),
+			data: ({
+				index: $(this).val(),
+			}),
+		}).done(function(result) {
+			$('#ldapDirSyncServersContent').html(result);
+		});
+				
+		return false;
+	});
+</script>
+	</div>
+</html>	

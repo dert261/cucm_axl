@@ -1,0 +1,112 @@
+<!-- Modal -->
+
+<div class="modal fade" id="changeNum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	            <h3 class="modal-title" id="myModalLabel"  th:text="#{changenum.create.ui.messages.index.title}"></h3>
+	        </div>
+	        <form class="form-horizontal" action="#" id="changeNumModalForm"  th:object="${changeNum}">
+	        	<div class="modal-body" id="myModalBody" >   
+	        		<fieldset>
+	        		
+		        		<div class="panel panel-default">
+							<div class="panel-heading">
+						    	<h3 class="panel-title" th:text="#{changenum.modal.panel.title.workparams}">Параметры </h3>
+						  	</div>
+					  		<div class="panel-body">
+					  			<div class="form-group col-sm-12">
+									<label class="col-sm-3 control-label" for="destination" th:text="#{changenum.field.destination}">	</label>
+									<div class="col-sm-9">
+										<select class="form-control" th:field="*{destination.id}" th:id="destination"></select>
+									</div>	
+								</div>			
+			        						
+			        			<div class="form-group col-sm-12">
+									<label class="col-sm-3 control-label" for="partition" th:text="#{changenum.field.partition}">	</label>
+									<div class="col-sm-9">
+										<input class="form-control" th:field="*{partition}"></input>
+									</div>	
+								</div>
+								
+								<div class="form-group col-sm-12">
+									<label class="col-sm-3 control-label" for="datasource" th:text="#{changenum.field.datasource}">	</label>
+									<div class="col-sm-9">
+										<select class="form-control" th:field="*{datasource.id}" th:id="datasource"></select>
+									</div>	
+								</div>
+					  		</div>
+						</div>
+	        			
+					</fieldset>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+					    	<h3 class="panel-title" th:text="#{changenum.modal.panel.title.jobparams}">Параметры задания</h3>
+					  	</div>
+				  		<div class="panel-body">
+				  		
+				  			<div class="form-group col-sm-12">
+								<label class="col-sm-3 control-label" for="partition" th:text="#{changenum.field.job.name}">	</label>
+								<div class="col-sm-9">
+									<input class="form-control" th:field="*{job.name}"></input>
+								</div>	
+							</div>
+							
+							<div class="form-group col-sm-12">
+								<label class="col-sm-3 control-label" for="partition" th:text="#{changenum.field.job.description}">	</label>
+								<div class="col-sm-9">
+									<input class="form-control" th:field="*{job.description}"></input>
+								</div>	
+							</div>
+				  		
+				  		</div>
+					</div>
+	        	</div>    	
+	            <div class="modal-footer">
+	            	<button type="submit" class="btn btn-default" th:text="#{changenum.create.form.button.change}">Change</button>
+	                <button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{changenum.create.form.button.close}">Close</button>
+	            </div>
+	        </form>
+	        
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    var axlPortDestinationMap = [[${axlPortDestinationsMap}]];
+	var axlPortData=[];
+	for(var k in axlPortDestinationMap){
+		axlPortData.push({"id":k, "text":axlPortDestinationMap[k]});
+	}       
+           
+	$axlDestination = jQuery('#destination');
+	$axlDestination.select2({
+		allowClear:false,
+		width:'100%', 
+		multiple:false,
+		language: [[${#locale.language}]], 
+		data: axlPortData
+	});
+	
+	
+	
+	var uploadSourceMap = [[${uploadSourceMap}]];
+	var uploadSourceData=[];
+	for(var k in uploadSourceMap){
+		uploadSourceData.push({"id":k, "text":uploadSourceMap[k]});
+	}       
+           
+	$uploadSource = jQuery('#datasource');
+	$uploadSource.select2({
+		allowClear:false,
+		width:'100%', 
+		multiple:false,
+		language: [[${#locale.language}]], 
+		data: uploadSourceData
+	});
+/*]]>*/
+</script>

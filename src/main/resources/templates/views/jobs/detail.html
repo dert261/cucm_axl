@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="jobsModalContentWrapper" class="row"> </div>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row" id="breadcrumbs-div">
+				<ol class="breadcrumb">
+					<li><a href="/jobs/index.html"><th:block th:text="#{breadcrumbs.jobs}" /></a></li>
+					<li class="active"><th:block th:text="#{breadcrumbs.jobsresult}" /></li>
+				</ol>
+				
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{jobs.ui.messages.detail.title}">Detail</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+				    	<h3 class="panel-title" th:text="#{jobs.detail.form.jobdetails}">Job</h3>
+				  	</div>
+				  	<div class="panel-body">
+				    	<div class="row">
+						<div class="col-md-2"><b th:text="#{jobs.field.name}+':'">Name</b></div>
+							<div class="col-md-3"><p th:text="${job.name}"></p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-2"><b th:text="#{jobs.field.description}+':'">Description</b></div>
+							<div class="col-md-3"><p th:text="${job.description}"></p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-2"><b th:text="#{jobs.field.status}+':'">Status</b></div>
+							<div class="col-md-3"><p th:text="${job.status}"></p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-2"><b th:text="#{jobs.field.createdate}+':'">Create date</b></div>
+							<div class="col-md-3"><p th:text="${#temporals.format(job.createDate,'dd.MM.yyyy HH:mm:ss')}"></p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-2"><b th:text="#{jobs.field.user}+':'">User</b></div>
+							<div class="col-md-3"><p th:text="${job.user.name}"></p></div>
+						</div>
+				  	</div>
+				</div>
+			</div>	
+						
+			<div class="row">
+			 	<fieldset>
+			 		<legend><h4 th:text="#{jobs.detail.form.jobresults}">Job Results</h4></legend>
+				 	<table class="table table-bordered">
+	    				<thead>
+					      	<tr>
+						        <th th:text="#{jobsresult.field.launchDate}">Launch Date</th>
+				                <th th:text="#{jobsresult.field.numberRecordsTotal}">Records total</th>
+				                <th th:text="#{jobsresult.field.numberRecordsProcessed}">Records processed</th>
+				                <th th:text="#{jobsresult.field.numberRecordsFailed}">Records failed</th>
+				                <th th:text="#{jobsresult.field.logfilename}">Log file</th>
+						    </tr>
+						</thead>
+						<tbody>
+							<tr th:each="result : ${job.results}">
+						    	<td th:text="${#temporals.format(result.launchDate,'dd.MM.yyyy HH:mm:ss')}">Launch Date</td>
+						    	<td th:text="${result.numberRecordsTotal}">Records total</td>
+						    	<td th:text="${result.numberRecordsProcessed}">Records processed</td>
+					            <td th:text="${result.numberRecordsFailed}">Records failed</td>
+					            <td th:utext="'&lt;a href=\'/downloads/operation/logs/'+${result.logfilename}+'\' TARGET=\'_blank\' &gt;'+${result.logfilename}+'&lt;/a&gt;'">Log file</td>
+					        </tr>
+					    </tbody>
+					</table>
+				</fieldset>	            
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+</body>
+</html>

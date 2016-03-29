@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+<!-- <div ddl:bundle-includes="select2,users-form" />  -->
+
+<body>
+<div id="wrapper">
+	<!-- Header -->
+	<div th:replace="fragment/header :: navbar_alt" > </div>
+		
+	<br/>
+	<div id="page-wrapper">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/cucmaxl/partitionfilter/"><th:block th:text="#{breadcrumbs.partitionfilter}" /></a></li>
+				<li class="active"><th:block th:text="#{breadcrumbs.partitionfilter.update}" /></li>
+			</ol>
+		</div> 
+		<div class="row">
+			
+			<form action="#" th:action="@{/cucmaxl/partitionfilter/update}" th:object="${partitionFilter}" th:method="PUT" method="PUT" class="well form">
+				<head th:replace="cucmaxl/partitionfilter/form :: partitionFilterFormContent" />
+			</form>
+		</div>
+	</div>
+</div>
+
+<div th:replace="fragment/header :: scripts" > </div>
+<script src="/static/assets/views/cucmaxl/partitionfilter/js/form.js" th:href="@{/static/assets/views/cucmaxl/partitionfilter/js/form.js}" > </script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.cmelocations}">Users</li>
+				</ol>
+				<div class="col-lg-12">
+					<a href="/cme/locations/create" th:text="#{breadcrumbs.cmelocations.create}">Create</a>
+				</div>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{cmelocations.ui.messages.index.title}">Filter management</h1>
+					
+				</div>
+				<div th:replace="cme/locations/search :: cmelocations_search_form" > </div>
+			</div>
+			
+			 <div class="row">
+			 	<table id="cmelocationstable" class="display" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{cmelocations.field.sequence}">№ п/п</th>
+			                <th th:text="#{cmelocations.field.name}">Name</th>
+			                <th th:text="#{cmelocations.field.description}">Description</th>
+			                <th th:text="#{cmelocations.field.actions}">Actions</th>
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{cmelocations.field.sequence}">№ п/п</th>
+			                <th th:text="#{cmelocations.field.name}">Name</th>
+			                <th th:text="#{cmelocations.field.description}">Description</th>
+			                <th th:text="#{cmelocations.field.actions}">Actions</th>
+			                
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var myTable = $('#cmelocationstable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/cme/locations/ajax/serverside/cmelocations.json",
+	        	"data": function ( d ) {
+	            	return $.extend( {}, d, {
+	                    "extra_search[id]": $('#id').val()!=undefined ? $('#id').val() : "null",
+	    
+	                });
+	            }
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "name" },
+	    	            { "data": "description" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	var updateField = '<a class="update" href="/cme/locations/update/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.edit}]]+'" data-original-title="'+[[#{ui.messages.table.edit}]]+'"> \
+		     	 								<i class="glyphicon glyphicon-pencil"></i></a>';
+		     	 		var deleteField = '<a class="delete" href="/cme/locations/delete" data-delete="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.delete}]]+'" data-original-title="'+[[#{ui.messages.table.delete}]]+'"> \
+		         								<i class="glyphicon glyphicon-trash"></i> </a>'; 	
+		         		return "<center>"+updateField+"&nbsp;&nbsp;&nbsp;"+deleteField+"</center>";
+	           		}
+	           	}
+	        ]
+	    });
+		
+	    myTable.on('click','a.delete',function() {
+			if(!confirm([[#{ui.messages.table.delete.cmelocations.confirmation}]])) return false;
+			
+			var deletedRow = myTable.row( $(this).parents('tr') );
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-delete'),
+					_method: 'DELETE'
+				}),
+				}).done(function() {
+					deletedRow
+				        .remove()
+				        .draw(false);
+			});
+				
+			return false;
+	    })
+	    	    
+	    $('#cmelocations-search-form').submit(function(){
+	      	myTable.draw();
+			return false;
+		});
+	    
+	 
+	});
+	
+	/*]]>*/
+	</script>
+
+</body>
+</html>
