@@ -18,7 +18,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 @Entity
-@Table(name = "ldap_authentication_servers", catalog="adsync")
+@Table(name = "ldap_authentication_servers", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class LdapAuthenticationServer {
 	

@@ -19,7 +19,7 @@ import ru.obelisk.cucmaxl.database.models.entity.Job;
 import ru.obelisk.cucmaxl.database.models.entity.UploadFile;
 
 @Entity
-@Table(name = "job_changenumber_detail", catalog="adsync")
+@Table(name = "job_changenumber_detail", catalog="adsync", schema="public")
 @ToString(exclude={"job"})
 public class ChangeNumberDetail implements Serializable {
  	private static final long serialVersionUID = 1771992995961268796L;

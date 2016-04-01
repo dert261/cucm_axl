@@ -26,7 +26,7 @@ import ru.obelisk.cucmaxl.database.models.entity.utils.CustomLocalDateTimeSerial
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "jobs_result", catalog="adsync")
+@Table(name = "jobs_result", catalog="adsync", schema="public")
 @ToString(exclude={"job"})
 public class JobResult implements Serializable {
  	private static final long serialVersionUID = -8250213484020612335L;

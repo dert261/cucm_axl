@@ -20,7 +20,7 @@ import ru.obelisk.cucmaxl.database.models.views.View;
 
 
 @Entity
-@Table(name = "cme_sip_ext_map_status", catalog="adsync")
+@Table(name = "cme_sip_ext_map_status", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeSipExtMapStatus implements Serializable{
 	private static final long serialVersionUID = -3744600591640271299L;

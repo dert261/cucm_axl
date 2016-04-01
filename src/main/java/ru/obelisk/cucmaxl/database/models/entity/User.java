@@ -39,7 +39,7 @@ import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 import ru.obelisk.cucmaxl.web.validator.NotNullField;
 
 @Entity
-@Table(name = "users", catalog="adsync")
+@Table(name = "users", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
 public class User implements Serializable {
@@ -76,7 +76,7 @@ public class User implements Serializable {
     
     //@JsonView(value={View.User.class})
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name="users2user_roles", catalog="adsync",
+    @JoinTable(name="users2user_roles", catalog="adsync", schema="public",
     	joinColumns=@JoinColumn(name="user_id"),
     	inverseJoinColumns=@JoinColumn(name="role_id")
     )
@@ -186,6 +186,7 @@ public class User implements Serializable {
     
     @JsonView(value={View.User.class})
 	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "phonebook_id")
 	private EndUserPhoneBook phoneBook = new EndUserPhoneBook();
     
     public User(){

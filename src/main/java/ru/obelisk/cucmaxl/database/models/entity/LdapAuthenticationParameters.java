@@ -25,7 +25,7 @@ import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 import ru.obelisk.cucmaxl.web.validator.NotNullField;
 
 @Entity
-@Table(name = "ldap_authentication_parameters", catalog="adsync")
+@Table(name = "ldap_authentication_parameters", catalog="adsync", schema="public")
 @FieldMatch(first = "password", second = "passwordConfirm", groups=LdapAuthenticationParameters.LdapAuthParamsStepTwo.class, message = "field.validation.error.diffpassword")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class LdapAuthenticationParameters {

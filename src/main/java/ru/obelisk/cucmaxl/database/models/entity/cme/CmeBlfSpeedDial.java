@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_blf_speed_dial", catalog="adsync")
+@Table(name = "cme_blf_speed_dial", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeBlfSpeedDial implements Serializable{
 	private static final long serialVersionUID = -4185808186901121724L;

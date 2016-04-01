@@ -15,7 +15,7 @@ import org.joda.time.DateTime;
 import com.cisco.axl.api._10.LUser;
 
 @Entity
-@Table(name = "cucm_user", catalog="adsync")
+@Table(name = "cucm_user", catalog="adsync", schema="public")
 public class CucmUser implements Serializable {
 	private static final long serialVersionUID = -7219265456818335570L;
 

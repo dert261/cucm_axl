@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "end_user_phone_book", catalog="adsync")
+@Table(name = "end_user_phone_book", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
 public class EndUserPhoneBook implements Serializable {
@@ -33,11 +33,11 @@ public class EndUserPhoneBook implements Serializable {
 	private Integer id;
 	
 	@JsonView(value={View.User.class, View.EndUserPhoneBook.class})
-	@Column(name = "uploadPhone")
+	@Column(name = "upload_phone")
 	private boolean uploadPhone = true;
 	
 	@JsonView(value={View.User.class, View.EndUserPhoneBook.class})
-	@Column(name = "useCustomPhone")
+	@Column(name = "use_custom_phone")
 	private boolean useCustomPhone = false;
 	
 	@JsonView(value={View.User.class, View.EndUserPhoneBook.class})

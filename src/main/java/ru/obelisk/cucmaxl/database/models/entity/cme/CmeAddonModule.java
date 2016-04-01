@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_addon_module", catalog="adsync")
+@Table(name = "cme_addon_module", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeAddonModule implements Serializable{
 	private static final long serialVersionUID = 3709126789148061176L;

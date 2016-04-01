@@ -22,7 +22,7 @@ import ru.obelisk.cucmaxl.database.models.views.View;
 import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 @Entity
-@Table(name = "ldap_dir_sync_server", catalog="adsync")
+@Table(name = "ldap_dir_sync_server", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class LdapDirSyncServer {
 	

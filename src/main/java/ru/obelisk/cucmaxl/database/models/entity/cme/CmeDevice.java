@@ -28,7 +28,7 @@ import lombok.Setter;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_device", catalog="adsync")
+@Table(name = "cme_device", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeDevice implements Serializable {
 	private static final long serialVersionUID = 1616971777135923950L;

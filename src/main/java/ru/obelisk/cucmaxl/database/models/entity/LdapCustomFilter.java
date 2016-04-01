@@ -18,7 +18,7 @@ import ru.obelisk.cucmaxl.database.models.views.View;
 import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 @Entity
-@Table(name = "ldap_custom_filter", catalog="adsync")
+@Table(name = "ldap_custom_filter", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class LdapCustomFilter {
 	

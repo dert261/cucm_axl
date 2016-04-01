@@ -38,7 +38,7 @@ import ru.obelisk.cucmaxl.database.models.views.View;
 import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 @Entity
-@Table(name = "cme_router", catalog="adsync")
+@Table(name = "cme_router", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @ToString(exclude={"location"})
 @EqualsAndHashCode(exclude={"id","numberLocalized"})

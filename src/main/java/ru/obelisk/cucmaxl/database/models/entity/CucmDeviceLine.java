@@ -20,7 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "cucm_device_line", catalog="adsync",
+@Table(name = "cucm_device_line", catalog="adsync", schema="public",
 		uniqueConstraints=@UniqueConstraint(columnNames={"deviceId", "lineId"}))
 @EqualsAndHashCode(exclude={"id"})
 @ToString

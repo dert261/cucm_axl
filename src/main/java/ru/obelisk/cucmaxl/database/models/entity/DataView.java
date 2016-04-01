@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "cucm_data_view", catalog = "adsync")
+@Table(name = "cucm_data_view", catalog = "adsync", schema="public")
 public class DataView implements Serializable {
 	
 	private static final long serialVersionUID = 4195901231230708792L;

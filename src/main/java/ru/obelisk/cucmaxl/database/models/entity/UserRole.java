@@ -24,7 +24,7 @@ import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 
 @Entity
-@Table(name = "user_roles", catalog="adsync")
+@Table(name = "user_roles", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserRole implements Serializable{
 	/**
@@ -46,7 +46,7 @@ public class UserRole implements Serializable{
     
     
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name="users2user_roles", catalog="adsync",
+    @JoinTable(name="users2user_roles", catalog="adsync", schema="public",
     	joinColumns=@JoinColumn(name="role_id"),
     	inverseJoinColumns=@JoinColumn(name="user_id")
     )

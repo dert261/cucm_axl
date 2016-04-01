@@ -23,7 +23,7 @@ import lombok.ToString;
 import ru.obelisk.cucmaxl.cucm.utils.CucmRepo;
 
 @Entity
-@Table(name = "cucm_device", catalog="adsync")
+@Table(name = "cucm_device", catalog="adsync", schema="public")
 @EqualsAndHashCode(exclude={"id","linesTemp","lines"})
 @ToString(exclude={"linesTemp", "lines", "userId", "cucmAxlPort"})
 public class CucmDevice implements Serializable, CucmRepo {

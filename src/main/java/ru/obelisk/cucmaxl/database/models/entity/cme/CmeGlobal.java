@@ -26,7 +26,7 @@ import ru.obelisk.cucmaxl.database.models.views.View;
 
 
 @Entity
-@Table(name = "cme_global_state", catalog="adsync")
+@Table(name = "cme_global_state", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeGlobal implements Serializable {
 	private static final long serialVersionUID = -2996907910162345512L;

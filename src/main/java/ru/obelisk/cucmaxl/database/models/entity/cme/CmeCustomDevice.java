@@ -28,7 +28,7 @@ import ru.obelisk.cucmaxl.database.models.entity.enums.CmeUserType;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_custom_device", catalog="adsync")
+@Table(name = "cme_custom_device", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @ToString(exclude={"cmeDevice"})
 public class CmeCustomDevice implements Serializable {

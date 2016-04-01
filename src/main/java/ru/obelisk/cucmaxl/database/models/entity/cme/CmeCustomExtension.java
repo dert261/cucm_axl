@@ -23,7 +23,7 @@ import lombok.ToString;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_custom_extension", catalog="adsync")
+@Table(name = "cme_custom_extension", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @ToString(exclude={"cmeExtension"})
 public class CmeCustomExtension implements Serializable {

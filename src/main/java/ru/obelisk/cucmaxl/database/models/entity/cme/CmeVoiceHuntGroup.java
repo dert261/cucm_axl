@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_voice_hunt_group", catalog="adsync")
+@Table(name = "cme_voice_hunt_group", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
 public class CmeVoiceHuntGroup implements Serializable{

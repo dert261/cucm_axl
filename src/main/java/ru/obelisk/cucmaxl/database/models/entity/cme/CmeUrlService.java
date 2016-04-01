@@ -27,7 +27,7 @@ import lombok.ToString;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_url_service", catalog="adsync")
+@Table(name = "cme_url_service", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @ToString(exclude={"cmeGlobal"}, includeFieldNames=true)
 @EqualsAndHashCode(exclude={"id"})

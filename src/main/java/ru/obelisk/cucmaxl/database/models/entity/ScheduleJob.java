@@ -29,7 +29,7 @@ import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 import ru.obelisk.cucmaxl.web.validator.NotNullField;
 
 @Entity
-@Table(name = "schedule_job", catalog="adsync")
+@Table(name = "schedule_job", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ScheduleJob implements Serializable {
 	private static final long serialVersionUID = -8885259600985788247L;

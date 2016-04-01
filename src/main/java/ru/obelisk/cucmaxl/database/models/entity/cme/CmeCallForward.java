@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_callforward", catalog="adsync")
+@Table(name = "cme_callforward", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeCallForward implements Serializable{
 	private static final long serialVersionUID = 548352710978394386L;

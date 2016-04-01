@@ -19,7 +19,7 @@ import lombok.ToString;
 
 
 @Entity
-@Table(name = "upload_file", catalog="adsync")
+@Table(name = "upload_file", catalog="adsync", schema="public")
 @EqualsAndHashCode(exclude={"id"})
 @ToString
 public class UploadFile implements Serializable {

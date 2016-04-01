@@ -29,7 +29,7 @@ import ru.obelisk.cucmaxl.database.models.entity.enums.CucmPhoneType;
 import ru.obelisk.cucmaxl.database.models.views.View;
 
 @Entity
-@Table(name = "cme_custom_sip_device", catalog="adsync")
+@Table(name = "cme_custom_sip_device", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeCustomSipDevice implements Serializable {
 	private static final long serialVersionUID = 1436518227169422675L;

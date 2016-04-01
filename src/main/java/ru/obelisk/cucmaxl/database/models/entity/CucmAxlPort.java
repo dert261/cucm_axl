@@ -28,7 +28,7 @@ import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 
 @Entity
-@Table(name = "cucm_axl_port", catalog="adsync")
+@Table(name = "cucm_axl_port", catalog="adsync", schema="public")
 public class CucmAxlPort implements Serializable {
 	
 	private static final long serialVersionUID = 5227717725577564434L;

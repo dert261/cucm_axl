@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "partition_filter", catalog="adsync")
+@Table(name = "partition_filter", catalog="adsync", schema="public")
 @ToString(exclude={"numberLocalized"})
 public class PartitionFilter implements Serializable {
  	private static final long serialVersionUID = 1771992995961268796L;

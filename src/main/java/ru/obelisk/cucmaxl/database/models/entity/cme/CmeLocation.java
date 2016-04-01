@@ -25,7 +25,7 @@ import ru.obelisk.cucmaxl.database.models.views.View;
 import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 @Entity
-@Table(name = "cme_location", catalog="adsync")
+@Table(name = "cme_location", catalog="adsync", schema="public")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CmeLocation implements Serializable {
 	private static final long serialVersionUID = 368289999948162835L;

@@ -18,7 +18,7 @@ import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 import ru.obelisk.cucmaxl.web.validator.NotNullField;
 
 @Entity
-@Table(name = "schedule_cron", catalog="adsync")
+@Table(name = "schedule_cron", catalog="adsync", schema="public")
 public class ScheduleCron implements Serializable {
 	private static final long serialVersionUID = -8143008404515034945L;
 
