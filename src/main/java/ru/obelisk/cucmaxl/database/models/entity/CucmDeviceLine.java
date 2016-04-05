@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -21,34 +22,39 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "cucm_device_line", catalog="adsync", schema="public",
-		uniqueConstraints=@UniqueConstraint(columnNames={"deviceId", "lineId"}))
+		uniqueConstraints=@UniqueConstraint(columnNames={"device_id", "line_id"}))
 @EqualsAndHashCode(exclude={"id"})
 @ToString
 public class CucmDeviceLine implements Serializable, Comparable<CucmDeviceLine> {
 	private static final long serialVersionUID = 7054028254892414948L;
 
-	@Id
+	
 	@Getter
 	@Setter
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	/*@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)*/
+	
+	@Id
+	@SequenceGenerator(sequenceName = "cucm_device_line_id_seq", name = "CucmDeviceLineIdSequence", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmDeviceLineIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	
-	@Column(name = "lineIndex")
 	@Getter
 	@Setter
+	@Column(name = "line_index")
 	private String lineIndex;
 	
 	@ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.MERGE})
 	@Getter
 	@Setter
-	@JoinColumn(name = "deviceId")
+	@JoinColumn(name = "device_id")
 	private CucmDevice device;
 	
 	@ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.MERGE})
 	@Getter
 	@Setter
-	@JoinColumn(name = "lineId")
+	@JoinColumn(name = "line_id")
 	private CucmLine line;
 
 	@Override

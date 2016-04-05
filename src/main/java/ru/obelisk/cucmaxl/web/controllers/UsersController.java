@@ -107,7 +107,6 @@ public class UsersController {
 	public @ResponseBody List<Select2Result> searchUser(@PathVariable Integer id) {
 		logger.info("Requesting search user with id: {}",id);
 		User user = userService.getUserById(id);
-		//u.id, CONCAT(u.name,' (',u.login,')')
 		Select2Result selResult = new Select2Result(user.getId(), user.getName()+"("+user.getLogin()+")");
 		List<Select2Result> resultList = new ArrayList<Select2Result>();
 		resultList.add(selResult);

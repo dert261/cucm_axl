@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -27,7 +28,8 @@ public class ChangeNumberDetail implements Serializable {
 	@Getter
     @Setter
  	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+ 	@SequenceGenerator(sequenceName = "job_changenumber_detail_id_seq", name = "JobChangenumberDetailIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "JobChangenumberDetailIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
     private Integer id;
 	

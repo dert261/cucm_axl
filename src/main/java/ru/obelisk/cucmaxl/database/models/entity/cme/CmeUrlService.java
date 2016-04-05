@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -38,7 +39,8 @@ public class CmeUrlService implements Serializable{
 	@Getter
 	@Setter
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_url_service_id_seq", name = "CmeUrlServiceIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeUrlServiceIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

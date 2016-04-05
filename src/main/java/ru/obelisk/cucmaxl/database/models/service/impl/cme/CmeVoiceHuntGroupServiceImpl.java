@@ -113,7 +113,7 @@ public class CmeVoiceHuntGroupServiceImpl implements CmeVoiceHuntGroupService {
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(cmeVoiceHuntGroup.id, cmeVoiceHuntGroup.name) FROM CmeVoiceHuntGroup cmeVoiceHuntGroup" 
                 		+ " WHERE "
-                        + " cmeVoiceHuntGroup.name LIKE :term", Select2Result.class)
+                        + " LOWER(cmeVoiceHuntGroup.name) LIKE :term", Select2Result.class)
         .setParameter("term", "%" + term.toLowerCase() + "%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();

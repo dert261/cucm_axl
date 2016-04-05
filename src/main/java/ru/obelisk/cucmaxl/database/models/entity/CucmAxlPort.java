@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -35,7 +36,8 @@ public class CucmAxlPort implements Serializable {
 
 	@Id
 	@JsonView(value={View.RouterExportDetail.class, View.EndUser.class, View.CucmAxlPort.class})
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cucm_axl_port_id_seq", name = "CucmAxlPortIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmAxlPortIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

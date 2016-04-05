@@ -76,7 +76,7 @@ public class CmeLocationServiceImpl implements CmeLocationService {
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(cmeLocation.id, cmeLocation.name) FROM CmeLocation cmeLocation" 
                 		+ " WHERE "
-                        + " cmeLocation.name LIKE :term", Select2Result.class)
+                        + " LOWER(cmeLocation.name) LIKE :term", Select2Result.class)
         .setParameter("term", "%" + term.toLowerCase() + "%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();

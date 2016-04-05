@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -91,7 +92,8 @@ public class DataView implements Serializable {
 	@GenericGenerator(name = "generator", strategy = "foreign", 
 			parameters = @Parameter(name = "property", value = "device_name"))
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cucm_data_view_id_seq", name = "DataViewIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DataViewIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

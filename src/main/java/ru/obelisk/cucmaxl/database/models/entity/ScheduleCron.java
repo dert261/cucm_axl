@@ -8,7 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -24,7 +26,8 @@ public class ScheduleCron implements Serializable {
 
 	@Id
 	@JsonView(value={View.ScheduleJob.class})
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "schedule_cron_id_seq", name = "ScheduleCronIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ScheduleCronIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	
@@ -47,7 +50,7 @@ public class ScheduleCron implements Serializable {
 	private String hours = "*";
 	
 	@JsonView(value={View.ScheduleJob.class})
-	@Column(name = "dayOfMonth")
+	@Column(name = "day_of_month")
 	@NotNullField
     @NotEmpty
 	private String dayOfMonth = "*";
@@ -59,7 +62,7 @@ public class ScheduleCron implements Serializable {
 	private String month = "*";
 	
 	@JsonView(value={View.ScheduleJob.class})
-	@Column(name = "dayOfWeek")
+	@Column(name = "day_of_week")
 	@NotNullField
     @NotEmpty
 	private String dayOfWeek = "*";
@@ -69,6 +72,7 @@ public class ScheduleCron implements Serializable {
 	private String year = "*";
 	
 	@OneToOne(fetch=FetchType.LAZY, optional=true)
+	@JoinColumn(name="schedule_job_id")
 	private ScheduleJob scheduleJob;
 	
 	public Integer getId() {

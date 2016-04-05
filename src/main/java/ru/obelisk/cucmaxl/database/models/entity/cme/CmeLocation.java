@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -36,7 +37,8 @@ public class CmeLocation implements Serializable {
 	
 	@JsonView({View.CmeLocation.class, View.CmeRouter.class})
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_location_id_seq", name = "CmeLocationIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeLocationIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

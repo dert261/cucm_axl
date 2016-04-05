@@ -52,8 +52,9 @@ public interface UserRepository extends DataTablesRepository<User, Integer> {
 			+ " LEFT JOIN FETCH devLine.line line"
 		+ " WHERE"
 			+ " (phoneBook.uploadPhone = true OR phoneBook.uploadPhone IS NULL)"
-			+ " AND (devLine.lineIndex = 1 OR devLine.lineIndex IS NULL)"
+			+ " AND (devLine.lineIndex = '1' OR devLine.lineIndex IS NULL)"
 			+ " AND user.ldapDirSyncParameters = :ldapParams"
+			//+ " AND ldapDir = :ldapParams"
 		+" ORDER BY user.id, devLine.lineIndex"
 	)
 	List<User> findAllForADSyncByLdapSource(@Param("ldapParams") LdapDirSyncParameters ldapParams);
@@ -66,7 +67,7 @@ public interface UserRepository extends DataTablesRepository<User, Integer> {
 			+ " LEFT JOIN FETCH devLine.line line"
 		+ " WHERE"
 			+ " (phoneBook.uploadPhone = true OR phoneBook.uploadPhone IS NULL)"
-			+ " AND (devLine.lineIndex = 1 OR devLine.lineIndex IS NULL)"
+			+ " AND (devLine.lineIndex = '1' OR devLine.lineIndex IS NULL)"
 			+ " AND ldapDir.fqdnName = :fqdn"
 			+" ORDER BY user.id, devLine.lineIndex"
 	)

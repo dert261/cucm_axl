@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -28,7 +29,8 @@ public class EndUserPhoneBook implements Serializable {
 
 	@Id
 	@JsonView(value={View.User.class, View.EndUserPhoneBook.class})
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "end_user_phone_book_id_seq", name = "EndUserPhoneBookIdSequence", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EndUserPhoneBookIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

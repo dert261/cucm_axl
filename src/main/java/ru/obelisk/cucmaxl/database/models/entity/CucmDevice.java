@@ -11,8 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -32,7 +34,8 @@ public class CucmDevice implements Serializable, CucmRepo {
 	@Setter
 	@Getter
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cucm_device_id_seq", name = "CucmDeviceIdSequence", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmDeviceIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	
@@ -64,11 +67,13 @@ public class CucmDevice implements Serializable, CucmRepo {
 	@Getter
 	@Setter
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
+	@JoinColumn(name="user_id")
 	private User userId;
 	
 	@Getter
 	@Setter
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
+	@JoinColumn(name="cucm_axl_port_id")
 	private CucmAxlPort cucmAxlPort;
 	
 	@Getter

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -23,7 +24,8 @@ public class PartitionFilter implements Serializable {
  	@Getter
     @Setter
  	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+ 	@SequenceGenerator(sequenceName = "partition_filter_id_seq", name = "PartitionFilterIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PartitionFilterIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
     private Integer id;
      

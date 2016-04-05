@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -46,7 +47,8 @@ public class LdapDirSyncParameters {
 		
 		@JsonView(value={View.LdapDirSyncParameters.class, View.User.class})
 	    @Id
-	    @GeneratedValue(strategy = GenerationType.AUTO)
+	    @SequenceGenerator(sequenceName = "ldap_dir_sync_parameters_id_seq", name = "LdapDirSyncParametersIdSequence")
+		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LdapDirSyncParametersIdSequence")
 	    @Column(name = "id", length = 11, nullable = false)
 	    private Integer id;
 	    
@@ -129,6 +131,7 @@ public class LdapDirSyncParameters {
 		@JsonView(value={View.LdapDirSyncParameters.class})
 	    @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.MERGE)
 	    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+		@JoinColumn(name="ldap_custom_filter_id")
 	    private LdapCustomFilter ldapCustomFilter;
 		
 		public LdapDirSyncParameters(){

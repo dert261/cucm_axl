@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -30,7 +31,8 @@ public class LdapDirSyncServer {
 	
 	@JsonView(value={View.LdapDirSyncParameters.class})
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "ldap_dir_sync_server_id_seq", name = "LdapDirSyncServerIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LdapDirSyncServerIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
      

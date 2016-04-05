@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -46,7 +47,8 @@ public class User implements Serializable {
  	private static final long serialVersionUID = 2731242147275363481L;
 
  	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+ 	@SequenceGenerator(sequenceName = "users_id_seq", name = "UsersIdSequence", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UsersIdSequence")
 	@JsonView(value={View.User.class, View.CmeDevice.class, View.CmeSipDevice.class})
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
@@ -173,7 +175,7 @@ public class User implements Serializable {
     private String telephoneNumber;
     
     @JsonView(value={View.User.class})
-    @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.DETACH)
+    @ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "ldap_dir_sync_parameters_id")
 	private LdapDirSyncParameters ldapDirSyncParameters;
     

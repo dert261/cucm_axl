@@ -77,7 +77,7 @@ public class CmeSipExtensionServiceImpl implements CmeSipExtensionService {
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(cmeSipExtension.id, cmeSipExtension.name) FROM CmeSipExtension cmeSipExtension" 
                 		+ " WHERE "
-                        + " cmeSipExtension.name LIKE :term", Select2Result.class)
+                        + " LOWER(cmeSipExtension.name) LIKE :term", Select2Result.class)
         .setParameter("term", "%" + term.toLowerCase() + "%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();

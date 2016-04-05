@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -20,44 +21,45 @@ public class CucmUser implements Serializable {
 	private static final long serialVersionUID = -7219265456818335570L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cucm_user_id_seq", name = "CucmUserIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmUserIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 
 	@Column(name = "uuid")
 	private String uuid;
 	
-	@Column(name = "accountType")
+	@Column(name = "account_type")
 	private String accountType;
 
-	@Column(name = "userId")
+	@Column(name = "user_id")
 	private String userId;
 
-	@Column(name = "firstName")
+	@Column(name = "first_name")
 	private String firstName;
 
-	@Column(name = "middleName")
+	@Column(name = "middle_name")
 	private String middleName;
 
-	@Column(name = "lastName")
+	@Column(name = "last_name")
 	private String lastName;
 
 	@Column(name = "title")
 	private String title;
 
-	@Column(name = "directoryUri")
+	@Column(name = "directory_uri")
 	private String directoryUri;
 
-	@Column(name = "telephoneNumber")
+	@Column(name = "telephone_number")
 	private String telephoneNumber;
 
-	@Column(name = "homeNumber")
+	@Column(name = "home_number")
 	private String homeNumber;
 
-	@Column(name = "mobileNumber")
+	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@Column(name = "pagerNumber")
+	@Column(name = "pager_number")
 	private String pagerNumber;
 
 	@Column(name = "mailid")
@@ -69,19 +71,19 @@ public class CucmUser implements Serializable {
 	@Column(name = "department")
 	private String department;
 
-	@Column(name = "userLocale")
+	@Column(name = "user_locale")
 	private String userLocale;
 
-	@Column(name = "associatedPc")
+	@Column(name = "associated_pc")
 	private String associatedPc;
 
 	@Column(name = "status")
 	private String status;
 
-	@Column(name = "primExtensionPattern")
+	@Column(name = "prim_extension_pattern")
 	private String primExtensionPattern;
 
-	@Column(name = "primExtensionRoutePartitionName")
+	@Column(name = "prim_extension_route_partition_name")
 	private String primExtensionRoutePartitionName;
 	
 	@Column(name = "create_time")

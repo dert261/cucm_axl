@@ -11,8 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -36,7 +38,8 @@ public class ScheduleJob implements Serializable {
 
 	@Id
 	@JsonView(value={View.ScheduleJob.class, View.LdapDirSyncParameters.class})
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "schedule_job_id_seq", name = "ScheduleJobIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ScheduleJobIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	
@@ -55,33 +58,32 @@ public class ScheduleJob implements Serializable {
 	private String description;
 	
 	@JsonView(value={View.ScheduleJob.class})
-	@Column(name = "startDate")
+	@Column(name = "start_date")
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@NotNullField
     private DateTime startDate = null;
 	
 	@JsonView(value={View.ScheduleJob.class})
-	@Column(name = "stopDate")
+	@Column(name = "stop_date")
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime stopDate = null;
 	
 	@JsonView(value={View.ScheduleJob.class})
-	@Column(name = "repeatFlag")
+	@Column(name = "repeat_flag")
 	private boolean repeatFlag = false;
 	
 	@Valid
 	@JsonView(value={View.ScheduleJob.class})
 	@OneToOne(fetch=FetchType.LAZY, optional=true)
+	@JoinColumn(name="schedule_cron_id")	
 	private ScheduleCron scheduleCron;
 	
 	@JsonView(value={View.ScheduleJob.class})
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
-	//@JoinColumn(name="scheduleJob_id")
 	private Set<LdapDirSyncParameters> ldapDirSyncParameters = new HashSet<LdapDirSyncParameters>(0);
 	
 	@JsonView(value={View.ScheduleJob.class})
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
-	//@JoinColumn(name="scheduleJob_id")
 	private Set<CucmAxlPort> cucmAxlPorts = new HashSet<CucmAxlPort>(0);
 	
 	public Integer getId() {

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -29,7 +30,9 @@ public class CucmLine implements Serializable, CucmRepo {
 	@Getter
 	@Setter
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(sequenceName = "cucm_line_id_seq", name = "CucmLineIdSequence", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmLineIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

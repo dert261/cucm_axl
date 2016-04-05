@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -27,7 +28,8 @@ public class CmeExtMapStatus implements Serializable{
 
 	@JsonView({View.CmeDevice.class, View.CmeExtension.class})
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_ext_map_status_id_seq", name = "CmeExtMapStatusIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeExtMapStatusIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 		

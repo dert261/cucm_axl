@@ -6,7 +6,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,7 +27,8 @@ public class LdapAuthenticationServer {
 	public interface LdapAuthServersValid{}
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "ldap_authentication_servers_id_seq", name = "LdapAuthenticationServerIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LdapAuthenticationServerIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
      
@@ -39,7 +42,7 @@ public class LdapAuthenticationServer {
     private String host = null;
     
     @Column(name = "port", length = 5, nullable = false)
-    @Min(value = 0, message = "field.validation.error.min")
+    @Min(value = 0, message = "field.validation.error.min")	
     @Max(value = 65535, message = "field.validation.error.max")
     private String port = "389";
     
@@ -47,6 +50,7 @@ public class LdapAuthenticationServer {
     private boolean useSSL = false;
     
     @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="ldap_auth_params_id")
     private LdapAuthenticationParameters ldapAuthParams;
     
     public LdapAuthenticationServer (){

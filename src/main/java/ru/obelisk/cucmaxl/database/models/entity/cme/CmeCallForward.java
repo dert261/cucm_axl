@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -27,7 +28,8 @@ public class CmeCallForward implements Serializable{
 
 	@JsonView(View.CmeExtension.class)
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_callforward_id_seq", name = "CmeCallforwardIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeCallforwardIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

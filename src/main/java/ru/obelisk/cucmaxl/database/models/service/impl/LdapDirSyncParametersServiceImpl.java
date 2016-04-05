@@ -83,7 +83,7 @@ public class LdapDirSyncParametersServiceImpl implements LdapDirSyncParametersSe
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(ldapDirSyncParameters.id, ldapDirSyncParameters.configName) FROM LdapDirSyncParameters ldapDirSyncParameters" 
                 		+ " WHERE "
-                        + " ldapDirSyncParameters.configName LIKE :term", Select2Result.class)
+                        + " LOWER(ldapDirSyncParameters.configName) LIKE :term", Select2Result.class)
         .setParameter("term", "%" + term.toLowerCase() + "%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();

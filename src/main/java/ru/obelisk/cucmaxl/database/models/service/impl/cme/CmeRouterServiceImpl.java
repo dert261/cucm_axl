@@ -80,7 +80,7 @@ public class CmeRouterServiceImpl implements CmeRouterService {
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(cmeRouter.id, cmeRouter.name) FROM CmeRouter cmeRouter" 
                 		+ " WHERE "
-                        + " cmeRouter.name LIKE :term", Select2Result.class)
+                        + " LOWER(cmeRouter.name) LIKE :term", Select2Result.class)
         .setParameter("term", "%" + term.toLowerCase() + "%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();

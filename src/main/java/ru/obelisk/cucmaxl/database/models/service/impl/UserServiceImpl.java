@@ -177,8 +177,8 @@ public class UserServiceImpl implements UserService {
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(u.id, CONCAT(u.name,' (',u.login,')')) FROM User u" 
                 		+ " WHERE "
-                        + " u.name LIKE :term"
-                        + " OR u.login LIKE :term", Select2Result.class)
+                        + " LOWER(u.name) LIKE :term"
+                        + " OR LOWER(u.login) LIKE :term", Select2Result.class)
         .setParameter("term", "%" + term.toLowerCase() + "%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();
@@ -195,9 +195,9 @@ public class UserServiceImpl implements UserService {
 						+ " WHERE "
                 		+ " u.status = 'ACTIVE'"
 						+ " AND ldapParams.fqdnName IN ('bin.bank','corp.icba.biz')"
-                        + " AND (u.name LIKE :term"
-                        + " OR u.login LIKE :term)", Select2Result.class)
-        .setParameter("term", "%" + term.toLowerCase() + "%")
+                        + " AND (LOWER(u.name) LIKE :term"
+                        + " OR LOWER(u.login) LIKE :term)", Select2Result.class)
+        .setParameter("term", "%"+term.toLowerCase()+"%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();
         return reultList;

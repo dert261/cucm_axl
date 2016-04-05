@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -44,7 +45,8 @@ public class Job implements Serializable {
 	@Getter
     @Setter
  	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+ 	@SequenceGenerator(sequenceName = "jobs_id_seq", name = "JobsIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "JobsIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
     private Integer id;
      
@@ -87,7 +89,7 @@ public class Job implements Serializable {
     @Getter
     @Setter
     @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY, optional = true, orphanRemoval=true)
-   	@JoinColumn(name = "changeNumberDetail_id")
+   	@JoinColumn(name = "change_number_detail_id")
    	private ChangeNumberDetail changeNumberDetail = null;
 
     @JsonView(value={View.Job.class})

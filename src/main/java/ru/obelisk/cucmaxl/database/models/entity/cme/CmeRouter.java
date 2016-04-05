@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -45,19 +46,20 @@ import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 public class CmeRouter implements Serializable {
 	private static final long serialVersionUID = 1634935505364487243L;
 
+	@JsonView({View.RouterExportDetail.class, View.CmeRouterWithOutRelations.class, View.CmeRouter.class, View.CmeLocation.class})
+	@Getter
+	@Setter
+	@Id
+	@SequenceGenerator(sequenceName = "cme_router_id_seq", name = "CmeRouterIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeRouterIdSequence")
+    @Column(name = "id", length = 11, nullable = false)
+	private Integer id;
+	
 	@JsonView({View.CmeRouter.class, View.CmeLocation.class})
 	@Getter
 	@Setter
 	@Transient
     private int numberLocalized;
-	
-	@JsonView({View.RouterExportDetail.class, View.CmeRouterWithOutRelations.class, View.CmeRouter.class, View.CmeLocation.class})
-	@Getter
-	@Setter
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", length = 11, nullable = false)
-	private Integer id;
 	
 	@JsonView({View.RouterExportDetail.class, View.CmeRouterWithOutRelations.class, View.CmeRouter.class, View.CmeLocation.class})
 	@Getter
@@ -146,12 +148,14 @@ public class CmeRouter implements Serializable {
 	@JsonView({View.CmeRouter.class})
 	@Getter
 	@Setter
+	@Column(name = "sync_status")
 	@Enumerated(EnumType.STRING)
 	private CmeRouterSyncStatus syncStatus = CmeRouterSyncStatus.NONSYNC;
 	
 	@JsonView({View.CmeRouter.class})
 	@Getter
 	@Setter
+	@Column(name = "last_update_time")
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private LocalDateTime lastUpdateTime;

@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -28,7 +29,8 @@ public class CmeSpeedDial implements Serializable{
 
 	@JsonView({View.CmeRouter.class, View.CmeDevice.class})
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_speed_dial_id_seq", name = "CmeSpeedDialIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeSpeedDialIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	

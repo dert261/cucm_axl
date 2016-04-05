@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -38,7 +39,8 @@ public class CmeCustomDevice implements Serializable {
 	@Getter
 	@Setter
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_custom_device_id_seq", name = "CmeCustomDeviceIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeCustomDeviceIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
 	
@@ -52,7 +54,7 @@ public class CmeCustomDevice implements Serializable {
 	@JsonView({View.CmeCustomDevice.class, View.CmeDevice.class})
 	@Getter
 	@Setter
-	@Column(name="userType")
+	@Column(name="user_type")
 	@Enumerated(EnumType.STRING)
     private CmeUserType userType = CmeUserType.ANONYMOUS;
 	

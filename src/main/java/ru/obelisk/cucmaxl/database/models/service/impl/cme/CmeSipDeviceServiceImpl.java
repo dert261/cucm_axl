@@ -127,7 +127,7 @@ public class CmeSipDeviceServiceImpl implements CmeSipDeviceService {
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(cmeSipDevice.id, cmeSipDevice.name) FROM CmeSipDevice cmeSipDevice" 
                 		+ " WHERE "
-                        + " cmeSipDevice.name LIKE :term", Select2Result.class)
+                        + " LOWER(cmeSipDevice.name) LIKE :term", Select2Result.class)
         .setParameter("term", "%" + term.toLowerCase() + "%")
         .setHint("org.hibernate.cacheable", true)
         .getResultList();

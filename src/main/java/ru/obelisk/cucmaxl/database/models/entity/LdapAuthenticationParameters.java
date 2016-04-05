@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -34,7 +35,8 @@ public class LdapAuthenticationParameters {
 		public interface LdapAuthParamsStepTwo{}
 		
 	    @Id
-	    @GeneratedValue(strategy = GenerationType.AUTO)
+	    @SequenceGenerator(sequenceName = "ldap_authentication_parameters_id_seq", name = "LdapAuthenticationParameterIdSequence")
+		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LdapAuthenticationParameterIdSequence")
 	    @Column(name = "id", length = 11, nullable = false)
 	    private Integer id;
 	     
@@ -63,7 +65,7 @@ public class LdapAuthenticationParameters {
 	    
 	    @Valid
 	    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval=true)
-	    @JoinColumn(name="ldapAuthParams_id")
+	    @JoinColumn(name="ldap_auth_params_id")
 	    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	    private List<LdapAuthenticationServer> ldapServers = new ArrayList<LdapAuthenticationServer>(0);
 	    	       

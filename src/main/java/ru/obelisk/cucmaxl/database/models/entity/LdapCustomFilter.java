@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -26,7 +27,8 @@ public class LdapCustomFilter {
 	
 	@JsonView(value={View.LdapCustomFilter.class})
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "ldap_custom_filter_id_seq", name = "LdapCustomFilterIdSequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LdapCustomFilterIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
      

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -38,7 +39,8 @@ public class CmeCustomSipDevice implements Serializable {
 	@Getter
 	@Setter
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_custom_sip_device_id_seq", name = "CmeCustomSipDeviceIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeCustomSipDeviceIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
 	
@@ -52,7 +54,7 @@ public class CmeCustomSipDevice implements Serializable {
 	@JsonView({View.CmeCustomSipDevice.class, View.CmeSipDevice.class})
 	@Getter
 	@Setter
-	@Column(name="userType")
+	@Column(name="user_type")
 	@Enumerated(EnumType.STRING)
     private CmeUserType userType = CmeUserType.ANONYMOUS;
 	

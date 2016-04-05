@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -34,7 +35,8 @@ public class UserRole implements Serializable{
 
 	@Id
 	@JsonView(value={View.User.class})
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "user_roles_id_seq", name = "UserRolesIdSequence", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserRolesIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
      

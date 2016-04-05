@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Cache;
@@ -39,7 +40,8 @@ public class CmeDevice implements Serializable {
 	
 	@JsonView({View.CmeDevice.class, View.CmeRouter.class, View.CmeExtension.class})
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_device_id_seq", name = "CmeDeviceIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeDeviceIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
 	

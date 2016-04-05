@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -37,7 +38,8 @@ public class CmeGlobal implements Serializable {
 	
 	@JsonView({View.CmeRouter.class, View.CmeGlobal.class})
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_global_state_id_seq", name = "CmeGlobalIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeGlobalIdSequence")
     @Column(name = "id", length = 11, nullable = false)
 	private Integer id;
 	
@@ -111,7 +113,7 @@ public class CmeGlobal implements Serializable {
 	
 	@JsonView({View.CmeRouter.class, View.CmeGlobal.class})
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name="global2url_service", catalog="adsync",
+    @JoinTable(name="global2url_service", catalog="adsync", schema="public",
     	joinColumns=@JoinColumn(name="global_id"),
     	inverseJoinColumns=@JoinColumn(name="url_service_id")
     )

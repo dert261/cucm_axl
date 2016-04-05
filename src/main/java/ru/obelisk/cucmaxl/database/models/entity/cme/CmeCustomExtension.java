@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -33,7 +34,8 @@ public class CmeCustomExtension implements Serializable {
 	@Getter
 	@Setter
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "cme_custom_extension_id_seq", name = "CmeCustomExtensionIdSequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CmeCustomExtensionIdSequence")
     @Column(name = "id", length = 11, nullable = false)
     private Integer id;
 	
