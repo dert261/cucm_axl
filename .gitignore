@@ -1,8 +1,8 @@
-target/
-config/
-libraries/
-logs/
-operations/
-upload/
-certs/
-data/
+/target/
+/config/
+/libraries/
+/logs/
+/operations/
+/upload/
+/certs/
+/data/
