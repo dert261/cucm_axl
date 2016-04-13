@@ -215,8 +215,9 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 		Iterator<CucmDevice> deviceRepoValuesIterator = devicesRepo.values().iterator();
 		while(deviceRepoValuesIterator.hasNext()){
 			CucmDevice device = deviceRepoValuesIterator.next();
-			
-			if(!device.getLines().containsAll(device.getLinesTemp())){
+						
+			if(!device.getLines().equals(device.getLinesTemp())){
+				device.getLines().clear();
 				device.getLines().addAll(device.getLinesTemp());
 				device.setChanged(true);
 			}
@@ -322,8 +323,13 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 		
 		CucmLine line = linesRepo.get(row.getLinePkid());
 		if(line==null){
-			line = new CucmLine();
-			line.setPkid(row.getLinePkid());
+			CucmLine dbLine = lineService.findByPkID(row.getLinePkid());
+			if(dbLine==null){
+				line = new CucmLine();
+				line.setPkid(row.getLinePkid());
+			} else {
+				line = dbLine;
+			}	
 			linesRepo.put(row.getLinePkid(), line);
 		}
 		line.setDescription(row.getLineDescription());

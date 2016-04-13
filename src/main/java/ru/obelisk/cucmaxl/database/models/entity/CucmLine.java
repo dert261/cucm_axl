@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,7 +23,7 @@ import ru.obelisk.cucmaxl.cucm.utils.CucmRepo;
 
 @Entity
 @Table(name = "cucm_line", catalog="adsync", schema="public")
-//@EqualsAndHashCode(exclude={"id","devices"})
+@EqualsAndHashCode(exclude={"id","devices"})
 @ToString(exclude={"devices"})
 public class CucmLine implements Serializable, CucmRepo {
 	private static final long serialVersionUID = -8429115892777286213L;
@@ -30,7 +31,6 @@ public class CucmLine implements Serializable, CucmRepo {
 	@Getter
 	@Setter
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@SequenceGenerator(sequenceName = "cucm_line_id_seq", name = "CucmLineIdSequence", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmLineIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
@@ -63,37 +63,5 @@ public class CucmLine implements Serializable, CucmRepo {
 
 	public boolean isNew(){
 		return this.id==null;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CucmLine other = (CucmLine) obj;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (partition == null) {
-			if (other.partition != null)
-				return false;
-		} else if (!partition.equals(other.partition))
-			return false;
-		if (pattern == null) {
-			if (other.pattern != null)
-				return false;
-		} else if (!pattern.equals(other.pattern))
-			return false;
-		if (pkid == null) {
-			if (other.pkid != null)
-				return false;
-		} else if (!pkid.equals(other.pkid))
-			return false;
-		return true;
 	}
 }
