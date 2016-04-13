@@ -23,7 +23,7 @@ public class CucmAxlPortSyncUtils {
 		
 			logger.info("Requesting resync CUCM AXL port");
 			
-			CucmAxlPort axlPort = cucmAxlPortService.getCucmAxlPortById(axlPortId);
+			CucmAxlPort axlPort = cucmAxlPortService.findById(axlPortId);
 			if(axlPort!=null){
 				DateTime startDate = new DateTime();
 				axlPort.setResyncStatus(ResyncStatus.ACTIVE);

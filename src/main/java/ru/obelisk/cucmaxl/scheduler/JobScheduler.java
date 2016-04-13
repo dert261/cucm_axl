@@ -66,7 +66,7 @@ public class JobScheduler {
 	}
 	
 	private void cucmAxlPortSyncShedulerInit(){
-		List<CucmAxlPort> cucmAxlPorts = cucmAxlPortService.getAllCucmAxlPorts();
+		List<CucmAxlPort> cucmAxlPorts = cucmAxlPortService.findAll();
 		Iterator<CucmAxlPort> cucmAxlPortsIterator = cucmAxlPorts.iterator();
 		while(cucmAxlPortsIterator.hasNext()){
 			CucmAxlPort cucmAxlPort = cucmAxlPortsIterator.next();

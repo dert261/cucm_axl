@@ -24,18 +24,19 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncStatus;
 import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncUnit;
+import ru.obelisk.cucmaxl.database.models.entity.utils.BaseEntity;
 import ru.obelisk.cucmaxl.database.models.views.View;
 import ru.obelisk.cucmaxl.web.validator.NotEmpty;
 
 
 @Entity
 @Table(name = "cucm_axl_port", catalog="adsync", schema="public")
-public class CucmAxlPort implements Serializable {
+public class CucmAxlPort implements Serializable, BaseEntity {
 	
 	private static final long serialVersionUID = 5227717725577564434L;
 
 	@Id
-	@JsonView(value={View.RouterExportDetail.class, View.EndUser.class, View.CucmAxlPort.class})
+	@JsonView(value={View.Collector.class, View.RouterExportDetail.class, View.EndUser.class, View.CucmAxlPort.class})
 	@SequenceGenerator(sequenceName = "cucm_axl_port_id_seq", name = "CucmAxlPortIdSequence")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmAxlPortIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
@@ -45,13 +46,13 @@ public class CucmAxlPort implements Serializable {
 	@Transient
 	private int numberLocalized;
 	
-	@JsonView(value={View.RouterExportDetail.class, View.EndUser.class, View.CucmAxlPort.class})
+	@JsonView(value={View.Collector.class, View.RouterExportDetail.class, View.EndUser.class, View.CucmAxlPort.class})
 	@Column(name = "name")
 	@NotNull 
     @NotEmpty
 	private String name=null;
 	
-	@JsonView(value={View.CucmAxlPort.class})
+	@JsonView(value={View.Collector.class, View.CucmAxlPort.class})
 	@Column(name = "description")
 	private String description=null;
 	

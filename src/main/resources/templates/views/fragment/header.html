@@ -18,6 +18,13 @@
 	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/css/select.dataTables.min.css" th:href="@{/static/assets/data-tables-1.10.6/css/select.dataTables.min.css}" />
 	<link rel="stylesheet" src="/static/assets/select2/4.0.1/css/select2.css" th:href="@{/static/assets/select2/4.0.1/css/select2.css}" />
 	<link rel="stylesheet" src="/static/assets/metisMenu/2.0.1/metisMenu.min.css" th:href="@{/static/assets/metisMenu/2.0.1/metisMenu.min.css}" />
+	<!-- Error for select2 elements -->
+	<style>	
+		.has-error .select2-selection {
+    		border: 1px solid #a94442;
+    		border-radius: 4px;
+		}
+	</style>	
 	<script src="/static/assets/jquery-1.11.2.min.js" th:href="@{/static/assets/jquery-1.11.2.min.js}" > </script>  
 </head>
 
@@ -129,6 +136,15 @@
 				                
 				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
 			                    	<a href="/jobs/" th:utext="'&lt;i class=\'fa fa-random fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.jobs}">Jobs</a>
+				                </li>
+				                
+				                 <li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-desktop fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>Monitor<span class="fa arrow"></span></a> 
+			                    	<ul class="nav nav-third-level">
+				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
+				                    		<a href="/monitor/collectors/" th:utext="'&lt;i class=\'fa fa-dot-circle-o fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor.collectors}">Collectors</a>
+				                    	</li>
+				                    </ul>	
 				                </li>
 				                 
 				            </ul>

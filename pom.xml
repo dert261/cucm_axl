@@ -39,11 +39,32 @@
 	    <commons-io.version>1.3.2</commons-io.version>
 	    <quartz.version>2.2.2</quartz.version>
 	    <cucmesdk.version>1.0.2</cucmesdk.version>
+	    <camel.version>2.17.0</camel.version>
 	</properties>
 	
 	
 
 	<dependencies>
+		
+		<dependency>
+    		<groupId>com.univocity</groupId>
+    		<artifactId>univocity-parsers</artifactId>
+    		<version>2.0.2</version>
+    		<type>jar</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-core</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-ftp</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>uk.co.gcwilliams</groupId>
 			<artifactId>jodatime-thymeleaf-dialect</artifactId>
@@ -342,6 +363,10 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
 			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jersey</artifactId>
 		</dependency>
 	</dependencies>
 		

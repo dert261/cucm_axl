@@ -39,5 +39,7 @@ public class View{
 	
 	public interface Job extends Datatable {}
 	
+	public interface Collector extends Datatable {}
+	
 	
 }

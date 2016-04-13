@@ -2,6 +2,8 @@ package ru.obelisk.cucmaxl.config.web;
 
 import java.text.SimpleDateFormat;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
@@ -87,5 +89,10 @@ public class SpringConfig{
 		messageSource.setDefaultEncoding("UTF-8");
 		messageSource.setCacheSeconds(1);
 	    return messageSource;
+	}
+	
+	@Bean
+	public CamelContext camelContext(){
+		return new DefaultCamelContext();
 	}
 }

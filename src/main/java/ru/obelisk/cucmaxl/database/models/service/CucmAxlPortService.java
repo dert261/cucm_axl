@@ -12,11 +12,11 @@ public interface CucmAxlPortService {
 	public CucmAxlPort edit(CucmAxlPort cucmAxlPort);
 	void delete(int id);
 	
-	public CucmAxlPort getCucmAxlPortById(int id);
-	public List<CucmAxlPort> getAllCucmAxlPorts();
+	public CucmAxlPort findById(int id);
+	public List<CucmAxlPort> findAll();
     
-	public List<Select2Result> findCucmAxlPortByTerm(String term);
-	public List<CucmAxlPort> findCucmAxlPortWithDatatablesCriterias(DatatablesCriterias criterias);
+	public List<Select2Result> findByTerm(String term);
+	public List<CucmAxlPort> findWithDatatablesCriterias(DatatablesCriterias criterias);
 	public Long getFilteredCount(DatatablesCriterias criterias);
 	public Long getTotalCount();
 }

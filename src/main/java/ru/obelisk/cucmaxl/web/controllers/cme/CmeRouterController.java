@@ -587,7 +587,7 @@ public class CmeRouterController {
 		exportDetail.setSource(router);
 				
 		Map<Integer, String> axlPortDestinations = new HashMap<Integer, String>();
-		List<CucmAxlPort> axlPorts = cucmAxlPortService.getAllCucmAxlPorts();
+		List<CucmAxlPort> axlPorts = cucmAxlPortService.findAll();
 		Iterator<CucmAxlPort> axlPortsIterator =axlPorts.iterator();
 		while(axlPortsIterator.hasNext()){
 			CucmAxlPort axlPort = axlPortsIterator.next();
@@ -607,7 +607,7 @@ public class CmeRouterController {
 	public @ResponseBody RouterExportDetail exportRouterToCUCM(@RequestBody RouterExportDetail routerDetail) {
 		logger.info("Requesting export phones to CUCM");
 		routerDetail.setSource(cmeRouterService.findById(routerDetail.getSource().getId())); 
-		routerDetail.setDestination(cucmAxlPortService.getCucmAxlPortById(routerDetail.getDestination().getId()));
+		routerDetail.setDestination(cucmAxlPortService.findById(routerDetail.getDestination().getId()));
 		//logger.info(routerDetail);
 
 		Iterator<CmeDevice> cmeDevicesIterator = cmeDeviceService.findAllForExportByRouterWithRelations(routerDetail.getSource()).iterator();

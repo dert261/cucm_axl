@@ -67,7 +67,7 @@ public class ExtendsController {
 		log.info("Requesting changenum modal");
 		
 		Map<Integer, String> axlPortDestinations = new HashMap<Integer, String>();
-		List<CucmAxlPort> axlPorts = cucmAxlPortService.getAllCucmAxlPorts();
+		List<CucmAxlPort> axlPorts = cucmAxlPortService.findAll();
 		Iterator<CucmAxlPort> axlPortsIterator =axlPorts.iterator();
 		while(axlPortsIterator.hasNext()){
 			CucmAxlPort axlPort = axlPortsIterator.next();
@@ -108,7 +108,7 @@ public class ExtendsController {
 		
 		AjaxOperationResult ajaxOperationResult = new AjaxOperationResult();
 		changeNumber.setDatasource(uploadFileService.findById(changeNumber.getDatasource()!=null ? changeNumber.getDatasource().getId() : 0));
-		changeNumber.setDestination(cucmAxlPortService.getCucmAxlPortById(changeNumber.getDestination()!=null ? changeNumber.getDestination().getId() : 0));
+		changeNumber.setDestination(cucmAxlPortService.findById(changeNumber.getDestination()!=null ? changeNumber.getDestination().getId() : 0));
 		
 		if(changeNumber.getPartition()==null || changeNumber.getPartition().isEmpty()){
 			ajaxOperationResult.setStatus(-1);

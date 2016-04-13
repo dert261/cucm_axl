@@ -54,19 +54,19 @@ public class CucmAxlPortServiceImpl implements CucmAxlPortService {
  
     @Override
     @Transactional(readOnly=true)
-    public List<CucmAxlPort> getAllCucmAxlPorts() {
+    public List<CucmAxlPort> findAll() {
         return cucmAxlPortRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly=true)
-	public CucmAxlPort getCucmAxlPortById(int id) {
+	public CucmAxlPort findById(int id) {
 		return cucmAxlPortRepository.findById(id);
 	}
 	
     @Override
     @Transactional(readOnly=true)
-	public List<Select2Result> findCucmAxlPortByTerm(String term) {
+	public List<Select2Result> findByTerm(String term) {
 		
 		List<Select2Result> reultList = entityManager.createQuery(
                 "SELECT NEW ru.obelisk.cucmaxl.web.ui.select2.Select2Result(cucmAxlPort.id, cucmAxlPort.name) FROM CucmAxlPort cucmAxlPort" 
@@ -89,7 +89,7 @@ public class CucmAxlPortServiceImpl implements CucmAxlPortService {
 	*/
     @Override
     @Transactional(readOnly=true)
-	public List<CucmAxlPort> findCucmAxlPortWithDatatablesCriterias(DatatablesCriterias criterias) {
+	public List<CucmAxlPort> findWithDatatablesCriterias(DatatablesCriterias criterias) {
 		StringBuilder queryBuilder = new StringBuilder("SELECT cucmAxlPort FROM CucmAxlPort cucmAxlPort");
 		
 		/**
