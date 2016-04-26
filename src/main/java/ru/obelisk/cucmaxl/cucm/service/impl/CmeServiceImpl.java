@@ -62,6 +62,7 @@ import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipDeviceService;
 import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipExtensionService;
 import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipGlobalService;
 import ru.obelisk.cucmaxl.database.models.service.cme.CmeVoiceHuntGroupService;
+import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
 
 @Component
 @Log4j2
@@ -387,7 +388,7 @@ public class CmeServiceImpl implements CmeService {
 			}	
 			
 		} catch (Exception e) {
-			log.warn(e.getMessage());
+			log.warn(ObeliskStringUtils.getTraceToLog(e));
 		}
 		return cmeExtensions;
 	}
@@ -417,14 +418,17 @@ public class CmeServiceImpl implements CmeService {
 				Response deviceTagResponse = cme_http.getAllDevicesByTag();
 				Iterator<ISDevice> deviceTagIterator = deviceTagResponse.getISDevices().getISDevice().iterator();
 				while(deviceTagIterator.hasNext()){
-					Response deviceByTagResponse = cme_http.getDeviceById(deviceTagIterator.next().getISDevID());
-					ISDevice device = deviceByTagResponse.getISDevices().getISDevice().get(0);
-					CmeDevice cmeDevice = getCmeDevice(device, router, cmeExtensionMap);
-					
-					
-					
-					
-					cmeDevices.add(cmeDevice);
+					ISDevice tag = deviceTagIterator.next();
+					log.trace("Tag ISDevID: {}", tag.getISDevID());
+					Response deviceByTagResponse = cme_http.getDeviceById(tag.getISDevID());
+					log.trace("DeviceByTagResponse: {}", deviceByTagResponse);
+					if(deviceByTagResponse.getISDevices()!=null){
+						ISDevice device = deviceByTagResponse.getISDevices().getISDevice().get(0);
+						CmeDevice cmeDevice = getCmeDevice(device, router, cmeExtensionMap);
+						cmeDevices.add(cmeDevice);
+					} else {
+						log.trace("DeviceByTagResponse not contain object with this key: {}", tag.getISDevID());
+					}
 				}
 			} else {
 				log.trace("Error code is null");
@@ -440,8 +444,7 @@ public class CmeServiceImpl implements CmeService {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn(e.getMessage());
+			log.warn(ObeliskStringUtils.getTraceToLog(e));
 		}
 		return cmeDevices;
 	}
@@ -683,6 +686,7 @@ public class CmeServiceImpl implements CmeService {
 			log.info("Extension {} not linked with any device. Extension not saved in local DB.", extension.getISExtNumber());
 			return null;
 		}
+		log.trace("Find extension by number and router. Extension: {}, router_id: {}", extension.getISExtNumber(), router.getId());
 		CmeExtension cmeExtension = cmeExtensionService.findByNumberAndRouter(extension.getISExtNumber(), router);
 		if(cmeExtension==null){
 			cmeExtension = new CmeExtension();

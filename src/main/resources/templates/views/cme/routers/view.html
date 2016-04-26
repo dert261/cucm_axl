@@ -427,7 +427,7 @@
 	           		"render": function (data, type, full, meta) {
 	           			var returnStatement="";
 	           			full.lines.forEach(function(entry){
-		           			if(entry.extension.customExtension.enable){
+		           			if(entry.extension.customExtension!=null && entry.extension.customExtension.enable){
 		           				if(entry.extension.customExtension.label!=null && entry.extension.customExtension.label.length>0){
 		           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.label+"<br>";
 		           				} else if(data!=undefined){
@@ -447,11 +447,15 @@
 	           		"render": function (data, type, full, meta) {
 	           			var returnStatement="";
 	           			full.lines.forEach(function(entry){
-	           				if(entry.extension.customExtension.enable & (entry.extension.customExtension.externalPhoneNumberMask != null && entry.extension.customExtension.externalPhoneNumberMask.length>0)){
-	           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.externalPhoneNumberMask+"<br>";
+	           				if(entry.extension.customExtension!=null){
+		           				if(entry.extension.customExtension.enable & (entry.extension.customExtension.externalPhoneNumberMask != null && entry.extension.customExtension.externalPhoneNumberMask.length>0)){
+		           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.externalPhoneNumberMask+"<br>";
+		           				}
+	           				} else {
+	           					returnStatement = "";
 	           				}	
 	           			});
-	           			return returnStatement.substring(0,returnStatement.length-4);
+	           			return returnStatement!="" ? returnStatement.substring(0,returnStatement.length-4) : "";
 					}
 	           	},
 	           	{
@@ -462,11 +466,15 @@
 	           		"render": function (data, type, full, meta) {
 	           			var returnStatement="";
 	           			full.lines.forEach(function(entry){
-	           				if(entry.extension.customExtension.enable & (entry.extension.customExtension.number != null && entry.extension.customExtension.number.length>0)){
-	           					returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.number+"<br>";
+	           				if(entry.extension.customExtension!=null){
+	           					if(entry.extension.customExtension.enable & (entry.extension.customExtension.number != null && entry.extension.customExtension.number.length>0)){
+	           						returnStatement=returnStatement+entry.lineId+". "+entry.extension.customExtension.number+"<br>";
+	           					}
+	           				} else { 
+	           					returnStatement = "";
 	           				}	
 	           			});
-	           			return returnStatement.substring(0,returnStatement.length-4);
+	           			return returnStatement!="" ? returnStatement.substring(0,returnStatement.length-4) : "";
 	           		}
 	           	},
 	           	{

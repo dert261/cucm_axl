@@ -128,10 +128,10 @@ public class CmeDeviceServiceImpl implements CmeDeviceService {
    			
    		     	Fetch<CmeDevice, CmeExtMapStatus> cmeExtMap = root.fetch("lines", JoinType.LEFT);
 		     	cmeExtMap.fetch("extension", JoinType.LEFT).fetch("customExtension", JoinType.LEFT);
-		     	root.fetch("speedDials", JoinType.LEFT);
-   		     	root.fetch("blfSpeedDials", JoinType.LEFT);
-   		     	root.fetch("fastDials", JoinType.LEFT);
-   		     	root.fetch("addonModules", JoinType.LEFT);
+		     	//root.fetch("speedDials", JoinType.LEFT);
+   		     	//root.fetch("blfSpeedDials", JoinType.LEFT);
+   		     	//root.fetch("fastDials", JoinType.LEFT);
+   		     	//root.fetch("addonModules", JoinType.LEFT);
    		     	root.fetch("customDevice", JoinType.LEFT).fetch("user", JoinType.LEFT);
    		     	
    		     	return builder.equal(root.get("router"), router);
