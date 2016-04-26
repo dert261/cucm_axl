@@ -21,7 +21,7 @@ import com.univocity.parsers.csv.CsvParserSettings;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import ru.obelisk.cucmaxl.database.models.service.BaseService;
+import ru.obelisk.database.models.service.BaseService;
 import ru.obelisk.cucmaxl.ftp.converter.CsvToDBConverter;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
 

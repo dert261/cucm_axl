@@ -9,6 +9,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
@@ -24,8 +25,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j2;
-import ru.obelisk.cucmaxl.database.models.entity.UploadFile;
-import ru.obelisk.cucmaxl.database.models.service.UploadFileService;
+import ru.obelisk.database.models.entity.UploadFile;
+import ru.obelisk.database.models.service.UploadFileService;
+import ru.obelisk.cucmaxl.web.controllers.utils.UploadFileView;
 import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
 import ru.obelisk.datatables.mapping.DataTablesInput;
 import ru.obelisk.datatables.mapping.DataTablesOutput;
@@ -39,7 +41,7 @@ public class UploadsController {
 	@Value("${upload.maxsize}") private int UPLOAD_SIZE_LIMIT;
 	
 	@Autowired private UploadFileService uploadFileService;
-		
+	
 	@RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
 	@Secured("ROLE_ADMIN")
 	public String indexPage(Model model) {
@@ -67,7 +69,7 @@ public class UploadsController {
 	@Secured("ROLE_ADMIN")
 	public String viewCreateCmeLocationPage(Model model) {
 		log.info("Requesting upload new file modal");
-		UploadFile uploadFile = new UploadFile();
+		UploadFileView uploadFile = new UploadFileView();
 		model.addAttribute("uploadFile", uploadFile);
 		return "uploads/_modal_upload";
 	}
@@ -75,7 +77,7 @@ public class UploadsController {
 	@RequestMapping(value = {"/create"}, method = RequestMethod.POST)
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody AjaxOperationResult saveCreateCmeLocationPage(final ModelMap model, 
-									@Valid @ModelAttribute("uploadFile") final UploadFile uploadFile, 
+									@Valid @ModelAttribute("uploadFile") final UploadFileView uploadFile, 
 									RedirectAttributes redirectAttributes) {
 		log.info("Requesting save upload new file method");
 		
@@ -98,7 +100,9 @@ public class UploadsController {
 					
 					uploadFile.setFilename(fileName);
 					uploadFile.setFilepath(ROOT);
-					uploadFileService.add(uploadFile);
+					UploadFile upload = new UploadFile();
+					BeanUtils.copyProperties(uploadFile, upload);
+					uploadFileService.add(upload);
 					ajaxOperationResult.setStatus(0);
 					ajaxOperationResult.setMessage("You successfully uploaded " + uploadFile.getName() + "!");
 					log.info("You successfully uploaded " + uploadFile.getName() + "!");
@@ -152,3 +156,4 @@ public class UploadsController {
 		return "redirect:/uploads/";
 	}
 }
+

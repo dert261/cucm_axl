@@ -39,33 +39,32 @@ import ru.obelisk.cucmaxl.cucm.service.CmeService;
 import ru.obelisk.cucmaxl.cucm.service.CucmWithDBService;
 import ru.obelisk.cucmaxl.cucm.utils.CucmExportDevice;
 import ru.obelisk.cucmaxl.cucm.utils.CucmMigrationUtils;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomSipDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomSipExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeExtMapStatus;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeRouter;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipExtMapStatus;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeVoiceHuntGroup;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CmeUserType;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CucmPhoneType;
-import ru.obelisk.cucmaxl.database.models.service.CucmAxlPortService;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeDeviceService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeLocationService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeRouterService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipDeviceService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeVoiceHuntGroupService;
-import ru.obelisk.cucmaxl.database.models.views.View;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.cme.CmeCustomDevice;
+import ru.obelisk.database.models.entity.cme.CmeCustomExtension;
+import ru.obelisk.database.models.entity.cme.CmeCustomSipDevice;
+import ru.obelisk.database.models.entity.cme.CmeCustomSipExtension;
+import ru.obelisk.database.models.entity.cme.CmeDevice;
+import ru.obelisk.database.models.entity.cme.CmeExtMapStatus;
+import ru.obelisk.database.models.entity.cme.CmeExtension;
+import ru.obelisk.database.models.entity.cme.CmeRouter;
+import ru.obelisk.database.models.entity.cme.CmeSipDevice;
+import ru.obelisk.database.models.entity.cme.CmeSipExtMapStatus;
+import ru.obelisk.database.models.entity.cme.CmeSipExtension;
+import ru.obelisk.database.models.entity.cme.CmeVoiceHuntGroup;
+import ru.obelisk.database.models.entity.enums.CmeUserType;
+import ru.obelisk.database.models.entity.enums.CucmPhoneType;
+import ru.obelisk.database.models.service.CucmAxlPortService;
+import ru.obelisk.database.models.service.UserService;
+import ru.obelisk.database.models.service.cme.CmeDeviceService;
+import ru.obelisk.database.models.service.cme.CmeLocationService;
+import ru.obelisk.database.models.service.cme.CmeRouterService;
+import ru.obelisk.database.models.service.cme.CmeSipDeviceService;
+import ru.obelisk.database.models.service.cme.CmeVoiceHuntGroupService;
+import ru.obelisk.database.models.views.View;
+import ru.obelisk.database.select2.Select2Result;
 import ru.obelisk.cucmaxl.web.controllers.cme.viewtypes.RouterExportDetail;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesResponse;
-import ru.obelisk.cucmaxl.web.ui.select2.Select2Result;
 
 @Controller
 @RequestMapping("/cme/routers")
@@ -101,27 +100,6 @@ public class CmeRouterController {
 		model.addAttribute("cmeRouter", new CmeRouter());
 		model.addAttribute("cmeRouterAll", new ArrayList<CmeRouter>());
 		return "cme/routers/index";
-	}
-	
-	/*@JsonView(View.CmeRouter.class)
-	@RequestMapping(value = {"/ajax/serverside/cmerouters.json"}, method = RequestMethod.GET)
-	@Secured("ROLE_ADMIN")
-	public @ResponseBody DatatablesResponse<CmeRouter> cmeRoutersDatatables(
-			@DatatableCriterias DatatablesCriterias criterias, 
-			Model model) {
-		logger.info("Requesting CME router data for table on index page");
-		List<CmeRouter> cmeRouters = cmeRouterService.findWithDatatablesCriterias(criterias);
-		Long count = cmeRouterService.getTotalCount();
-		Long countFiltered = cmeRouterService.getFilteredCount(criterias);
-		return DatatablesResponse.build(new DataSet<CmeRouter>(cmeRouters,count,countFiltered), criterias);
-	}*/
-		
-	@RequestMapping(value = {"/ajax/clientside/cmerouters.json"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
-	public @ResponseBody DatatablesResponse<CmeRouter> cmeRoutersDataClientSide(Model model) {
-		logger.info("Requesting CME router data for table on index page");
-		List<CmeRouter> cmeRouters = cmeRouterService.findAll();
-		return DatatablesResponse.clientSideBuild(cmeRouters);
 	}
 	
 	@RequestMapping(value = {"/create"}, method = RequestMethod.GET)
@@ -202,34 +180,6 @@ public class CmeRouterController {
 		status.setComplete();
 		return "redirect:/cme/routers/";
 	}
-	
-	/*@RequestMapping(value = {"/export"}, method = RequestMethod.POST)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
-	public String exportPhones(int id, SessionStatus status) {
-		logger.info("Requesting export phones");
-		CucmAxlPort axlPort = cucmAxlPortService.getCucmAxlPortById(2);
-		Iterator<CmeDevice> cmeDevicesIterator = cmeDeviceService.findAllForExportByRouterWithRelations(cmeRouterService.findById(id)).iterator();
-		while(cmeDevicesIterator.hasNext()){
-			CmeDevice cmeDevice = cmeDevicesIterator.next();
-			CucmDevice cucmDevice = migrationUtils.getCucmDeviceFromCmeDevice(cmeDevice);
-			logger.info("CmeDevice: {}", cmeDevice);
-			logger.info("CucmDevice: {}", cucmDevice);
-			cucmDbService.cucmAddPhone(axlPort, cucmDevice);
-		}
-		
-		
-		Iterator<CmeSipDevice> cmeSipDevicesIterator = cmeSipDeviceService.findAllForExportByRouterWithRelations(cmeRouterService.findById(id)).iterator();
-		while(cmeSipDevicesIterator.hasNext()){
-			CmeSipDevice cmeSipDevice = cmeSipDevicesIterator.next();
-			CucmDevice cucmDevice = migrationUtils.getCucmDeviceFromCmeSipDevice(cmeSipDevice);
-			logger.info("CmeDevice: {}", cmeSipDevice);
-			logger.info("CucmDevice: {}", cucmDevice);
-			cucmDbService.cucmAddPhone(axlPort, cucmDevice);
-		}
-		
-		status.setComplete();
-		return "redirect:/cme/routers/";
-	}*/
 	
 	@JsonView(View.CmeRouter.class)
 	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
@@ -320,83 +270,6 @@ public class CmeRouterController {
 	}
 	
 	
-	/*@JsonView(value={View.CmeDevice.class})
-	@RequestMapping(value = {"/phone/sccp/{id}/lines"}, method = RequestMethod.PUT, consumes="application/json")
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
-	public String addLineSCCPPhonePage(ModelMap model, @RequestBody CmeDevice cmeDevice) {
-		logger.info("Requesting add line for SCCP phone method");
-		logger.info(cmeDevice);
-				
-		CmeCustomExtension customExtension = new CmeCustomExtension();
-
-		CmeExtension extension = new CmeExtension();
-		extension.setNumber("");
-		extension.setCustomExtension(customExtension);
-		
-		customExtension.setCmeExtension(extension);
-		
-		CmeExtMapStatus extMap = new CmeExtMapStatus();
-		extMap.setDevice(cmeDevice);
-		extMap.setLineId(String.valueOf(cmeDevice.getLines().size()));
-		extMap.setExtension(extension);
-		
-		cmeDevice.getLines().add(extMap);
-		
-		model.addAttribute("device", cmeDevice);
-		
-		logger.info(cmeDevice);
-		
-		/*User user = cmeCustomDevice.getUser().getId()!=null ? userService.getUserById(cmeCustomDevice.getUser().getId()) : null; 
-		CmeDevice device = cmeDeviceService.findById(cmeCustomDevice.getCmeDevice().getId());
-		
-		cmeCustomDevice.setUser(user);
-		device.setCustomDevice(cmeCustomDevice);
-		cmeCustomDevice.setCmeDevice(device);
-		cmeDeviceService.edit(device);*/
-		
-		
-		
-		
-/*		return "cme/routers/_modal::deviceLinesContent";
-		//return "cme/routers/_modal";
-	}
-	
-	
-	
-	
-	@JsonView(value={View.CmeDevice.class})
-	@RequestMapping(value = {"/phone/sccp/{id}/lines/{delLineId}"}, method = RequestMethod.PUT, consumes="application/json")
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
-	public String delLineSCCPPhonePage(ModelMap model, @RequestBody CmeDevice cmeDevice, @PathVariable(value = "delLineId") int delLineId) {
-		logger.info("Requesting del line for SCCP phone method");
-		logger.info(cmeDevice);
-				
-		Iterator<CmeExtMapStatus> iterator = cmeDevice.getLines().iterator();
-		while(iterator.hasNext()){
-			CmeExtMapStatus cmeExt = iterator.next();
-			
-			logger.info(cmeExt);
-			if(Integer.parseInt(cmeExt.getLineId())==delLineId){
-				logger.info("Delete {}",cmeExt);
-				cmeExt.getExtension().getCustomExtension().setEnable(false);
-			}
-		}
-		
-		model.addAttribute("device", cmeDevice);
-		
-		logger.info(cmeDevice);
-		
-		return "cme/routers/_modal::deviceLinesContent";
-	}
-	
-	*/
-	
-	
-	
-	
-	
-	
-	
 	
 	@JsonView(value={View.CmeDevice.class})
 	@RequestMapping(value = {"/phone/sccp"}, method = RequestMethod.PUT, consumes="application/json")
@@ -463,18 +336,6 @@ public class CmeRouterController {
 		cmeDeviceService.edit(device);
 		return device;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	@JsonView(value={View.CmeSipDevice.class})

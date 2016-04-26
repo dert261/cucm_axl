@@ -23,11 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncParameters;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncUnit;
-import ru.obelisk.cucmaxl.database.models.service.CucmAxlPortService;
-import ru.obelisk.cucmaxl.database.models.service.LdapDirSyncParametersService;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.LdapDirSyncParameters;
+import ru.obelisk.database.models.entity.enums.ResyncUnit;
+import ru.obelisk.database.models.service.CucmAxlPortService;
+import ru.obelisk.database.models.service.LdapDirSyncParametersService;
 
 @Component
 public class JobScheduler {
@@ -51,7 +51,7 @@ public class JobScheduler {
 	}
 	
 	private void ldapDirSyncShedulerInit(){
-		List<LdapDirSyncParameters> ldapDirs = ldapDirSyncParametersService.getAllLdapDirSyncParametersWithoutFriendship();
+		List<LdapDirSyncParameters> ldapDirs = ldapDirSyncParametersService.findAll();
 		Iterator<LdapDirSyncParameters> ldapDirsIterator = ldapDirs.iterator();
 		while(ldapDirsIterator.hasNext()){
 			LdapDirSyncParameters ldapDir = ldapDirsIterator.next();

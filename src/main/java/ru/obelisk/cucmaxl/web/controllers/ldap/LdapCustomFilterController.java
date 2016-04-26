@@ -21,14 +21,12 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.security.access.annotation.Secured;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import ru.obelisk.cucmaxl.annotations.DatatableCriterias;
-import ru.obelisk.cucmaxl.database.models.entity.LdapCustomFilter;
-import ru.obelisk.cucmaxl.database.models.service.LdapCustomFilterService;
-import ru.obelisk.cucmaxl.database.models.views.View;
-import ru.obelisk.cucmaxl.web.ui.datatables.DataSet;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesCriterias;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesResponse;
-import ru.obelisk.cucmaxl.web.ui.select2.Select2Result;
+import ru.obelisk.database.models.entity.LdapCustomFilter;
+import ru.obelisk.database.models.service.LdapCustomFilterService;
+import ru.obelisk.database.models.views.View;
+import ru.obelisk.database.select2.Select2Result;
+import ru.obelisk.datatables.mapping.DataTablesInput;
+import ru.obelisk.datatables.mapping.DataTablesOutput;
 
 @Controller
 @RequestMapping("/ldap/customfilter")
@@ -43,7 +41,7 @@ public class LdapCustomFilterController {
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody List<Select2Result> searchLdapCustomFilter(@RequestParam String searchString) {
 		logger.info("Requesting search ldap custom filter with term: {}",searchString);
-		return ldapCustomFilterService.findLdapCustomFilterByTerm(searchString);
+		return ldapCustomFilterService.findByTerm(searchString);
 	}
 	
 	@RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
@@ -52,11 +50,11 @@ public class LdapCustomFilterController {
 		logger.info("Requesting  ldap custom filter page");
 		LdapCustomFilter ldapCustomFilter = new LdapCustomFilter();
 		model.addAttribute("ldapCustomFilter", ldapCustomFilter);
-		model.addAttribute("ldapCustomFilterAll", ldapCustomFilterService.getAllLdapCustomFilters());
+		model.addAttribute("ldapCustomFilterAll", ldapCustomFilterService.findAll());
 		return "ldap/customfilter/index";
 	}
 	
-	@JsonView(View.LdapCustomFilter.class)
+	/*@JsonView(View.LdapCustomFilter.class)
 	@RequestMapping(value = {"/ajax/serverside/ldapcustomfilter.json"}, method = RequestMethod.GET)
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody DatatablesResponse<LdapCustomFilter> ldapCustomFiltersDatatables(
@@ -76,6 +74,22 @@ public class LdapCustomFilterController {
 		logger.info("Requesting ldap custom filter data for table on index page");
 		List<LdapCustomFilter> ldapCustomFilters = ldapCustomFilterService.getAllLdapCustomFilters();
 		return DatatablesResponse.clientSideBuild(ldapCustomFilters);
+	}*/
+	
+	@JsonView(View.LdapCustomFilter.class)
+	@RequestMapping(value = {"/ajax/serverside/ldapcustomfilter.json"}, method = RequestMethod.GET)
+	@Secured("ROLE_ADMIN")
+	public @ResponseBody DataTablesOutput<LdapCustomFilter> ldapCustomFiltersDatatable(@Valid DataTablesInput input) {
+		DataTablesOutput<LdapCustomFilter> output = ldapCustomFilterService.findAll(input);
+		output.setData(idGenerate(output.getData(),input.getStart()));
+		return output;
+	}
+		
+	private List<LdapCustomFilter> idGenerate(List<LdapCustomFilter> files, int start){
+		for(int i=0;i<files.size();i++){
+			files.get(i).setNumberLocalized(start+i+1);
+		}
+		return files;
 	}
 	
 	@RequestMapping(value = {"/create"}, method = RequestMethod.GET)
@@ -105,7 +119,7 @@ public class LdapCustomFilterController {
 	@Secured("ROLE_ADMIN")
 	public String viewUpdateLdapCustomFilterPage(ModelMap model, @PathVariable(value = "id") int id) {
 		logger.info("Requesting update ldap custom filter page");
-		LdapCustomFilter ldapCustomFilter = ldapCustomFilterService.getLdapCustomFilterById(id);
+		LdapCustomFilter ldapCustomFilter = ldapCustomFilterService.findById(id);
 		model.addAttribute("ldapCustomFilter", ldapCustomFilter);
 		return "ldap/customfilter/update";
 	}

@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.access.annotation.Secured;
-import ru.obelisk.cucmaxl.database.models.entity.LdapAuthenticationParameters;
-import ru.obelisk.cucmaxl.database.models.entity.LdapAuthenticationServer;
-import ru.obelisk.cucmaxl.database.models.service.LdapAuthenticationParametersService;
+import ru.obelisk.database.models.entity.LdapAuthenticationParameters;
+import ru.obelisk.database.models.entity.LdapAuthenticationServer;
+import ru.obelisk.database.models.service.LdapAuthenticationParametersService;
 
 
 @Controller

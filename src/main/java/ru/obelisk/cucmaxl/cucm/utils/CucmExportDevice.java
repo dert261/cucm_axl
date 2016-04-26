@@ -6,10 +6,10 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipDevice;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CucmPhoneType;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.cme.CmeDevice;
+import ru.obelisk.database.models.entity.cme.CmeSipDevice;
+import ru.obelisk.database.models.entity.enums.CucmPhoneType;
 
 @ToString
 public class CucmExportDevice {

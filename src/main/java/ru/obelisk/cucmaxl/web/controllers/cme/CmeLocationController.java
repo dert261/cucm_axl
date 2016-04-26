@@ -25,14 +25,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.security.access.annotation.Secured;
 
-import ru.obelisk.cucmaxl.annotations.DatatableCriterias;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeLocation;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeLocationService;
-import ru.obelisk.cucmaxl.database.models.views.View;
-import ru.obelisk.cucmaxl.web.ui.datatables.DataSet;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesCriterias;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesResponse;
-import ru.obelisk.cucmaxl.web.ui.select2.Select2Result;
+import ru.obelisk.database.models.entity.cme.CmeLocation;
+import ru.obelisk.database.models.service.cme.CmeLocationService;
+import ru.obelisk.database.models.views.View;
+import ru.obelisk.database.select2.Select2Result;
+import ru.obelisk.datatables.mapping.DataTablesInput;
+import ru.obelisk.datatables.mapping.DataTablesOutput;
+
 
 @Controller
 @RequestMapping("/cme/locations")
@@ -58,7 +57,8 @@ public class CmeLocationController {
 		model.addAttribute("cmeLocationAll", new ArrayList<CmeLocation>());
 		return "cme/locations/index";
 	}
-	@JsonView(View.CmeLocation.class)
+	
+	/*@JsonView(View.CmeLocation.class)
 	@RequestMapping(value = {"/ajax/serverside/cmelocations.json"}, method = RequestMethod.GET)
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody DatatablesResponse<CmeLocation> cmeLocationsDatatables(
@@ -77,6 +77,22 @@ public class CmeLocationController {
 		logger.info("Requesting CME location data for table on index page");
 		List<CmeLocation> cmeLocations = cmeLocationService.findAll();
 		return DatatablesResponse.clientSideBuild(cmeLocations);
+	}*/
+	
+	@JsonView(View.CmeLocation.class)
+	@RequestMapping(value = {"/ajax/serverside/cmelocations.json"}, method = RequestMethod.GET)
+	@Secured("ROLE_ADMIN")
+	public @ResponseBody DataTablesOutput<CmeLocation> cmeLocationDatatable(@Valid DataTablesInput input) {
+		DataTablesOutput<CmeLocation> output = cmeLocationService.findAll(input);
+		output.setData(idGenerate(output.getData(),input.getStart()));
+		return output;
+	}
+		
+	private List<CmeLocation> idGenerate(List<CmeLocation> files, int start){
+		for(int i=0;i<files.size();i++){
+			files.get(i).setNumberLocalized(start+i+1);
+		}
+		return files;
 	}
 	
 	@RequestMapping(value = {"/create"}, method = RequestMethod.GET)

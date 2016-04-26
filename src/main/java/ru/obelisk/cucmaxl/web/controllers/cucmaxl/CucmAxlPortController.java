@@ -30,21 +30,19 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.security.access.annotation.Secured;
 
-import ru.obelisk.cucmaxl.annotations.DatatableCriterias;
 import ru.obelisk.cucmaxl.cucm.repository.AxlPortRepository;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.PartitionFilter;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncStatus;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncUnit;
-import ru.obelisk.cucmaxl.database.models.service.CucmAxlPortService;
-import ru.obelisk.cucmaxl.database.models.service.PartitionFilterService;
-import ru.obelisk.cucmaxl.database.models.views.View;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.PartitionFilter;
+import ru.obelisk.database.models.entity.enums.ResyncStatus;
+import ru.obelisk.database.models.entity.enums.ResyncUnit;
+import ru.obelisk.database.models.service.CucmAxlPortService;
+import ru.obelisk.database.models.service.PartitionFilterService;
+import ru.obelisk.database.models.views.View;
+import ru.obelisk.database.select2.Select2Result;
+import ru.obelisk.datatables.mapping.DataTablesInput;
+import ru.obelisk.datatables.mapping.DataTablesOutput;
 import ru.obelisk.cucmaxl.scheduler.CucmAxlPortSyncUtils;
 import ru.obelisk.cucmaxl.scheduler.JobScheduler;
-import ru.obelisk.cucmaxl.web.ui.datatables.DataSet;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesCriterias;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesResponse;
-import ru.obelisk.cucmaxl.web.ui.select2.Select2Result;
 
 @Controller
 @RequestMapping("/cucmaxl/port")
@@ -77,7 +75,10 @@ public class CucmAxlPortController {
 		return "cucmaxl/port/index";
 	}
 	
-	@JsonView(value={View.CucmAxlPort.class})
+	
+	
+	
+	/*@JsonView(value={View.CucmAxlPort.class})
 	@RequestMapping(value = {"/ajax/serverside/cucmaxlport.json"}, method = RequestMethod.GET)
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody DatatablesResponse<CucmAxlPort> cucmAxlPortsDatatables(
@@ -97,7 +98,28 @@ public class CucmAxlPortController {
 		logger.info("Requesting CUCM AXL port data for table on index page");
 		List<CucmAxlPort> cucmAxlPorts = cucmAxlPortService.findAll();
 		return DatatablesResponse.clientSideBuild(cucmAxlPorts);
+	}*/
+	
+	
+	
+	@JsonView(value={View.CucmAxlPort.class})
+	@RequestMapping(value = "/ajax/serverside/cucmaxlport.json", method = RequestMethod.GET)
+	@Secured({"ROLE_ADMIN"})
+	public @ResponseBody DataTablesOutput<CucmAxlPort> cucmAxlPortDatatable(@Valid DataTablesInput input) {
+		DataTablesOutput<CucmAxlPort> output = cucmAxlPortService.findAll(input);
+		output.setData(idGenerate(output.getData(),input.getStart()));
+		return output;
 	}
+		
+	private List<CucmAxlPort> idGenerate(List<CucmAxlPort> files, int start){
+		for(int i=0;i<files.size();i++){
+			files.get(i).setNumberLocalized(start+i+1);
+		}
+		return files;
+	}
+	
+	
+	
 	
 	@JsonView(value={View.CucmAxlPort.class})
 	@RequestMapping(value = {"/create"}, method = RequestMethod.GET)

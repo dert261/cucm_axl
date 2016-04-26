@@ -15,15 +15,15 @@ import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncParameters;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.UserRole;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncStatus;
-import ru.obelisk.cucmaxl.database.models.entity.enums.UserStatus;
-import ru.obelisk.cucmaxl.database.models.entity.enums.UserType;
-import ru.obelisk.cucmaxl.database.models.service.LdapDirSyncParametersService;
-import ru.obelisk.cucmaxl.database.models.service.UserRoleService;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
+import ru.obelisk.database.models.entity.LdapDirSyncParameters;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.UserRole;
+import ru.obelisk.database.models.entity.enums.ResyncStatus;
+import ru.obelisk.database.models.entity.enums.UserStatus;
+import ru.obelisk.database.models.entity.enums.UserType;
+import ru.obelisk.database.models.service.LdapDirSyncParametersService;
+import ru.obelisk.database.models.service.UserRoleService;
+import ru.obelisk.database.models.service.UserService;
 import ru.obelisk.cucmaxl.ldap.entity.Person;
 import ru.obelisk.cucmaxl.ldap.repository.PersonRepo;
 

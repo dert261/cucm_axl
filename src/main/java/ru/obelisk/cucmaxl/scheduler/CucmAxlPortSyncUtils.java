@@ -7,9 +7,9 @@ import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.obelisk.cucmaxl.cucm.service.CucmWithDBService;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncStatus;
-import ru.obelisk.cucmaxl.database.models.service.CucmAxlPortService;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.enums.ResyncStatus;
+import ru.obelisk.database.models.service.CucmAxlPortService;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
 
 @Component

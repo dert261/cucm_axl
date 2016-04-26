@@ -31,16 +31,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.CucmDevice;
-import ru.obelisk.cucmaxl.database.models.entity.CucmDeviceLine;
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncParameters;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.enums.PhoneBookSyncSource;
-import ru.obelisk.cucmaxl.database.models.service.LdapDirSyncParametersService;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
-import ru.obelisk.cucmaxl.database.models.views.CucmToADSync;
-import ru.obelisk.cucmaxl.database.models.views.ListCucmToADSync;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.CucmDevice;
+import ru.obelisk.database.models.entity.CucmDeviceLine;
+import ru.obelisk.database.models.entity.LdapDirSyncParameters;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.enums.PhoneBookSyncSource;
+import ru.obelisk.database.models.service.LdapDirSyncParametersService;
+import ru.obelisk.database.models.service.UserService;
+import ru.obelisk.database.models.views.CucmToADSync;
+import ru.obelisk.database.models.views.ListCucmToADSync;
 
 @Controller
 @RequestMapping("/downloads")

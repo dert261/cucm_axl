@@ -22,18 +22,18 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 
 import lombok.extern.log4j.Log4j2;
 import ru.obelisk.cucmaxl.cucm.service.CucmWithDBService;
-import ru.obelisk.cucmaxl.database.models.entity.Job;
-import ru.obelisk.cucmaxl.database.models.entity.JobResult;
-import ru.obelisk.cucmaxl.database.models.entity.enums.JobStatus;
-import ru.obelisk.cucmaxl.database.models.service.JobResultService;
-import ru.obelisk.cucmaxl.database.models.service.JobService;
+import ru.obelisk.database.models.entity.Job;
+import ru.obelisk.database.models.entity.JobResult;
+import ru.obelisk.database.models.entity.enums.JobStatus;
+import ru.obelisk.database.models.service.JobResultService;
+import ru.obelisk.database.models.service.JobService;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
 import ru.obelisk.cucmaxl.web.controllers.utils.CsvChangeNumber;
 
 @Component
 @Log4j2
 public class ChangeNumberJob {
-	@Autowired private JobService jobsService;
+	@Autowired private JobService jobService;
 	@Autowired private JobResultService jobResultService;
 	@Autowired private CucmWithDBService cucmWithDBService;
 	@Autowired private JobRepo jobRepo;
@@ -108,7 +108,7 @@ public class ChangeNumberJob {
 			resultingJobStatus = JobStatus.FAILED;
 		}
 		job.setStatus(resultingJobStatus);
-		jobsService.edit(job);
+		jobService.edit(job);
 		jobRepo.removeJobFromRepo(job);
 	}
 	

@@ -9,7 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import ru.obelisk.cucmaxl.database.models.entity.CallManagementRecord;
+import ru.obelisk.database.models.entity.CallManagementRecord;
 import ru.obelisk.cucmaxl.ftp.csv.CsvCucmCmr;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
 

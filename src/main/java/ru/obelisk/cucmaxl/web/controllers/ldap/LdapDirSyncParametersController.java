@@ -37,22 +37,20 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.security.access.annotation.Secured;
 
-import ru.obelisk.cucmaxl.annotations.DatatableCriterias;
-import ru.obelisk.cucmaxl.database.models.entity.LdapCustomFilter;
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncParameters;
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncServer;
-import ru.obelisk.cucmaxl.database.models.entity.enums.PhoneBookSyncSource;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncStatus;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncUnit;
-import ru.obelisk.cucmaxl.database.models.service.LdapCustomFilterService;
-import ru.obelisk.cucmaxl.database.models.service.LdapDirSyncParametersService;
-import ru.obelisk.cucmaxl.database.models.views.View;
+import ru.obelisk.database.models.entity.LdapCustomFilter;
+import ru.obelisk.database.models.entity.LdapDirSyncParameters;
+import ru.obelisk.database.models.entity.LdapDirSyncServer;
+import ru.obelisk.database.models.entity.enums.PhoneBookSyncSource;
+import ru.obelisk.database.models.entity.enums.ResyncStatus;
+import ru.obelisk.database.models.entity.enums.ResyncUnit;
+import ru.obelisk.database.models.service.LdapCustomFilterService;
+import ru.obelisk.database.models.service.LdapDirSyncParametersService;
+import ru.obelisk.database.models.views.View;
+import ru.obelisk.database.select2.Select2Result;
+import ru.obelisk.datatables.mapping.DataTablesInput;
+import ru.obelisk.datatables.mapping.DataTablesOutput;
 import ru.obelisk.cucmaxl.scheduler.DirSyncUtils;
 import ru.obelisk.cucmaxl.scheduler.JobScheduler;
-import ru.obelisk.cucmaxl.web.ui.datatables.DataSet;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesCriterias;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesResponse;
-import ru.obelisk.cucmaxl.web.ui.select2.Select2Result;
 
 @Controller
 @RequestMapping("/ldap/dirsync")
@@ -74,7 +72,7 @@ public class LdapDirSyncParametersController {
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody List<Select2Result> searchUser(@RequestParam String searchString) {
 		logger.info("Requesting search ldap dir sync with term: {}",searchString);
-		return ldapDirSyncParamsService.findLdapDirSyncParametersByTerm(searchString);
+		return ldapDirSyncParamsService.findByTerm(searchString);
 	}
 	
 	@JsonView(value={View.LdapDirSyncParameters.class})
@@ -83,11 +81,16 @@ public class LdapDirSyncParametersController {
 	public String indexPage(Model model) {
 		logger.info("Requesting index ldap dir sync page");
 		LdapDirSyncParameters ldapDirSyncParameters = new LdapDirSyncParameters();
-		List<LdapDirSyncParameters> ldapDirSyncParametersAll = ldapDirSyncParamsService.getAllLdapDirSyncParameters();
+		List<LdapDirSyncParameters> ldapDirSyncParametersAll = ldapDirSyncParamsService.findAll();
 		model.addAttribute("ldapDirSyncParams", ldapDirSyncParameters);
 		model.addAttribute("ldapDirSyncParamsAll", ldapDirSyncParametersAll);
         return "ldap/dirsync/index";
 	}
+	
+	
+	
+	
+	/*
 	
 	@JsonView(value={View.LdapDirSyncParameters.class})
 	@RequestMapping(value = {"/ajax/serverside/ldapdirsyncdata.json"}, method = RequestMethod.GET)
@@ -111,7 +114,28 @@ public class LdapDirSyncParametersController {
 		logger.info("Requesting users data for table on index page");
 		List<LdapDirSyncParameters> ldapDirSyncParameters = ldapDirSyncParamsService.getAllLdapDirSyncParameters();
 		return DatatablesResponse.clientSideBuild(ldapDirSyncParameters);
+	}*/
+	
+	
+	
+	@JsonView(value={View.LdapDirSyncParameters.class})
+	@RequestMapping(value = {"/ajax/serverside/ldapdirsyncdata.json"}, method = RequestMethod.GET)
+	@Secured("ROLE_ADMIN")
+	public @ResponseBody DataTablesOutput<LdapDirSyncParameters> ldapDirSyncParametersDatatable(@Valid DataTablesInput input) {
+		DataTablesOutput<LdapDirSyncParameters> output = ldapDirSyncParamsService.findAll(input);
+		output.setData(idGenerate(output.getData(),input.getStart()));
+		return output;
 	}
+		
+	private List<LdapDirSyncParameters> idGenerate(List<LdapDirSyncParameters> files, int start){
+		for(int i=0;i<files.size();i++){
+			files.get(i).setNumberLocalized(start+i+1);
+		}
+		return files;
+	}
+	
+	
+	
 	
 	@JsonView(value={View.LdapDirSyncParameters.class})
 	@RequestMapping(value = {"/ajax/addserver"}, method = RequestMethod.GET)
@@ -143,7 +167,7 @@ public class LdapDirSyncParametersController {
 		LdapDirSyncParameters ldapDirSyncParams = new LdapDirSyncParameters();
 		ldapDirSyncParams.getLdapDirSyncServers().add(new LdapDirSyncServer());
 		model.addAttribute("ldapDirSyncParams", ldapDirSyncParams);
-		List<LdapCustomFilter> filters = ldapCustomFilterService.getAllLdapCustomFilters();
+		List<LdapCustomFilter> filters = ldapCustomFilterService.findAll();
 		model.addAttribute("ldapCustomFilterAll", filters);
 		model.addAttribute("resyncUnits", Arrays.asList(ResyncUnit.values()));
 		model.addAttribute("phoneBookSyncSources", Arrays.asList(PhoneBookSyncSource.values()));
@@ -163,7 +187,7 @@ public class LdapDirSyncParametersController {
 		if (isNotValid(formParameters, bindingResult, 
 					LdapDirSyncParameters.LdapDirSyncParamsStepOne.class, 
 					LdapDirSyncParameters.LdapDirSyncParamsStepTwo.class)) {
-			List<LdapCustomFilter> filters = ldapCustomFilterService.getAllLdapCustomFilters();
+			List<LdapCustomFilter> filters = ldapCustomFilterService.findAll();
 			model.addAttribute("ldapCustomFilterAll", filters);
 			return "ldap/dirsync/create";
 		}
@@ -182,7 +206,7 @@ public class LdapDirSyncParametersController {
 		logger.info("Requesting update ldap dir sync page");
 		LdapDirSyncParameters ldapDirSyncParams = ldapDirSyncParamsService.getLdapDirSyncParametersById(id);
 		model.addAttribute("ldapDirSyncParams", ldapDirSyncParams);
-		List<LdapCustomFilter> filters = ldapCustomFilterService.getAllLdapCustomFilters();
+		List<LdapCustomFilter> filters = ldapCustomFilterService.findAll();
 		model.addAttribute("ldapCustomFilterAll", filters);
 		model.addAttribute("resyncUnits", Arrays.asList(ResyncUnit.values()));
 		model.addAttribute("phoneBookSyncSources", Arrays.asList(PhoneBookSyncSource.values()));
@@ -213,7 +237,7 @@ public class LdapDirSyncParametersController {
 		if (isNotValid(formParameters, bindingResult, 
 					LdapDirSyncParameters.LdapDirSyncParamsStepOne.class, 
 					LdapDirSyncParameters.LdapDirSyncParamsStepTwo.class)) {
-			List<LdapCustomFilter> filters = ldapCustomFilterService.getAllLdapCustomFilters();
+			List<LdapCustomFilter> filters = ldapCustomFilterService.findAll();
 			model.addAttribute("ldapCustomFilterAll", filters);
 			return "ldap/dirsync/update/"+formParameters.getId();
 		}

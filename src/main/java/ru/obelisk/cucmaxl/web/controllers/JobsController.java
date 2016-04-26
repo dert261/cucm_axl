@@ -21,10 +21,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.extern.log4j.Log4j2;
 import ru.obelisk.cucmaxl.backend.processors.JobProcessor;
-import ru.obelisk.cucmaxl.database.models.entity.Job;
-import ru.obelisk.cucmaxl.database.models.entity.JobResult;
-import ru.obelisk.cucmaxl.database.models.service.JobService;
-import ru.obelisk.cucmaxl.database.models.views.View;
+import ru.obelisk.database.models.entity.Job;
+import ru.obelisk.database.models.entity.JobResult;
+import ru.obelisk.database.models.service.JobService;
+import ru.obelisk.database.models.views.View;
 import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
 import ru.obelisk.datatables.mapping.DataTablesInput;
 import ru.obelisk.datatables.mapping.DataTablesOutput;

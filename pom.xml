@@ -65,12 +65,7 @@
 			<version>${camel.version}</version>
 		</dependency>
 	
-		<dependency>
-			<groupId>uk.co.gcwilliams</groupId>
-			<artifactId>jodatime-thymeleaf-dialect</artifactId>
-			<version>1.3</version>
-		</dependency>
-	
+			
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
@@ -93,8 +88,8 @@
 		</dependency>-->
 		
 		<dependency>
-			<groupId>ru.obelisk</groupId>
-			<artifactId>datatables</artifactId>
+			<groupId>ru.obelisk.database</groupId>
+			<artifactId>adsync</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 			

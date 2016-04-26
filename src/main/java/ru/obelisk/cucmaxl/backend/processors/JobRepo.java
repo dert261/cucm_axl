@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import ru.obelisk.cucmaxl.database.models.entity.Job;
+import ru.obelisk.database.models.entity.Job;
 
 @Component
 public class JobRepo {

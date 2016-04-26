@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.extern.log4j.Log4j2;
-import ru.obelisk.cucmaxl.database.models.entity.Collector;
-import ru.obelisk.cucmaxl.database.models.entity.CollectorFtpConfig;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CollectorResourceSourceType;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CollectorType;
-import ru.obelisk.cucmaxl.database.models.service.CollectorService;
-import ru.obelisk.cucmaxl.database.models.service.CucmAxlPortService;
-import ru.obelisk.cucmaxl.database.models.views.View;
+import ru.obelisk.database.models.entity.Collector;
+import ru.obelisk.database.models.entity.CollectorFtpConfig;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.enums.CollectorResourceSourceType;
+import ru.obelisk.database.models.entity.enums.CollectorType;
+import ru.obelisk.database.models.service.CollectorService;
+import ru.obelisk.database.models.service.CucmAxlPortService;
+import ru.obelisk.database.models.views.View;
 import ru.obelisk.datatables.mapping.DataTablesInput;
 import ru.obelisk.datatables.mapping.DataTablesOutput;
 
