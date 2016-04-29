@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j2;
-import ru.obelisk.cucmaxl.backend.processors.JobProcessor;
 import ru.obelisk.database.models.entity.CucmAxlPort;
 import ru.obelisk.database.models.entity.Job;
 import ru.obelisk.database.models.entity.UploadFile;
@@ -36,6 +35,7 @@ import ru.obelisk.database.models.service.CucmAxlPortService;
 import ru.obelisk.database.models.service.JobService;
 import ru.obelisk.database.models.service.UploadFileService;
 import ru.obelisk.database.models.service.UserService;
+import ru.obelisk.cucmaxl.backend.processors.job.JobProcessor;
 import ru.obelisk.cucmaxl.web.controllers.utils.ChangeNumber;
 import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
 

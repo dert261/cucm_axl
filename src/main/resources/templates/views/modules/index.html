@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.modules}">Modules</li>
+				</ol>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{modules.ui.messages.index.title}">Modules management</h1>
+					
+				</div>
+			</div>
+			
+			 <div class="row">
+			 	<table id="modulestable" class="display" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{modules.field.sequence}">№ п/п</th>
+			                <th th:text="#{modules.field.name}">Name</th>
+			                <th th:text="#{modules.field.description}">Description</th>
+			                <th th:text="#{modules.field.type}">Type</th>
+			                <th th:text="#{modules.field.launchMode}">Launch Mode</th>
+			                <th th:text="#{modules.field.actions}">Actions</th>
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{modules.field.sequence}">№ п/п</th>
+			                <th th:text="#{modules.field.name}">Name</th>
+			                <th th:text="#{modules.field.description}">Description</th>
+			                <th th:text="#{modules.field.type}">Type</th>
+			                <th th:text="#{modules.field.launchMode}">Launch Mode</th>
+			                <th th:text="#{modules.field.actions}">Actions</th>
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+	
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		 
+				
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var modulesTable = $('#modulestable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/modules/ajax/serverside/modules.json",
+	        	"data": function ( d ) {
+	            	return $.extend( {}, d, {
+	                    "extra_search[id]": $('#id').val()!=undefined ? $('#id').val() : "null",
+	    			});
+	            }
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "name" },
+	    	            { "data": "description" },
+	    	            { "data": "type" },
+	    	            { "data": "launchMode" },
+	    	            { "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Все"]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	var isRunModuleField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		         		var runModuleField = isRunModuleField ? '<a class="runmodule" href="/modules/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.run}]]+'" data-original-title="'+[[#{modules.ui.messages.table.run}]]+'"> \
+		         								<i class="glyphicon glyphicon-play"></i> </a>' : "";
+		         								
+		         		var isStopModuleField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		         		var stopModuleField = isStopModuleField ? '<a class="stopmodule" href="/modules/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.stop}]]+'" data-original-title="'+[[#{modules.ui.messages.table.stop}]]+'"> \
+		         								<i class="glyphicon glyphicon-stop"></i> </a>' : "";						
+		         		
+		         		var operationModuleField = full.status=='RUN' ? stopModuleField : runModuleField; 						
+		         								
+		            	return "<center>"+operationModuleField+"</center>";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "Launch Mode",
+		            "render": function (data, type, full, meta) {
+		        		return '<center><select class="sel2" id="launchModeFor'+full.id+'"> </select></center>';
+		            }	
+	           	}
+	        ]
+	    });
+		
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		
+		modulesTable.on('draw',function() {
+	   		jQuery.each(modulesTable.ajax.json().data, function(key, value){
+	   			select2Render(value.launchMode, value.id);
+	   		});
+	   	});
+		
+		function select2Render(data, id){
+		
+			var moduleLaunchModeMap = [[${moduleLaunchModeMap}]];
+			var moduleLaunchModeData=[];
+			for(var k in moduleLaunchModeMap){
+				moduleLaunchModeData.push({"id":k, "text":moduleLaunchModeMap[k]});
+			}       
+					            			            			
+        	$select = $("#launchModeFor"+id).select2({
+				allowClear:false,
+				width:'100%', 
+				multiple:false,
+				language: [[${#locale.language}]],
+				data: moduleLaunchModeData
+			});
+        	
+        	var selected = data;
+			$select.val(selected);
+			$select.trigger('change');
+			
+			$select.on("select2:select", function (e) {
+				$tr = $select.closest("tr");
+				$tr.spin();
+				$.ajax({
+					type: 'POST',
+					url: "/modules/change_launch_mode",
+					data: ({
+						id: id,
+						launchMode: e.target.value
+					}),
+				}).done(function(data) {
+					if(data.status==0){
+						modulesTable.draw();
+					} else {
+						alert(data.message);
+					}
+					$tr.spin(false);
+				});
+			});
+		}
+		
+		modulesTable.on('click','a.runmodule',function() {
+			if(!confirm([[#{ui.messages.table.run.modules.confirmation}]])) return false;
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-id'),
+					operation: 'RUN'
+				}),
+			}).done(function(data) {
+				if(data.status==0){
+					modulesTable.draw();
+					$(".sel2").select2("destroy").select2();
+				} else {
+					alert(data.message);
+				}
+			});
+				
+			return false;
+	   	});
+	   	
+		modulesTable.on('click','a.stopmodule',function() {
+			if(!confirm([[#{ui.messages.table.stop.modules.confirmation}]])) return false;
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-id'),
+					operation: 'SHUTDOWN'
+				}),
+			}).done(function(data) {
+				if(data.status==0){
+					modulesTable.draw();
+					$(".sel2").select2("destroy").select2();
+				} else {
+					alert(data.message);
+				}
+			});
+				
+			return false;
+	   	})
+	});
+	
+	/*]]>*/
+	</script>
+</body>
+</html>

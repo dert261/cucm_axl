@@ -1,4 +1,4 @@
-package ru.obelisk.cucmaxl.backend.processors;
+package ru.obelisk.cucmaxl.backend.processors.job;
 
 import java.io.File;
 import java.io.FileNotFoundException;

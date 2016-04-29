@@ -138,7 +138,11 @@
 			                    	<a href="/jobs/" th:utext="'&lt;i class=\'fa fa-random fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.jobs}">Jobs</a>
 				                </li>
 				                
-				                 <li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			                    	<a href="/modules/" th:utext="'&lt;i class=\'fa fa-puzzle-piece fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.modules}">Modules</a>
+				                </li>
+				                
+				                <li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
 			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-desktop fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>Monitor<span class="fa arrow"></span></a> 
 			                    	<ul class="nav nav-third-level">
 				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
