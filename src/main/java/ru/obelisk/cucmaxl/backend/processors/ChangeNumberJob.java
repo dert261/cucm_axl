@@ -3,7 +3,6 @@ package ru.obelisk.cucmaxl.backend.processors;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -65,17 +64,16 @@ public class ChangeNumberJob {
             File file = new File(job.getChangeNumberDetail().getDatasource().getFilepath()+"/"+job.getChangeNumberDetail().getDatasource().getFilename());
             boolean error = false;
             try (FileReader reader = new FileReader(file)) {
-            	
-    			beanList = csvToBean.parse(strategy, new CSVReader(reader));
-    		} catch (FileNotFoundException e) {
+            	beanList = csvToBean.parse(strategy, new CSVReader(reader));
+    		} catch (Exception e) {
     			out.println("Operation failed. Failed read csv file: "+e.getMessage());
     			error = true;
     			log.trace(ObeliskStringUtils.getTraceToLog(e));
     			resultingJobStatus = JobStatus.FAILED;
-    		} catch (IOException e1) {
-    			log.trace(ObeliskStringUtils.getTraceToLog(e1));
-			}
-        	
+    			jobResult.setNumberRecordsTotal(0);
+	            jobResultService.add(jobResult);
+    		}
+            
             if(!error){
 	            jobResult.setNumberRecordsTotal(beanList.size());
 	            jobResultService.add(jobResult);
@@ -84,15 +82,24 @@ public class ChangeNumberJob {
 	    		while(chNumIter.hasNext() && !job.isChancel()){
 	    			log.info(job);
 	    			CsvChangeNumber number = chNumIter.next();
-		    		number = cucmWithDBService.changeDirectoryNumber(job.getChangeNumberDetail().getDestination(), number, job.getChangeNumberDetail().getPartition());
-		    		out.println(number);
-		    		if(number.getState()==-1){
-		    			jobResult.setNumberRecordsFailed(jobResult.getNumberRecordsFailed()+1);
-		    		}
-		    		jobResult.setNumberRecordsProcessed(jobResult.getNumberRecordsProcessed()+1);
-		    		
-		    		jobResultService.edit(jobResult);
-		    		out.flush();
+	    			number.setOldNumber(number.getOldNumber().trim());
+	    			number.setNewNumber(number.getNewNumber().trim());
+	    			if(!number.getOldNumber().matches("^\\d+$") || !number.getNewNumber().matches("^\\d+$")){
+	    				number.setMessage("Incorrect number format for NEW or OLD NUMBERs. NUMBERs must be digits.");
+			    		number.setState(-1);
+	    			} else {	
+	    				number = cucmWithDBService.changeDirectoryNumber(job.getChangeNumberDetail().getDestination(), number, job.getChangeNumberDetail().getPartition());
+	    			}
+	    			
+			    	out.println(number);
+			    	if(number.getState()==-1){
+			    		jobResult.setNumberRecordsFailed(jobResult.getNumberRecordsFailed()+1);
+			    	}
+			    	jobResult.setNumberRecordsProcessed(jobResult.getNumberRecordsProcessed()+1);
+			    		
+			    	jobResultService.edit(jobResult);
+			    	out.flush();
+	    				
 	    		}
 	    		
 	    		if(job.isChancel()){
