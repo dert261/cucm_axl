@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+	<div id="wrapper">
+		<!-- Header -->
+		<div th:replace="fragment/header :: navbar_alt" > </div>
+		<br/>
+		<div id="page-wrapper">
+			<div class="row">
+				<ol class="breadcrumb">
+					<li class="active" th:text="#{breadcrumbs.cdrs}">CDRs</li>
+				</ol>
+				<div class="col-lg-12">
+					<h1 class="page-header" th:text="#{cdrs.ui.messages.index.title}">CDRs management</h1>
+					
+				</div>
+			</div>
+			
+			
+
+			
+
+			<div class="row">
+			 	<table id="cdrstable" class="display" >
+			        <thead>
+			            <tr>
+			                <th th:text="#{cdrs.field.sequence}">№ п/п</th>
+			                <th th:text="#{cdrs.field.pkid}">PK ID</th>
+			                <th th:text="#{cdrs.field.callingPartyUnicodeLoginUserId}">PK ID</th>
+			                <th th:text="#{cdrs.field.origIpv4v6Addr}">PK ID</th>
+			                <th th:text="#{cdrs.field.origDeviceName}">PK ID</th>
+			                <th th:text="#{cdrs.field.callingPartyNumber}">PK ID</th>
+			                
+			                
+			                <th th:text="#{cdrs.field.finalCalledPartyUnicodeLoginUserId}">PK ID</th>
+			                <th th:text="#{cdrs.field.destIpv4v6Addr}">PK ID</th>
+			                <th th:text="#{cdrs.field.destDeviceName}">PK ID</th>
+			                <th th:text="#{cdrs.field.finalCalledPartyNumber}">PK ID</th>
+			                
+			                <th th:text="#{cdrs.field.dateTimeOriginationDb}">PK ID</th>
+			                <th th:text="#{cdrs.field.dateTimeConnectDb}">PK ID</th>
+			                <th th:text="#{cdrs.field.dateTimeDisconnectDb}">PK ID</th>
+			                <th th:text="#{cdrs.field.duration}">PK ID</th>
+			                
+			                <th th:text="#{cdrs.field.origCauseValue}">PK ID</th>
+			                <th th:text="#{cdrs.field.destCauseValue}">PK ID</th>
+			               			                
+			                <th th:text="#{cdrs.field.actions}">Actions</th>
+			            </tr>
+			        </thead>
+			 
+			        <tfoot>
+			            <tr>
+			                <th th:text="#{cdrs.field.sequence}">№ п/п</th>
+			               	<th th:text="#{cdrs.field.pkid}">PK ID</th>
+			                <th th:text="#{cdrs.field.callingPartyUnicodeLoginUserId}">PK ID</th>
+			                <th th:text="#{cdrs.field.origIpv4v6Addr}">PK ID</th>
+			                <th th:text="#{cdrs.field.origDeviceName}">PK ID</th>
+			                <th th:text="#{cdrs.field.callingPartyNumber}">PK ID</th>
+			                
+			                
+			                <th th:text="#{cdrs.field.finalCalledPartyUnicodeLoginUserId}">PK ID</th>
+			                <th th:text="#{cdrs.field.destIpv4v6Addr}">PK ID</th>
+			                <th th:text="#{cdrs.field.destDeviceName}">PK ID</th>
+			                <th th:text="#{cdrs.field.finalCalledPartyNumber}">PK ID</th>
+			                
+			                <th th:text="#{cdrs.field.dateTimeOriginationDb}">PK ID</th>
+			                <th th:text="#{cdrs.field.dateTimeConnectDb}">PK ID</th>
+			                <th th:text="#{cdrs.field.dateTimeDisconnectDb}">PK ID</th>
+			                <th th:text="#{cdrs.field.duration}">PK ID</th>
+			                
+			                <th th:text="#{cdrs.field.origCauseValue}">PK ID</th>
+			                <th th:text="#{cdrs.field.destCauseValue}">PK ID</th>
+			               			                
+			                <th th:text="#{cdrs.field.actions}">Actions</th>
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragment/header :: scripts" > </div>
+	
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	
+	$(document).ready(function() {
+		 
+				
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		
+		function dateFormatter(value) {
+			if(value==null){return "";}
+	    	return moment(value).format("DD.MM.YYYY HH:mm:ss");
+	    }
+		
+		var cdrsTable = $('#cdrstable').DataTable({
+	    	"stateSave": true,
+	    	"processing": true,
+	        "serverSide": true,
+	        "responsive": false,
+	        "searching": false,
+	        "scrollX": true,        
+	        
+	        "dom": "<'row'<'col-xs-6'l><'col-xs-6 datatable-buttons'B>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+	        "buttons": [
+	        	{ 
+	        		"extend": "colvis",
+	        		"text": [[#{datatable.button.colvis}]]
+	        	}
+	        ],
+	        
+	        "ajax": {
+	        	"method": "GET",
+	        	"url": "/monitor/cdrs/ajax/serverside/cdrs.json",
+	        	"data": function ( d ) {
+	            	return $.extend( {}, d, {
+	                    "extra_search[id]": $('#id').val()!=undefined ? $('#id').val() : "null",
+	    			});
+	            }
+	        },
+	    	"columns": [
+	    	            { "data": "numberLocalized" },
+	    	            { "data": "pkid" },
+	    	            { "data": "callingPartyUnicodeLoginUserId" },
+	    	            { "data": "origIpv4v6Addr" },
+	    	            { "data": "origDeviceName" },
+	    	            { "data": "callingPartyNumber" },
+	    	            { "data": "finalCalledPartyUnicodeLoginUserId" },
+	    	            { "data": "destIpv4v6Addr" },
+	    	            { "data": "destDeviceName" },
+	    	            { "data": "finalCalledPartyNumber" },
+	    	            { "data": "dateTimeOriginationDb" },
+	    	            { "data": "dateTimeConnectDb" },
+	    	            { "data": "dateTimeDisconnectDb" },
+	    	            { "data": "duration" },
+	    	            { "data": "origCauseValue" },
+	    	            { "data": "destCauseValue" },
+	    	           	{ "data": "id" }
+	    	        ],
+	    	
+	    	
+			"language": {
+	        	"url": "/static/assets/data-tables-1.10.6/i18n/"+[[${#locale.language}]]+".lang"
+	        },
+	        "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]],
+	        "order": [[ 1, 'asc' ]],
+	        "columnDefs": [
+				{
+	    			"searchable": false,
+	    			"orderable": false,
+	    			"targets": [0]
+				},
+	            {
+		         	"targets": [-1],
+		         	"searchable": false,
+	    			"orderable": false,
+		            "data": "Actions",
+		            "render": function (data, type, full, meta) {
+		            	return "";
+	           		}
+	           	},
+	           	{
+		         	"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "user",
+		            "render": function (data, type, full, meta) {
+		            	return data!=null ? data : "";
+	           		}
+	           	},	           	
+	           	{
+		         	"targets": [-6],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "name",
+		            "render": function (data, type, full, meta) {
+		            	return data!=null ? "<a href='/jobs/detail/"+full.id+"'>"+data+"</a>" : "";
+	           		}
+	           	}
+	        ]
+	    });
+		
+		var defAction = cdrsTable.button(0).action();
+		cdrsTable.button(0).action(function( e, dt, button, config ) {
+			defAction();
+		    console.log( 'Button '+this.text()+' activated' );
+		    this.disable();
+		} );
+		
+	});
+	
+	
+	
+	/*]]>*/
+	</script>
+</body>
+</html>

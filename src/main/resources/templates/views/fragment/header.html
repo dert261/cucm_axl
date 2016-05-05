@@ -16,15 +16,28 @@
 	<link rel="stylesheet" src="/static/assets/extensions/bootstrap-datetimepicker-4.17.37/css/bootstrap-datetimepicker.min.css" th:href="@{/static/assets/extensions/bootstrap-datetimepicker-4.17.37/css/bootstrap-datetimepicker.min.css}" />
 	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/integr/css/datatables.min.css" th:href="@{/static/assets/data-tables-1.10.6/integr/css/datatables.min.css}" />
 	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/css/select.dataTables.min.css" th:href="@{/static/assets/data-tables-1.10.6/css/select.dataTables.min.css}" />
+	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/plugin/css/buttons.dataTables.min.css" th:href="@{/static/assets/data-tables-1.10.6/plugin/css/buttons.dataTables.min.css}" />
 	<link rel="stylesheet" src="/static/assets/select2/4.0.1/css/select2.css" th:href="@{/static/assets/select2/4.0.1/css/select2.css}" />
 	<link rel="stylesheet" src="/static/assets/metisMenu/2.0.1/metisMenu.min.css" th:href="@{/static/assets/metisMenu/2.0.1/metisMenu.min.css}" />
-	<!-- Error for select2 elements -->
-	<style>	
+	
+	<style>
+		/* Error for select2 elements */	
 		.has-error .select2-selection {
     		border: 1px solid #a94442;
     		border-radius: 4px;
 		}
-	</style>	
+		/* DataTable buttons right align */
+		.datatable-buttons .dt-buttons {
+    		float: right;
+    		position: relative;
+		}
+		.dataTables_processing {
+			z-index: 1000;
+		}
+	</style>
+	
+	
+		
 	<script src="/static/assets/jquery-1.11.2.min.js" th:href="@{/static/assets/jquery-1.11.2.min.js}" > </script>  
 </head>
 
@@ -148,6 +161,9 @@
 				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
 				                    		<a href="/monitor/collectors/" th:utext="'&lt;i class=\'fa fa-dot-circle-o fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor.collectors}">Collectors</a>
 				                    	</li>
+				                    	<li sec:authorize="hasRole('ROLE_ADMIN')">	
+				                    		<a href="/monitor/cdrs/" th:utext="'&lt;i class=\'fa fa-search-plus fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor.cdrs}">CDRs</a>
+				                    	</li>
 				                    </ul>	
 				                </li>
 				                 
@@ -169,7 +185,8 @@
 <div th:fragment="scripts">	
 	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
   	<script src="/static/assets/data-tables-1.10.6/integr/js/datatables.min.js" th:src="@{/static/assets/data-tables-1.10.6/integr/js/datatables.min.js}" > </script>
-  	<script src="/static/assets/data-tables-1.10.6/js/dataTables.select.min.js" th:src="@{/static/assets/data-tables-1.10.6/js/dataTables.select.min.js}" > </script> 
+  	<script src="/static/assets/data-tables-1.10.6/js/dataTables.select.min.js" th:src="@{/static/assets/data-tables-1.10.6/js/dataTables.select.min.js}" > </script>
+  	<script src="/static/assets/data-tables-1.10.6/plugin/js/dataTables.buttons.min.js" th:src="@{/static/assets/data-tables-1.10.6/plugin/js/dataTables.buttons.min.js}" > </script>
   	<script src="/static/assets/metisMenu/2.0.1/metisMenu.min.js" th:src="@{/static/assets/metisMenu/2.0.1/metisMenu.min.js}" > </script>
 	<script src="/static/assets/select2/4.0.1/js/select2.full.min.js" th:src="@{/static/assets/select2/4.0.1/js/select2.full.min.js}" > </script>
 	<script th:src="@{/static/assets/select2/4.0.1/js/i18n/__${#locale.language}__.js}" > </script>

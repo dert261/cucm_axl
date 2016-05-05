@@ -1,4 +1,4 @@
-package ru.obelisk.cucmaxl.web.controllers;
+package ru.obelisk.cucmaxl.web.controllers.monitor;
 
 import java.util.Arrays;
 import java.util.HashMap;
