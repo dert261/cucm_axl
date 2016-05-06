@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import ru.obelisk.database.models.entity.CallDetailRecord;
 import ru.obelisk.database.models.service.CallDetailRecordService;
 import ru.obelisk.database.models.views.View;
-import ru.obelisk.datatables.mapping.DataTablesInput;
+import ru.obelisk.database.view.CdrSearchForm;
+import ru.obelisk.database.view.DataTablesCdrInput;
 import ru.obelisk.datatables.mapping.DataTablesOutput;
 import lombok.extern.log4j.Log4j2;
 
@@ -33,15 +34,16 @@ public class CdrController {
 	@Secured("ROLE_ADMIN")
 	public String indexPage(Model model) {
 		log.info("Requesting cdr page");
+		model.addAttribute("cdrSearchForm", new CdrSearchForm());
 		return "monitor/cdrs/index";
 	}
 		
 	@JsonView(View.CdrView.class)
 	@RequestMapping(value = "/ajax/serverside/cdrs.json", method = RequestMethod.GET)
 	@Secured({"ROLE_ADMIN"})
-	public @ResponseBody DataTablesOutput<CallDetailRecord> getCollectors(@Valid DataTablesInput input) {
+	public @ResponseBody DataTablesOutput<CallDetailRecord> getCollectors(@Valid DataTablesCdrInput input) {
 		DataTablesOutput<CallDetailRecord> output = cdrService.findAllWithRelations(input);
-		output.setData(idGenerate(output.getData(),input.getStart()));
+		output.setData(idGenerate(output.getData(), input.getStart()));
 		return output;
 	}
 		

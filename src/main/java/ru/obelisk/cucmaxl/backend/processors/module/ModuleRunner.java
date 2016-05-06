@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cisco.cme.custom.xml.Report;
-
 import lombok.extern.log4j.Log4j2;
 import ru.obelisk.database.models.entity.Module;
 import ru.obelisk.database.models.entity.enums.ModuleStatus;
