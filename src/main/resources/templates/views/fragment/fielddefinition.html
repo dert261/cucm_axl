@@ -181,12 +181,47 @@
 	<script th:inline="javascript">
 		$(function () {
 			$([['#'+${fieldName}]]).datetimepicker({
-				locale: [[${#locale.language}]]
+				locale: [[${#locale.language}]],
 			});
 		});
 	</script>
 </div>	
 		
+		
+<!-- DATETIME PICKER FIELD TEMPLATE -->
+<div th:fragment="datetimepickerFullViewFormField(fieldName,requiredFlag,i18nName,domainObject, useCurrent)" th:remove="all">
+	<div	class="form-group" 
+			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
+		<label 	class="control-label"
+				th:classappend="${requiredFlag} ? 'required'"
+				th:class="${#fields.hasErrors(fieldName)}? 'control-label error' : 'control-label'" 
+				th:for="${fieldName}" 
+				th:inline="text">[[#{${i18nName}+'.'+${fieldName}}]] <span th:if="${requiredFlag}" class="required" style="color:red">*</span>
+		</label>
+		<div	class="input-group date"
+				th:id="${fieldName}">
+			<input 	class="form-control input-small" 
+					th:classappend="${#fields.hasErrors(fieldName)}? 'error'"
+					th:field="*{__${fieldName}__}"
+					th:id="${fieldName}+InputId"
+					type="text"
+					th:type="${inputType}" 
+					placeholder="field" 
+					th:attr="placeholder=#{${i18nName}+'.'+${fieldName}}"/>
+			<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+		</div>
+	</div>	
+	<script th:inline="javascript">
+		$(function () {
+			var picker = $([['#'+${fieldName}+'InputId']]).datetimepicker({
+				locale: [[${#locale.language}]],
+				format: 'DD.MM.YYYY HH:mm',
+				useCurrent: [[${useCurrent}]]
+			});
+			picker.val([[ ${#temporals.format(__${domainObject}__.__${fieldName}__, 'dd.MM.yyyy HH:mm')} ]]);
+		});
+	</script>
+</div>			
 		
 		
 

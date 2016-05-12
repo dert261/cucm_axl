@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.2.RELEASE</version>
+		<version>1.3.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -24,14 +24,10 @@
 		<spring-ldap-core.version>2.0.4.RELEASE</spring-ldap-core.version>
 		<jadira-usertype.version>3.1.0.CR1</jadira-usertype.version>
 		<axis.version>1.4</axis.version>
-		
-		<jackson-core.version>2.5.0</jackson-core.version>
-	    <jackson-databind.version>2.5.0</jackson-databind.version>
-	    <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
-	    <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
-	    	    
+			
+		<jackson.version>2.7.4</jackson.version>
+	    	    	    	    
 	    <thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
-	    <joda-time.version>2.6</joda-time.version>
 	    <thymeleaf-layout-dialect.version>1.2.7</thymeleaf-layout-dialect.version>
 	    <thymeleaf-extras-springsecurity4.version>2.1.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 	    <apache-commons-beanutils.version>1.9.2</apache-commons-beanutils.version>
@@ -45,7 +41,7 @@
 	
 
 	<dependencies>
-		
+	
 		<dependency>
     		<groupId>com.univocity</groupId>
     		<artifactId>univocity-parsers</artifactId>
@@ -215,25 +211,17 @@
 		<dependency>
     		<groupId>com.fasterxml.jackson.core</groupId>
     		<artifactId>jackson-databind</artifactId>
-       	</dependency>
-
-		<dependency>
-    		<groupId>org.codehaus.jackson</groupId>
-    		<artifactId>jackson-core-asl</artifactId>
-    		<version>${jackson-core-asl.version}</version>
-		</dependency>
-
-		<dependency>
-    		<groupId>org.codehaus.jackson</groupId>
-    		<artifactId>jackson-mapper-asl</artifactId>
-    		<version>${jackson-mapper-asl.version}</version>
-		</dependency>
-		
-		<dependency>
+    	</dependency>
+       	<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-annotations</artifactId>
+    	</dependency>
+       	<!-- <dependency>
 		    <groupId>com.fasterxml.jackson.datatype</groupId>
 		    <artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-		
+		    <version>${jackson.version}</version>
+		</dependency>-->
+
 		<!-- Thymeleaf dependencies -->
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
@@ -284,21 +272,6 @@
 		</dependency>
 		
 		<dependency>
-	        <groupId>joda-time</groupId>
-	        <artifactId>joda-time</artifactId>
-	    </dependency> 
-	    <dependency>
-  			<groupId>org.jadira.usertype</groupId>
-  			<artifactId>usertype.core</artifactId>
-  			<version>${jadira-usertype.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-joda</artifactId>
-		</dependency>
-
-	    <dependency>
 	    	<groupId>commons-httpclient</groupId>
 	    	<artifactId>commons-httpclient</artifactId>
 	    	<version>3.1</version>

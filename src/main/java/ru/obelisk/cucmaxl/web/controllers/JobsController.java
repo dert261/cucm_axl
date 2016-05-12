@@ -26,8 +26,8 @@ import ru.obelisk.database.models.service.JobService;
 import ru.obelisk.database.models.views.View;
 import ru.obelisk.cucmaxl.backend.processors.job.JobProcessor;
 import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
-import ru.obelisk.datatables.mapping.DataTablesInput;
-import ru.obelisk.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Controller
 @RequestMapping("/jobs")

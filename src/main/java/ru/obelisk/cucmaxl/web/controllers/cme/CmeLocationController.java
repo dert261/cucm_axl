@@ -29,8 +29,8 @@ import ru.obelisk.database.models.entity.cme.CmeLocation;
 import ru.obelisk.database.models.service.cme.CmeLocationService;
 import ru.obelisk.database.models.views.View;
 import ru.obelisk.database.select2.Select2Result;
-import ru.obelisk.datatables.mapping.DataTablesInput;
-import ru.obelisk.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 
 @Controller

@@ -16,7 +16,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import ru.obelisk.datatables.repository.DataTablesRepositoryFactoryBean;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
 
 @Configuration
 @EnableTransactionManagement

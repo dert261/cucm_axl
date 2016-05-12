@@ -31,8 +31,8 @@ import ru.obelisk.database.models.entity.enums.CollectorType;
 import ru.obelisk.database.models.service.CollectorService;
 import ru.obelisk.database.models.service.CucmAxlPortService;
 import ru.obelisk.database.models.views.View;
-import ru.obelisk.datatables.mapping.DataTablesInput;
-import ru.obelisk.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Controller
 @RequestMapping("/monitor/collectors")

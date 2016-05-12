@@ -47,8 +47,8 @@ import ru.obelisk.database.models.service.LdapCustomFilterService;
 import ru.obelisk.database.models.service.LdapDirSyncParametersService;
 import ru.obelisk.database.models.views.View;
 import ru.obelisk.database.select2.Select2Result;
-import ru.obelisk.datatables.mapping.DataTablesInput;
-import ru.obelisk.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import ru.obelisk.cucmaxl.scheduler.DirSyncUtils;
 import ru.obelisk.cucmaxl.scheduler.JobScheduler;
 

@@ -4,24 +4,19 @@
 		
 		<a class="search-button" href="#" th:text="#{cdrs.form.search.message}">Extended search</a>
 		
-		<div th:object="${cdrSearchForm}" class="search-form" style="display: none;">
-			<form action="#" th:action="@{/monitor/cdrs/search}" th:object="${cdrSearchForm}" th:method="GET" method="GET" id="cdrs-search-form" class="well-search form">
+		<div th:object="${cdrSearchCriteria}" class="search-form" style="display: none;">
+			<form action="#" th:action="@{/monitor/cdrs/search}" th:object="${cdrSearchCriteria}" th:method="GET" method="GET" id="cdrs-search-form" class="well-search form">
+				
+				<div th:include="fragment/fielddefinition :: textFormField('numberA',false, text, 'cdrs.search.field')">Number A</div>
+				<div th:include="fragment/fielddefinition :: textFormField('numberB',false, text, 'cdrs.search.field')">Number B</div>
 								
-				<div	class="form-group">
-					<label 	class="control-label"
-							for="id" 
-							th:text="#{cdrs.field.name}"> 
-					</label>
-			
-					<select th:field="*{id}" 
-							class="select2-chosen" 
-							multiple="multiple">
-							
-							<option th:each="data : ${cdrSearchFormAll}" 
-	        						th:value="${data.id}" 
-	          						th:text="${data.name}">
-	          				</option>
-					</select>
+				<div class="row">
+					<div class='col-lg-6'>
+						<div th:include="fragment/fielddefinition :: datetimepickerFullViewFormField('startTime', false, 'cdrs.search.field', 'cdrSearchCriteria', true)">Start date</div>
+					</div>
+					<div class='col-lg-6'>
+						<div th:include="fragment/fielddefinition :: datetimepickerFullViewFormField('stopTime', false, 'cdrs.search.field', 'cdrSearchCriteria', false)">Stop date</div>
+					</div>
 				</div>
 				
 				<div class="form-actions">
@@ -36,37 +31,7 @@
 						$('.search-form').toggle();
 						return false;
 					});
-				
-					jQuery(function($) {
-			    		jQuery('#id').select2({
-			    			allowClear:true,
-			    			width:'100%', 
-			    			minimumInputLength:'2', 
-			    			language: [[${#locale.language}]], 
-			    			placeholder: [[#{cdrs.searchform.searchfield.placeholder.name}]],
-			    			ajax: {
-			    				delay: 500,
-			    				url: function (params) {
-			    					return '/cme/locations/search';
-			    				},
-			    				data: function (params) {
-			    					var queryParameters = {
-			    					 	searchString: params.term
-			    					}
-			    					return queryParameters;
-			    				},
-			    				processResults: function (data) {
-			    					return {
-			    						results: data
-			    					};
-			    				},
-			    				
-			    				
-			    			}
-			    		
-			    		});
-			    	});
-			    });	
+				});
 			/*]]>*/
 		</script>
 	</div>

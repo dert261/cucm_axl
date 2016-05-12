@@ -86,9 +86,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		systemProps.put("javax.net.ssl.trustStoreType", sslTrustStoreType);
 		System.setProperties(systemProps);
 	}
-	
-	
-	
-	
 }
 

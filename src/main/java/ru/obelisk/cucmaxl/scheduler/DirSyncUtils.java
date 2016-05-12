@@ -1,5 +1,6 @@
 package ru.obelisk.cucmaxl.scheduler;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,8 +11,6 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +23,7 @@ import ru.obelisk.database.models.entity.enums.UserType;
 import ru.obelisk.database.models.service.LdapDirSyncParametersService;
 import ru.obelisk.database.models.service.UserRoleService;
 import ru.obelisk.database.models.service.UserService;
+import ru.obelisk.module.utils.TimePeriod;
 import ru.obelisk.cucmaxl.ldap.entity.Person;
 import ru.obelisk.cucmaxl.ldap.repository.PersonRepo;
 
@@ -45,7 +45,7 @@ public class DirSyncUtils {
 			
 			
 			if(ldapDir!=null){
-				DateTime startDate = new DateTime();
+				LocalDateTime startDate = LocalDateTime.now();
 				ldapDir.setResyncStatus(ResyncStatus.ACTIVE);
 				ldapDirSyncParamsService.edit(ldapDir);
 				logger.info("Start resync Ldap Directory at {}: {}",startDate, ldapDir);
@@ -97,9 +97,9 @@ public class DirSyncUtils {
 					logger.warn("Periodic sync end with errors: {}", e);
 				}	
 				
-				DateTime stopDate = new DateTime();
+				LocalDateTime stopDate = LocalDateTime.now();
 				logger.info("Stop resync Ldap Directory at {}: {}",stopDate, ldapDir);
-				Interval interval = new Interval(startDate, stopDate); 
+				TimePeriod interval = TimePeriod.getDateTimeDuration(startDate, stopDate); 
 				logger.info("Total work time is {}", interval);
 			}
 			ldapDir.setResyncStatus(ResyncStatus.NONACTIVE);

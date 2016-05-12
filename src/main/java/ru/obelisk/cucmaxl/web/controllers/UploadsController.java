@@ -29,8 +29,8 @@ import ru.obelisk.database.models.entity.UploadFile;
 import ru.obelisk.database.models.service.UploadFileService;
 import ru.obelisk.cucmaxl.web.controllers.utils.UploadFileView;
 import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
-import ru.obelisk.datatables.mapping.DataTablesInput;
-import ru.obelisk.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Controller
 @RequestMapping("/uploads")

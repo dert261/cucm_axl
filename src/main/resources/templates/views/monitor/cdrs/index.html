@@ -17,14 +17,12 @@
 					<h1 class="page-header" th:text="#{cdrs.ui.messages.index.title}">CDRs management</h1>
 					
 				</div>
+				
 				<div th:replace="monitor/cdrs/search :: cdrs_search_form" > </div>
 			</div>
 			
-			
-
-			
-
 			<div class="row">
+			<br/>
 			 	<table id="cdrstable" class="display" >
 			        <thead>
 			            <tr>
@@ -121,10 +119,10 @@
 	        	"method": "GET",
 	        	"url": "/monitor/cdrs/ajax/serverside/cdrs.json",
 	        	"data": function ( d ) {
-	            	return $.extend( {}, d, {
-	                    "extra_search[id]": $('#id').val()!=undefined ? $('#id').val() : "null",
-	    			});
-	            }
+	        		return $.extend( {}, d, {
+	        			"cdrSearchCriteria": jQuery('#cdrs-search-form').serializeObject(),
+	        		});
+	        	}
 	        },
 	    	"columns": [
 	    	            { "data": "numberLocalized" },
@@ -195,6 +193,11 @@
 		    this.disable();
 		} );
 		
+		
+		$('#cdrs-search-form').submit(function(){
+			cdrsTable.draw();
+			return false;
+		});
 	});
 	
 	

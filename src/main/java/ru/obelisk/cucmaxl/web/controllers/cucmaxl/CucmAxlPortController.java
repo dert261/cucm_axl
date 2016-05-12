@@ -39,8 +39,8 @@ import ru.obelisk.database.models.service.CucmAxlPortService;
 import ru.obelisk.database.models.service.PartitionFilterService;
 import ru.obelisk.database.models.views.View;
 import ru.obelisk.database.select2.Select2Result;
-import ru.obelisk.datatables.mapping.DataTablesInput;
-import ru.obelisk.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import ru.obelisk.cucmaxl.scheduler.CucmAxlPortSyncUtils;
 import ru.obelisk.cucmaxl.scheduler.JobScheduler;
 
