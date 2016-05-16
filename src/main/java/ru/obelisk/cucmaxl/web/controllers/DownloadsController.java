@@ -168,7 +168,7 @@ public class DownloadsController {
 			else {
 				if(user.getPhoneBook()==null || !user.getPhoneBook().isUseCustomPhone()){
 					List<String> userPhones = new ArrayList<String>();	
-					Iterator<CucmDevice> deviceIterator = user.getDevices().iterator();
+					Iterator<CucmDevice> deviceIterator = user.getDevices().stream().sorted( (left, right) -> left.getPkid().compareTo(right.getPkid()) ).iterator();
 					while(deviceIterator.hasNext()){
 						CucmDevice device = deviceIterator.next();
 						
@@ -195,7 +195,11 @@ public class DownloadsController {
 						}
 					}
 					StringBuilder phones = new StringBuilder();
-					Iterator<String> patternIterator = userPhones.iterator();
+					Iterator<String> patternIterator = userPhones.stream().sorted((left, right) -> {
+								int result = Integer.parseInt(left)-Integer.parseInt(right);
+								if(result != 0) return (int) result / Math.abs( result );
+								return 0;
+							}).iterator();
 					while(patternIterator.hasNext()){
 						phones.append(patternIterator.next());
 						phones.append(patternIterator.hasNext() ? "," : "");
