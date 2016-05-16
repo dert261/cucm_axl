@@ -12,10 +12,12 @@ public interface CucmLineService {
 	CucmLine editLine(CucmLine formLine);
 
 	void deleteLine(int id);
+	void deleteLine(CucmLine line);
 
 	List<CucmLine> getAllLine();
 
 	CucmLine findByPkID(String pkid);
+	CucmLine findByID(int id);
 	
 	List<CucmLine> findByPkCucmAxlPort(CucmAxlPort axlPort); 
 }

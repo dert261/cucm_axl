@@ -49,6 +49,10 @@ public class CucmLineServiceImpl implements CucmLineService {
     public void deleteLine(int id) {
     	lineRepository.delete(id);
     }
+    
+    public void deleteLine(CucmLine line) {
+    	lineRepository.delete(line);
+    }
 
 	@Override
 	public List<CucmLine> getAllLine() {
@@ -65,8 +69,8 @@ public class CucmLineServiceImpl implements CucmLineService {
 		return lineRepository.findByPkID(pkid);
 	}
 	
-	
-	
-     
-    
+	@Override
+	public CucmLine findByID(int id) {
+		return lineRepository.findOne(id);
+	}
 }

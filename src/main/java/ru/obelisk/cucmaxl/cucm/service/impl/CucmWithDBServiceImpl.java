@@ -1,5 +1,6 @@
 package ru.obelisk.cucmaxl.cucm.service.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,8 +12,10 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -151,7 +154,7 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 		sqlBuilder.append(" ORDER BY device.name, devNumPlanMap.numplanindex");
 		
 		String sql = sqlBuilder.toString();
-		logger.info(sql);
+		logger.trace(sql);
 		req.setSql(sql);
 		
 		List<CucmRow> cucmTable = new ArrayList<CucmRow>();
@@ -201,22 +204,15 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 		usersRepo.clear();
 		
 		devicesRepo = getCucmRepo(deviceService.findAllWithRelational(port));
-		linesRepo = getCucmRepo(lineService.findByPkCucmAxlPort(port));
+		linesRepo = getCucmRepo(lineService.getAllLine());
 		usersRepo = getCucmUserRepo(userService.getAllUsers());
 		
-		logger.info("Size of lines repo: {}",linesRepo.size());
-		
-		Iterator<CucmRow> rowIterator = cucmTable.iterator();
-		while(rowIterator.hasNext()){
-			CucmRow row = rowIterator.next();
-			checkDevice(row);
-		}
-				
-		Iterator<CucmDevice> deviceRepoValuesIterator = devicesRepo.values().iterator();
-		while(deviceRepoValuesIterator.hasNext()){
-			CucmDevice device = deviceRepoValuesIterator.next();
-			
-			if(!device.getLines().containsAll(device.getLinesTemp())){
+		logger.trace("Size of lines repo: {}",linesRepo.size());
+		cucmTable.stream().forEach(n->checkDevice(n));
+						
+		devicesRepo.values().stream().forEach(device -> {
+			if(!device.getLines().containsAll(device.getLinesTemp()) || !device.getLinesTemp().containsAll(device.getLines())){
+				device.getLines().clear();
 				device.getLines().addAll(device.getLinesTemp());
 				device.setChanged(true);
 			}
@@ -227,10 +223,24 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 			} else {
 				if(device.isChanged()){
 					logger.info("Update device: {}",device);
+					device.getLines().forEach(n -> {
+							
+							logger.trace("DevLine Hash {}: {}", n.hashCode(), n);
+							logger.trace("LineHash {}: {}", n.getLine().hashCode(), n.getLine());
+							logger.trace("DeviceHash {}: {}", n.getDevice().hashCode(),n.getDevice());
+							
+					});
+					logger.trace("LinesTemp -------------------------");
+					device.getLinesTemp().forEach(n -> {
+						
+						logger.trace("DevLine Hash {}: {}", n.hashCode(), n);
+						logger.trace("LineHash {}: {}", n.getLine().hashCode(), n.getLine());
+						logger.trace("DeviceHash {}: {}", n.getDevice().hashCode(),n.getDevice());
+				});
 					deviceService.editDevice(device);
 				}	
 			}
-		}
+		});
 		
 		List<CucmDevice> devices = deviceService.getAllDeviceByCucm(port);
 		Iterator<CucmDevice> iteratorDevice = devices.iterator();
@@ -250,7 +260,11 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 			}
 		}
 		
+		linesRepo.clear();
+		linesRepo = getCucmRepo(lineService.findByPkCucmAxlPort(port));
+		
 		Iterator<CucmLine> iteratorLine = linesRepo.values().iterator();
+		StringBuffer buff = new StringBuffer();
 		while(iteratorLine.hasNext()){
 			boolean isContain = false; 
 			CucmLine line = iteratorLine.next();
@@ -262,15 +276,37 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 				}	
 			}
 			if(!isContain){
-				logger.info("Delete line: {}", line);
-				lineService.deleteLine(line.getId());
+				CucmLine refreshLine = lineService.findByID(line.getId());
+				logger.info("Clear line: {}", refreshLine);
+				try{
+					refreshLine.getDevices().clear();
+					logger.info("Deleted line");
+					refreshLine.getDevices().forEach(n->logger.info(n));
+					lineService.editLine(refreshLine);
+				}catch(Exception e){
+					buff.append(refreshLine.getId()+", ");
+					Log.info(ObeliskStringUtils.getTraceToLog(e));
+				}
+				
 			}
 		}
+		logger.info(buff.toString());
 	}
 	
 	private void checkDevice(CucmRow row){
 		if(row.getDevicePkid()==null) return;
+		
 		CucmDevice device = devicesRepo.get(row.getDevicePkid());//deviceService.findByPkID(row.getDevicePkid());
+		
+		CucmDevice oldDevice = new CucmDevice();
+		if(device!=null){
+			try {
+				BeanUtils.copyProperties(oldDevice, device);
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if(device==null){
 			device = new CucmDevice();
 			device.setPkid(row.getDevicePkid());
@@ -293,6 +329,7 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 					CucmDeviceLine devLine = deviceLineIterator.next();
 					if(devLine.getLine().getId().equals(line.getId())){
 						deviceLine = devLine;
+						deviceLine.setLine(line);
 					}
 				}
 										
@@ -310,9 +347,9 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 			device.getLinesTemp().add(deviceLine);
 		}
 		
-		if(!device.isNew() && !devicesRepo.get(device.getPkid()).equals(device)){
+		if(!device.isNew() && !devicesRepo.get(device.getPkid()).myEquals(oldDevice)){
 			device.setChanged(true);
-			logger.info("Set Changed to TRUE");
+			logger.trace("Set Changed to TRUE");
 		}
 	}
 	
@@ -321,6 +358,14 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 		if(row.getLinePattern()==null) return null;
 		
 		CucmLine line = linesRepo.get(row.getLinePkid());
+		CucmLine oldLine = new CucmLine();
+		if(line!=null){
+			try {
+				BeanUtils.copyProperties(oldLine, line);
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				ObeliskStringUtils.getTraceToLog(e);
+			}
+		}
 		if(line==null){
 			line = new CucmLine();
 			line.setPkid(row.getLinePkid());
@@ -330,7 +375,7 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 		line.setPartition(row.getLinePartition());
 		line.setPattern(row.getLinePattern());
 			
-		if(!line.isNew() && !linesRepo.get(line.getPkid()).equals(line)){
+		if(!line.isNew() && !linesRepo.get(line.getPkid()).myEquals(oldLine)){
 			logger.info("Update line: {}",line);
 			line = lineService.editLine(line);
 		} else if(line.isNew()) {
@@ -344,27 +389,18 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 	
 	private <T extends  CucmRepo> Map<String, T> getCucmRepo(List<T> list){
 		Map<String, T> repo = new HashMap<String, T>();
-		Iterator<T> iterator = list.iterator();
-		while(iterator.hasNext()){
-			T item = iterator.next();
-			repo.put(item.getPkid(), item);
-		}
+		list.stream().forEach(n->repo.put(n.getPkid(), n));
 		return repo;
 	}
 	
 	private Map<String, User> getCucmUserRepo(List<User> list){
 		Map<String, User> repo = new HashMap<String, User>();
-		Iterator<User> iterator = list.iterator();
-		while(iterator.hasNext()){
-			User item = iterator.next();
-			repo.put(item.getAdGuid(), item);
-		}
+		list.stream().forEach(n->repo.put(n.getAdGuid(), n));
 		return repo;
 	}
 	
 	private User getUserByPkID(CucmRow row){
 		if(row.getEndUserUniqueIdentifier()==null) return null;
-		//User user = userService.getUserByLdapObjectGuid(getNormalGUID(row.getEndUserUniqueIdentifier()));
 		User user = usersRepo.get(getNormalGUID(row.getEndUserUniqueIdentifier()));
 		return user;
 	}

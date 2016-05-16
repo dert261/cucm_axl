@@ -18,7 +18,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,7 +25,6 @@ import ru.obelisk.cucmaxl.cucm.utils.CucmRepo;
 
 @Entity
 @Table(name = "cucm_device", catalog="adsync", schema="public")
-@EqualsAndHashCode(exclude={"id","linesTemp","lines"})
 @ToString(exclude={"linesTemp", "lines", "userId", "cucmAxlPort"})
 public class CucmDevice implements Serializable, CucmRepo {
 	private static final long serialVersionUID = -8143008404515034945L;
@@ -66,13 +64,13 @@ public class CucmDevice implements Serializable, CucmRepo {
 		
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User userId;
 	
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="cucm_axl_port_id")
 	private CucmAxlPort cucmAxlPort;
 	
@@ -93,5 +91,46 @@ public class CucmDevice implements Serializable, CucmRepo {
 
 	public boolean isNew(){
 		return this.id==null;
+	}
+
+	public boolean myEquals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CucmDevice other = (CucmDevice) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (model == null) {
+			if (other.model != null)
+				return false;
+		} else if (!model.equals(other.model))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (pkid == null) {
+			if (other.pkid != null)
+				return false;
+		} else if (!pkid.equals(other.pkid))
+			return false;
+		if (protocol == null) {
+			if (other.protocol != null)
+				return false;
+		} else if (!protocol.equals(other.protocol))
+			return false;
+		/*if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (other.userId!=null || !userId.getId().equals(other.userId.getId()))
+			return false;*/
+		return true;
 	}
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +22,8 @@ import lombok.ToString;
 import ru.obelisk.cucmaxl.cucm.utils.CucmRepo;
 
 @Entity
-@Table(name = "cucm_line", catalog="adsync", schema="public")
-//@EqualsAndHashCode(exclude={"id","devices"})
+@Table(name = "cucm_line", catalog="adsync", schema="public", 
+	uniqueConstraints=@UniqueConstraint(columnNames={"pkid"}))
 @ToString(exclude={"devices"})
 public class CucmLine implements Serializable, CucmRepo {
 	private static final long serialVersionUID = -8429115892777286213L;
@@ -30,7 +31,6 @@ public class CucmLine implements Serializable, CucmRepo {
 	@Getter
 	@Setter
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@SequenceGenerator(sequenceName = "cucm_line_id_seq", name = "CucmLineIdSequence", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CucmLineIdSequence")
 	@Column(name = "id", length = 11, nullable = false)
@@ -58,15 +58,14 @@ public class CucmLine implements Serializable, CucmRepo {
 	
 	@Getter
 	@Setter
-	@OneToMany(fetch = FetchType.LAZY, mappedBy="line", cascade={CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="line", orphanRemoval=true)
 	private Set<CucmDeviceLine> devices = new HashSet<CucmDeviceLine>(0);
 
 	public boolean isNew(){
 		return this.id==null;
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
+
+	public boolean myEquals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -89,11 +88,7 @@ public class CucmLine implements Serializable, CucmRepo {
 				return false;
 		} else if (!pattern.equals(other.pattern))
 			return false;
-		if (pkid == null) {
-			if (other.pkid != null)
-				return false;
-		} else if (!pkid.equals(other.pkid))
-			return false;
+		
 		return true;
 	}
 }
