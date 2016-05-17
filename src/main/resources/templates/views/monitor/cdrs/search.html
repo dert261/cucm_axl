@@ -9,6 +9,16 @@
 				
 				<div th:include="fragment/fielddefinition :: textFormField('numberA',false, text, 'cdrs.search.field')">Number A</div>
 				<div th:include="fragment/fielddefinition :: textFormField('numberB',false, text, 'cdrs.search.field')">Number B</div>
+				
+				<div class="form-group">
+					<label class="control-label" for="userA" th:text="#{cdrs.search.field.userA}">	</label>
+					<select th:field="*{userA}" th:id="userA"></select>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="userB" th:text="#{cdrs.search.field.userB}">	</label>
+					<select th:field="*{userB}" th:id="userB"></select>
+				</div>
+				
 								
 				<div class="row">
 					<div class='col-lg-6'>
@@ -18,6 +28,7 @@
 						<div th:include="fragment/fielddefinition :: datetimepickerFullViewFormField('stopTime', false, 'cdrs.search.field', 'cdrSearchCriteria', false)">Stop date</div>
 					</div>
 				</div>
+				<div th:include="fragment/fielddefinition :: textFormField('globalCallId', false, text, 'cdrs.search.field')">Global identifier</div>
 				
 				<div class="form-actions">
 					<button id="doSearch" class="btn btn-primary" name="doSearch" type="submit" th:text="#{cdrs.searchform.button.search}">Search</button>
@@ -30,6 +41,63 @@
 					$('.search-button').click(function(){
 						$('.search-form').toggle();
 						return false;
+					});
+					
+					$userSelectA = jQuery('#userA');
+					$userSelectA.select2({
+						allowClear:true,
+						width:'100%', 
+						multiple:false,
+						minimumInputLength:2,
+						language: [[${#locale.language}]], 
+						placeholder: [[#{user.searchform.searchfield.placeholder.name}]],
+						ajax: {
+							delay: 250,
+							dataType: "json",
+							url: function (params) {
+								return '/users/search/users';
+							},
+							data: function (params) {
+								var queryParameters = {
+								 	searchString: params.term
+								}
+								return queryParameters;
+							},
+							processResults: function (data) {
+								return {
+									results: data
+								};
+							},
+						}
+					});
+					
+					
+					$userSelectB = jQuery('#userB');
+					$userSelectB.select2({
+						allowClear:true,
+						width:'100%', 
+						multiple:false,
+						minimumInputLength:2,
+						language: [[${#locale.language}]], 
+						placeholder: [[#{user.searchform.searchfield.placeholder.name}]],
+						ajax: {
+							delay: 250,
+							dataType: "json",
+							url: function (params) {
+								return '/users/search/users';
+							},
+							data: function (params) {
+								var queryParameters = {
+								 	searchString: params.term
+								}
+								return queryParameters;
+							},
+							processResults: function (data) {
+								return {
+									results: data
+								};
+							},
+						}
 					});
 				});
 			/*]]>*/
