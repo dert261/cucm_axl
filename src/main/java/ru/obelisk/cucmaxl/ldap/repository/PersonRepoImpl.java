@@ -25,8 +25,8 @@ import org.springframework.ldap.core.support.SingleContextSource;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Component;
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncParameters;
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncServer;
+import ru.obelisk.database.models.entity.LdapDirSyncParameters;
+import ru.obelisk.database.models.entity.LdapDirSyncServer;
 import ru.obelisk.cucmaxl.ldap.entity.Person;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;

@@ -19,10 +19,10 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.annotation.Secured;
-import ru.obelisk.cucmaxl.database.models.entity.PartitionFilter;
-import ru.obelisk.cucmaxl.database.models.service.PartitionFilterService;
-import ru.obelisk.datatables.mapping.DataTablesInput;
-import ru.obelisk.datatables.mapping.DataTablesOutput;
+import ru.obelisk.database.models.entity.PartitionFilter;
+import ru.obelisk.database.models.service.PartitionFilterService;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Controller
 @RequestMapping("/cucmaxl/partitionfilter")

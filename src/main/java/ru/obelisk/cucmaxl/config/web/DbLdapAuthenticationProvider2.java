@@ -26,11 +26,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncParameters;
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncServer;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.UserRole;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
+import ru.obelisk.database.models.entity.LdapDirSyncParameters;
+import ru.obelisk.database.models.entity.LdapDirSyncServer;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.UserRole;
+import ru.obelisk.database.models.service.UserService;
 
 @Service
 @Qualifier("dbLdapAuthenticationProvider2")

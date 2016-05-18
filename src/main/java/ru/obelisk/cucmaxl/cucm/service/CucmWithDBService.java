@@ -1,7 +1,7 @@
 package ru.obelisk.cucmaxl.cucm.service;
 
 import ru.obelisk.cucmaxl.cucm.utils.CucmExportDevice;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.CucmAxlPort;
 import ru.obelisk.cucmaxl.web.controllers.cme.viewtypes.RouterExportDetail;
 import ru.obelisk.cucmaxl.web.controllers.utils.CsvChangeNumber;
 

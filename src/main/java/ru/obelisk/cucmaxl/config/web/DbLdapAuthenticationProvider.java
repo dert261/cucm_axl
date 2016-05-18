@@ -25,12 +25,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.obelisk.cucmaxl.database.models.entity.LdapAuthenticationParameters;
-import ru.obelisk.cucmaxl.database.models.entity.LdapAuthenticationServer;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.UserRole;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
-import ru.obelisk.cucmaxl.database.models.service.LdapAuthenticationParametersService;
+import ru.obelisk.database.models.entity.LdapAuthenticationParameters;
+import ru.obelisk.database.models.entity.LdapAuthenticationServer;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.UserRole;
+import ru.obelisk.database.models.service.UserService;
+import ru.obelisk.database.models.service.LdapAuthenticationParametersService;
 
 
 @Service

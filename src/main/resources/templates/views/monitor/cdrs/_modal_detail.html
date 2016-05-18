@@ -1,0 +1,568 @@
+<!-- Modal -->
+
+<div class="modal fade" id="cdrDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	            <h3 class="modal-title" id="myModalLabel"  th:text="#{cdrs.modal.title}"></h3>
+	        </div>
+	        <div class="modal-body" id="myModalBody" >   
+	        	<fieldset>
+	        		<legend><h4 th:text="#{cdrs.modal.legend.title}">CDR Detail</h4></legend>
+	        		
+	        		<table class="table table-bordered">
+	  					<tr>
+	  						<th th:text="#{cdrs.label.parameter}">Parameter</th>
+	  						<th th:text="#{cdrs.label.value}">Value</th>
+	  					</tr>
+	  					<tr>
+							<td>id</td>
+							<td th:text="${cdrRecord.id}"></td>
+						</tr>
+						<tr>
+							<td>cdrRecordType</td>
+							<td th:text="${cdrRecord.cdrRecordType}"></td>
+						</tr>
+						<tr>
+							<td>globalCallIdCallManagerId</td>
+							<td th:text="${cdrRecord.globalCallIdCallManagerId}"></td>
+						</tr>
+						<tr>
+							<td>globalCallIdCallId</td>
+							<td th:text="${cdrRecord.globalCallIdCallId}"></td>
+						</tr>
+						<tr>
+							<td>origLegCallIdentifier</td>
+							<td th:text="${cdrRecord.origLegCallIdentifier}"></td>
+						</tr>
+						<tr>
+							<td>dateTimeOriginationDb</td>
+							<td th:text="${cdrRecord.dateTimeOriginationDb}"></td>
+						</tr>
+						<tr>
+							<td>origNodeId</td>
+							<td th:text="${cdrRecord.origNodeId}"></td>
+						</tr>
+						<tr>
+							<td>origSpan</td>
+							<td th:text="${cdrRecord.origSpan}"></td>
+						</tr>
+						<tr>
+							<td>origIpAddr</td>
+							<td th:text="${cdrRecord.origIpAddr}"></td>
+						</tr>
+						<tr>
+							<td>callingPartyNumber</td>
+							<td th:text="${cdrRecord.callingPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>callingPartyUnicodeLoginUserId</td>
+							<td th:text="${cdrRecord.callingPartyUnicodeLoginUserId}"></td>
+						</tr>
+						<tr>
+							<td>origCauseLocation</td>
+							<td th:text="${cdrRecord.origCauseLocation}"></td>
+						</tr>
+						<tr>
+							<td>origCauseValue</td>
+							<td th:text="${cdrRecord.origCauseValue}"></td>
+						</tr>
+						<tr>
+							<td>origPrecedenceLevel</td>
+							<td th:text="${cdrRecord.origPrecedenceLevel}"></td>
+						</tr>
+						<tr>
+							<td>origMediaTransportAddressIP</td>
+							<td th:text="${cdrRecord.origMediaTransportAddressIP}"></td>
+						</tr>
+						<tr>
+							<td>origMediaTransportAddressPort</td>
+							<td th:text="${cdrRecord.origMediaTransportAddressPort}"></td>
+						</tr>
+						<tr>
+							<td>origMediaCapPayloadCapability</td>
+							<td th:text="${cdrRecord.origMediaCapPayloadCapability}"></td>
+						</tr>
+						<tr>
+							<td>origMediaCapMaxFramesPerPacket</td>
+							<td th:text="${cdrRecord.origMediaCapMaxFramesPerPacket}"></td>
+						</tr>
+						<tr>
+							<td>origMediaCapG723BitRate</td>
+							<td th:text="${cdrRecord.origMediaCapG723BitRate}"></td>
+						</tr>
+						<tr>
+							<td>origVideoCapCodec</td>
+							<td th:text="${cdrRecord.origVideoCapCodec}"></td>
+						</tr>
+						<tr>
+							<td>origVideoCapBandwidth</td>
+							<td th:text="${cdrRecord.origVideoCapBandwidth}"></td>
+						</tr>
+						<tr>
+							<td>origVideoCapResolution</td>
+							<td th:text="${cdrRecord.origVideoCapResolution}"></td>
+						</tr>
+						<tr>
+							<td>origVideoTransportAddressIP</td>
+							<td th:text="${cdrRecord.origVideoTransportAddressIP}"></td>
+						</tr>
+						<tr>
+							<td>origVideoTransportAddressPort</td>
+							<td th:text="${cdrRecord.origVideoTransportAddressPort}"></td>
+						</tr>
+						<tr>
+							<td>origRSVPAudioStat</td>
+							<td th:text="${cdrRecord.origRSVPAudioStat}"></td>
+						</tr>
+						<tr>
+							<td>origRSVPVideoStat</td>
+							<td th:text="${cdrRecord.origRSVPVideoStat}"></td>
+						</tr>
+						<tr>
+							<td>destLegIdentifier</td>
+							<td th:text="${cdrRecord.destLegIdentifier}"></td>
+						</tr>
+						<tr>
+							<td>destNodeId</td>
+							<td th:text="${cdrRecord.destNodeId}"></td>
+						</tr>
+						<tr>
+							<td>destSpan</td>
+							<td th:text="${cdrRecord.destSpan}"></td>
+						</tr>
+						<tr>
+							<td>destIpAddr</td>
+							<td th:text="${cdrRecord.destIpAddr}"></td>
+						</tr>
+						<tr>
+							<td>destIpAddrDb</td>
+							<td th:text="${cdrRecord.destIpAddrDb}"></td>
+						</tr>
+						<tr>
+							<td>originalCalledPartyNumber</td>
+							<td th:text="${cdrRecord.originalCalledPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>finalCalledPartyNumber</td>
+							<td th:text="${cdrRecord.finalCalledPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>finalCalledPartyUnicodeLoginUserId</td>
+							<td th:text="${cdrRecord.finalCalledPartyUnicodeLoginUserId}"></td>
+						</tr>
+						<tr>
+							<td>destCauseLocation</td>
+							<td th:text="${cdrRecord.destCauseLocation}"></td>
+						</tr>
+						<tr>
+							<td>destCauseValue</td>
+							<td th:text="${cdrRecord.destCauseValue}"></td>
+						</tr>
+						<tr>
+							<td>destPrecedenceLevel</td>
+							<td th:text="${cdrRecord.destPrecedenceLevel}"></td>
+						</tr>
+						<tr>
+							<td>destMediaTransportAddressIp</td>
+							<td th:text="${cdrRecord.destMediaTransportAddressIp}"></td>
+						</tr>
+						<tr>
+							<td>destMediaTransportAddressIpDb</td>
+							<td th:text="${cdrRecord.destMediaTransportAddressIpDb}"></td>
+						</tr>
+						<tr>
+							<td>destMediaTransportAddressPort</td>
+							<td th:text="${cdrRecord.destMediaTransportAddressPort}"></td>
+						</tr>
+						<tr>
+							<td>destMediaCapPayloadCapability</td>
+							<td th:text="${cdrRecord.destMediaCapPayloadCapability}"></td>
+						</tr>
+						<tr>
+							<td>destMediaCapMaxFramesPerPacket</td>
+							<td th:text="${cdrRecord.destMediaCapMaxFramesPerPacket}"></td>
+						</tr>
+						<tr>
+							<td>destMediaCapG723BitRate</td>
+							<td th:text="${cdrRecord.destMediaCapG723BitRate}"></td>
+						</tr>
+						<tr>
+							<td>destVideoCapCodec</td>
+							<td th:text="${cdrRecord.destVideoCapCodec}"></td>
+						</tr>
+						<tr>
+							<td>destVideoCapBandwidth</td>
+							<td th:text="${cdrRecord.destVideoCapBandwidth}"></td>
+						</tr>
+						<tr>
+							<td>destVideoCapResolution</td>
+							<td th:text="${cdrRecord.destVideoCapResolution}"></td>
+						</tr>
+						<tr>
+							<td>destVideoTransportAddressIp</td>
+							<td th:text="${cdrRecord.destVideoTransportAddressIp}"></td>
+						</tr>
+						<tr>
+							<td>destVideoTransportAddressPort</td>
+							<td th:text="${cdrRecord.destVideoTransportAddressPort}"></td>
+						</tr>
+						<tr>
+							<td>destRSVPAudioStat</td>
+							<td th:text="${cdrRecord.destRSVPAudioStat}"></td>
+						</tr>
+						<tr>
+							<td>destRSVPVideoStat</td>
+							<td th:text="${cdrRecord.destRSVPVideoStat}"></td>
+						</tr>
+						<tr>
+							<td>dateTimeConnectDb</td>
+							<td th:text="${cdrRecord.dateTimeConnectDb}"></td>
+						</tr>
+						<tr>
+							<td>dateTimeDisconnectDb</td>
+							<td th:text="${cdrRecord.dateTimeDisconnectDb}"></td>
+						</tr>
+						<tr>
+							<td>lastRedirectDn</td>
+							<td th:text="${cdrRecord.lastRedirectDn}"></td>
+						</tr>
+						<tr>
+							<td>pkid</td>
+							<td th:text="${cdrRecord.pkid}"></td>
+						</tr>
+						<tr>
+							<td>originalCalledPartyNumberPartition</td>
+							<td th:text="${cdrRecord.originalCalledPartyNumberPartition}"></td>
+						</tr>
+						<tr>
+							<td>callingPartyNumberPartition</td>
+							<td th:text="${cdrRecord.callingPartyNumberPartition}"></td>
+						</tr>
+						<tr>
+							<td>finalCalledPartyNumberPartition</td>
+							<td th:text="${cdrRecord.finalCalledPartyNumberPartition}"></td>
+						</tr>
+						<tr>
+							<td>lastRedirectDnPartition</td>
+							<td th:text="${cdrRecord.lastRedirectDnPartition}"></td>
+						</tr>
+						<tr>
+							<td>duration</td>
+							<td th:text="${cdrRecord.duration}"></td>
+						</tr>
+						<tr>
+							<td>origDeviceName</td>
+							<td th:text="${cdrRecord.origDeviceName}"></td>
+						</tr>
+						<tr>
+							<td>destDeviceName</td>
+							<td th:text="${cdrRecord.destDeviceName}"></td>
+						</tr>
+						<tr>
+							<td>origCallTerminationOnBehalfOf</td>
+							<td th:text="${cdrRecord.origCallTerminationOnBehalfOf}"></td>
+						</tr>
+						<tr>
+							<td>destCallTerminationOnBehalfOf</td>
+							<td th:text="${cdrRecord.destCallTerminationOnBehalfOf}"></td>
+						</tr>
+						<tr>
+							<td>origCalledPartyRedirectOnBehalfOf</td>
+							<td th:text="${cdrRecord.origCalledPartyRedirectOnBehalfOf}"></td>
+						</tr>
+						<tr>
+							<td>lastRedirectRedirectOnBehalfOf</td>
+							<td th:text="${cdrRecord.lastRedirectRedirectOnBehalfOf}"></td>
+						</tr>
+						<tr>
+							<td>origCalledPartyRedirectReason</td>
+							<td th:text="${cdrRecord.origCalledPartyRedirectReason}"></td>
+						</tr>
+						<tr>
+							<td>lastRedirectRedirectReason</td>
+							<td th:text="${cdrRecord.lastRedirectRedirectReason}"></td>
+						</tr>
+						<tr>
+							<td>destConversationId</td>
+							<td th:text="${cdrRecord.destConversationId}"></td>
+						</tr>
+						<tr>
+							<td>globalCallIdClusterId</td>
+							<td th:text="${cdrRecord.globalCallIdClusterId}"></td>
+						</tr>
+						<tr>
+							<td>joinOnBehalfOf</td>
+							<td th:text="${cdrRecord.joinOnBehalfOf}"></td>
+						</tr>
+						<tr>
+							<td>comment</td>
+							<td th:text="${cdrRecord.comment}"></td>
+						</tr>
+						<tr>
+							<td>authCodeDescription</td>
+							<td th:text="${cdrRecord.authCodeDescription}"></td>
+						</tr>
+						<tr>
+							<td>authorizationLevel</td>
+							<td th:text="${cdrRecord.authorizationLevel}"></td>
+						</tr>
+						<tr>
+							<td>clientMatterCode</td>
+							<td th:text="${cdrRecord.clientMatterCode}"></td>
+						</tr>
+						<tr>
+							<td>origDTMFMethod</td>
+							<td th:text="${cdrRecord.origDTMFMethod}"></td>
+						</tr>
+						<tr>
+							<td>destDTMFMethod</td>
+							<td th:text="${cdrRecord.destDTMFMethod}"></td>
+						</tr>
+						<tr>
+							<td>callSecuredStatus</td>
+							<td th:text="${cdrRecord.callSecuredStatus}"></td>
+						</tr>
+						<tr>
+							<td>origConversationId</td>
+							<td th:text="${cdrRecord.origConversationId}"></td>
+						</tr>
+						<tr>
+							<td>origMediaCapBandwidth</td>
+							<td th:text="${cdrRecord.origMediaCapBandwidth}"></td>
+						</tr>
+						<tr>
+							<td>destMediaCapBandwidth</td>
+							<td th:text="${cdrRecord.destMediaCapBandwidth}"></td>
+						</tr>
+						<tr>
+							<td>authorizationCodeValue</td>
+							<td th:text="${cdrRecord.authorizationCodeValue}"></td>
+						</tr>
+						<tr>
+							<td>outpulsedCallingPartyNumber</td>
+							<td th:text="${cdrRecord.outpulsedCallingPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>outpulsedCalledPartyNumber</td>
+							<td th:text="${cdrRecord.outpulsedCalledPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>origIpv4v6Addr</td>
+							<td th:text="${cdrRecord.origIpv4v6Addr}"></td>
+						</tr>
+						<tr>
+							<td>destIpv4v6Addr</td>
+							<td th:text="${cdrRecord.destIpv4v6Addr}"></td>
+						</tr>
+						<tr>
+							<td>origVideoCapCodecChannel2</td>
+							<td th:text="${cdrRecord.origVideoCapCodecChannel2}"></td>
+						</tr>
+						<tr>
+							<td>origVideoCapBandwidthChannel2</td>
+							<td th:text="${cdrRecord.origVideoCapBandwidthChannel2}"></td>
+						</tr>
+						<tr>
+							<td>origVideoCapResolutionChannel2</td>
+							<td th:text="${cdrRecord.origVideoCapResolutionChannel2}"></td>
+						</tr>
+						<tr>
+							<td>origVideoTransportAddressIPChannel2</td>
+							<td th:text="${cdrRecord.origVideoTransportAddressIPChannel2}"></td>
+						</tr>
+						<tr>
+							<td>origVideoTransportAddressPortChannel2</td>
+							<td th:text="${cdrRecord.origVideoTransportAddressPortChannel2}"></td>
+						</tr>
+						<tr>
+							<td>origVideoChannelRoleChannel2</td>
+							<td th:text="${cdrRecord.origVideoChannelRoleChannel2}"></td>
+						</tr>
+						<tr>
+							<td>destVideoCapCodecChannel2</td>
+							<td th:text="${cdrRecord.destVideoCapCodecChannel2}"></td>
+						</tr>
+						<tr>
+							<td>destVideoCapBandwidthChannel2</td>
+							<td th:text="${cdrRecord.destVideoCapBandwidthChannel2}"></td>
+						</tr>
+						<tr>
+							<td>destVideoCapResolutionChannel2</td>
+							<td th:text="${cdrRecord.destVideoCapResolutionChannel2}"></td>
+						</tr>
+						<tr>
+							<td>destVideoTransportAddressIpChannel2</td>
+							<td th:text="${cdrRecord.destVideoTransportAddressIpChannel2}"></td>
+						</tr>
+						<tr>
+							<td>destVideoTransportAddressPortChannel2</td>
+							<td th:text="${cdrRecord.destVideoTransportAddressPortChannel2}"></td>
+						</tr>
+						<tr>
+							<td>destVideoChannelRoleChannel2</td>
+							<td th:text="${cdrRecord.destVideoChannelRoleChannel2}"></td>
+						</tr>
+						<tr>
+							<td>incomingProtocolId</td>
+							<td th:text="${cdrRecord.incomingProtocolId}"></td>
+						</tr>
+						<tr>
+							<td>incomingProtocolCallRef</td>
+							<td th:text="${cdrRecord.incomingProtocolCallRef}"></td>
+						</tr>
+						<tr>
+							<td>outgoingProtocolId</td>
+							<td th:text="${cdrRecord.outgoingProtocolId}"></td>
+						</tr>
+						<tr>
+							<td>outgoingProtocolCallRef</td>
+							<td th:text="${cdrRecord.outgoingProtocolCallRef}"></td>
+						</tr>
+						<tr>
+							<td>currentRoutingReason</td>
+							<td th:text="${cdrRecord.currentRoutingReason}"></td>
+						</tr>
+						<tr>
+							<td>origRoutingReason</td>
+							<td th:text="${cdrRecord.origRoutingReason}"></td>
+						</tr>
+						<tr>
+							<td>lastRedirectingRoutingReason</td>
+							<td th:text="${cdrRecord.lastRedirectingRoutingReason}"></td>
+						</tr>
+						<tr>
+							<td>huntPilotPartition</td>
+							<td th:text="${cdrRecord.huntPilotPartition}"></td>
+						</tr>
+						<tr>
+							<td>huntPilotDn</td>
+							<td th:text="${cdrRecord.huntPilotDn}"></td>
+						</tr>
+						<tr>
+							<td>calledPartyPatternUsage</td>
+							<td th:text="${cdrRecord.calledPartyPatternUsage}"></td>
+						</tr>
+						<tr>
+							<td>incomingICId</td>
+							<td th:text="${cdrRecord.incomingICId}"></td>
+						</tr>
+						<tr>
+							<td>incomingOrigIOI</td>
+							<td th:text="${cdrRecord.incomingOrigIOI}"></td>
+						</tr>
+						<tr>
+							<td>incomingTermIOI</td>
+							<td th:text="${cdrRecord.incomingTermIOI}"></td>
+						</tr>
+						<tr>
+							<td>outgoingICId</td>
+							<td th:text="${cdrRecord.outgoingICId}"></td>
+						</tr>
+						<tr>
+							<td>outgoingOrigIOI</td>
+							<td th:text="${cdrRecord.outgoingOrigIOI}"></td>
+						</tr>
+						<tr>
+							<td>outgoingTermIOI</td>
+							<td th:text="${cdrRecord.outgoingTermIOI}"></td>
+						</tr>
+						<tr>
+							<td>outpulsedOriginalCalledPartyNumber</td>
+							<td th:text="${cdrRecord.outpulsedOriginalCalledPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>outpulsedLastRedirectingNumber</td>
+							<td th:text="${cdrRecord.outpulsedLastRedirectingNumber}"></td>
+						</tr>
+						<tr>
+							<td>wasCallQueued</td>
+							<td th:text="${cdrRecord.wasCallQueued}"></td>
+						</tr>
+						<tr>
+							<td>totalWaitTimeInQueue</td>
+							<td th:text="${cdrRecord.totalWaitTimeInQueue}"></td>
+						</tr>
+						<tr>
+							<td>callingPartyNumberUri</td>
+							<td th:text="${cdrRecord.callingPartyNumberUri}"></td>
+						</tr>
+						<tr>
+							<td>originalCalledPartyNumberUri</td>
+							<td th:text="${cdrRecord.originalCalledPartyNumberUri}"></td>
+						</tr>
+						<tr>
+							<td>finalCalledPartyNumberUri</td>
+							<td th:text="${cdrRecord.finalCalledPartyNumberUri}"></td>
+						</tr>
+						<tr>
+							<td>lastRedirectDnUri</td>
+							<td th:text="${cdrRecord.lastRedirectDnUri}"></td>
+						</tr>
+						<tr>
+							<td>mobileCallingPartyNumber</td>
+							<td th:text="${cdrRecord.mobileCallingPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>finalMobileCalledPartyNumber</td>
+							<td th:text="${cdrRecord.finalMobileCalledPartyNumber}"></td>
+						</tr>
+						<tr>
+							<td>origMobileDeviceName</td>
+							<td th:text="${cdrRecord.origMobileDeviceName}"></td>
+						</tr>
+						<tr>
+							<td>destMobileDeviceName</td>
+							<td th:text="${cdrRecord.destMobileDeviceName}"></td>
+						</tr>
+						<tr>
+							<td>origMobileCallDuration</td>
+							<td th:text="${cdrRecord.origMobileCallDuration}"></td>
+						</tr>
+						<tr>
+							<td>destMobileCallDuration</td>
+							<td th:text="${cdrRecord.destMobileCallDuration}"></td>
+						</tr>
+						<tr>
+							<td>mobileCallType</td>
+							<td th:text="${cdrRecord.mobileCallType}"></td>
+						</tr>
+						<tr>
+							<td>originalCalledPartyPattern</td>
+							<td th:text="${cdrRecord.originalCalledPartyPattern}"></td>
+						</tr>
+						<tr>
+							<td>finalCalledPartyPattern</td>
+							<td th:text="${cdrRecord.finalCalledPartyPattern}"></td>
+						</tr>
+						<tr>
+							<td>lastRedirectingPartyPattern</td>
+							<td th:text="${cdrRecord.lastRedirectingPartyPattern}"></td>
+						</tr>
+						<tr>
+							<td>huntPilotPattern</td>
+							<td th:text="${cdrRecord.huntPilotPattern}"></td>
+						</tr>
+
+	  				</table>
+	        		
+	        	</fieldset>
+			</div>
+	        	     	
+			<div class="modal-footer">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{enduserphonebook.form.button.close}">Close</button>
+	        </div>
+	        
+	        
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    
+
+	
+/*]]>*/
+</script>

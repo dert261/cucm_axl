@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.2.RELEASE</version>
+		<version>1.3.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -24,14 +24,10 @@
 		<spring-ldap-core.version>2.0.4.RELEASE</spring-ldap-core.version>
 		<jadira-usertype.version>3.1.0.CR1</jadira-usertype.version>
 		<axis.version>1.4</axis.version>
-		
-		<jackson-core.version>2.5.0</jackson-core.version>
-	    <jackson-databind.version>2.5.0</jackson-databind.version>
-	    <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
-	    <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
-	    	    
+			
+		<jackson.version>2.7.4</jackson.version>
+	    	    	    	    
 	    <thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
-	    <joda-time.version>2.6</joda-time.version>
 	    <thymeleaf-layout-dialect.version>1.2.7</thymeleaf-layout-dialect.version>
 	    <thymeleaf-extras-springsecurity4.version>2.1.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 	    <apache-commons-beanutils.version>1.9.2</apache-commons-beanutils.version>
@@ -39,17 +35,33 @@
 	    <commons-io.version>1.3.2</commons-io.version>
 	    <quartz.version>2.2.2</quartz.version>
 	    <cucmesdk.version>1.0.2</cucmesdk.version>
+	    <camel.version>2.17.0</camel.version>
 	</properties>
 	
 	
 
 	<dependencies>
+	
 		<dependency>
-			<groupId>uk.co.gcwilliams</groupId>
-			<artifactId>jodatime-thymeleaf-dialect</artifactId>
-			<version>1.3</version>
+    		<groupId>com.univocity</groupId>
+    		<artifactId>univocity-parsers</artifactId>
+    		<version>2.0.2</version>
+    		<type>jar</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-core</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-ftp</artifactId>
+			<version>${camel.version}</version>
 		</dependency>
 	
+			
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
@@ -72,8 +84,14 @@
 		</dependency>-->
 		
 		<dependency>
+			<groupId>ru.obelisk.database</groupId>
+			<artifactId>adsync</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>ru.obelisk</groupId>
-			<artifactId>datatables</artifactId>
+			<artifactId>module</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 			
@@ -193,25 +211,17 @@
 		<dependency>
     		<groupId>com.fasterxml.jackson.core</groupId>
     		<artifactId>jackson-databind</artifactId>
-       	</dependency>
-
-		<dependency>
-    		<groupId>org.codehaus.jackson</groupId>
-    		<artifactId>jackson-core-asl</artifactId>
-    		<version>${jackson-core-asl.version}</version>
-		</dependency>
-
-		<dependency>
-    		<groupId>org.codehaus.jackson</groupId>
-    		<artifactId>jackson-mapper-asl</artifactId>
-    		<version>${jackson-mapper-asl.version}</version>
-		</dependency>
-		
-		<dependency>
+    	</dependency>
+       	<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-annotations</artifactId>
+    	</dependency>
+       	<!-- <dependency>
 		    <groupId>com.fasterxml.jackson.datatype</groupId>
 		    <artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-		
+		    <version>${jackson.version}</version>
+		</dependency>-->
+
 		<!-- Thymeleaf dependencies -->
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
@@ -262,21 +272,6 @@
 		</dependency>
 		
 		<dependency>
-	        <groupId>joda-time</groupId>
-	        <artifactId>joda-time</artifactId>
-	    </dependency> 
-	    <dependency>
-  			<groupId>org.jadira.usertype</groupId>
-  			<artifactId>usertype.core</artifactId>
-  			<version>${jadira-usertype.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-joda</artifactId>
-		</dependency>
-
-	    <dependency>
 	    	<groupId>commons-httpclient</groupId>
 	    	<artifactId>commons-httpclient</artifactId>
 	    	<version>3.1</version>
@@ -342,6 +337,10 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
 			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jersey</artifactId>
 		</dependency>
 	</dependencies>
 		

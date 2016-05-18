@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragment/header :: headerFragment" />
+
+<body>
+<div id="wrapper">
+	<!-- Header -->
+	<div th:replace="fragment/header :: navbar_alt" > </div>
+		
+	<br/>
+	<div id="page-wrapper">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/monitor/collectors/"><th:block th:text="#{breadcrumbs.collectors}" /></a></li>
+				<li class="active"><th:block th:text="#{breadcrumbs.collectors.update}" /></li>
+			</ol>
+		</div> 
+		<div class="row">
+			
+			<form action="#" th:action="@{/monitor/collectors/update}" th:object="${collector}" th:method="PUT" method="PUT" class="well form">
+				<head th:replace="monitor/collectors/form :: collectorFormContent" />
+			</form>
+		</div>
+	</div>
+</div>
+
+<div th:replace="fragment/header :: scripts" > </div>
+<script src="/static/assets/views/monitor/collectors/js/form.js" th:href="@{/static/assets/views/monitor/collectors/js/form.js}" > </script>
+
+</body>
+</html>

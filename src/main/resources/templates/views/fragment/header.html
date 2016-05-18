@@ -16,9 +16,29 @@
 	<link rel="stylesheet" src="/static/assets/extensions/bootstrap-datetimepicker-4.17.37/css/bootstrap-datetimepicker.min.css" th:href="@{/static/assets/extensions/bootstrap-datetimepicker-4.17.37/css/bootstrap-datetimepicker.min.css}" />
 	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/integr/css/datatables.min.css" th:href="@{/static/assets/data-tables-1.10.6/integr/css/datatables.min.css}" />
 	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/css/select.dataTables.min.css" th:href="@{/static/assets/data-tables-1.10.6/css/select.dataTables.min.css}" />
+	<link rel="stylesheet" src="/static/assets/data-tables-1.10.6/plugin/css/buttons.dataTables.min.css" th:href="@{/static/assets/data-tables-1.10.6/plugin/css/buttons.dataTables.min.css}" />
 	<link rel="stylesheet" src="/static/assets/select2/4.0.1/css/select2.css" th:href="@{/static/assets/select2/4.0.1/css/select2.css}" />
 	<link rel="stylesheet" src="/static/assets/metisMenu/2.0.1/metisMenu.min.css" th:href="@{/static/assets/metisMenu/2.0.1/metisMenu.min.css}" />
-	<script src="/static/assets/jquery-1.11.2.min.js" th:href="@{/static/assets/jquery-1.11.2.min.js}" > </script>  
+	
+	<style>
+		/* Error for select2 elements */	
+		.has-error .select2-selection {
+    		border: 1px solid #a94442;
+    		border-radius: 4px;
+		}
+		/* DataTable buttons right align */
+		.datatable-buttons .dt-buttons {
+    		float: right;
+    		position: relative;
+		}
+		.dataTables_processing {
+			z-index: 1000;
+		}
+	</style>
+	
+	
+		
+	<script src="/static/assets/jquery-1.12.3.min.js" th:href="@{/static/assets/jquery-1.12.3.min.js}" > </script>  
 </head>
 
 <head th:fragment="headerFragmentError">
@@ -130,6 +150,22 @@
 				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
 			                    	<a href="/jobs/" th:utext="'&lt;i class=\'fa fa-random fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.jobs}">Jobs</a>
 				                </li>
+				                
+				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			                    	<a href="/modules/" th:utext="'&lt;i class=\'fa fa-puzzle-piece fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.modules}">Modules</a>
+				                </li>
+				                
+				                <li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-desktop fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>Monitor<span class="fa arrow"></span></a> 
+			                    	<ul class="nav nav-third-level">
+				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
+				                    		<a href="/monitor/collectors/" th:utext="'&lt;i class=\'fa fa-dot-circle-o fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor.collectors}">Collectors</a>
+				                    	</li>
+				                    	<li sec:authorize="hasRole('ROLE_ADMIN')">	
+				                    		<a href="/monitor/cdrs/" th:utext="'&lt;i class=\'fa fa-search-plus fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor.cdrs}">CDRs</a>
+				                    	</li>
+				                    </ul>	
+				                </li>
 				                 
 				            </ul>
                         </li>
@@ -147,8 +183,10 @@
 	<!--  </div> -->
 </footer>
 <div th:fragment="scripts">	
+	<script src="/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js" th:src="@{/static/assets/data-tables-1.10.6/js/jquery.spring-friendly.js}" > </script>
   	<script src="/static/assets/data-tables-1.10.6/integr/js/datatables.min.js" th:src="@{/static/assets/data-tables-1.10.6/integr/js/datatables.min.js}" > </script>
-  	<script src="/static/assets/data-tables-1.10.6/js/dataTables.select.min.js" th:src="@{/static/assets/data-tables-1.10.6/js/dataTables.select.min.js}" > </script> 
+  	<script src="/static/assets/data-tables-1.10.6/js/dataTables.select.min.js" th:src="@{/static/assets/data-tables-1.10.6/js/dataTables.select.min.js}" > </script>
+  	<script src="/static/assets/data-tables-1.10.6/plugin/js/dataTables.buttons.min.js" th:src="@{/static/assets/data-tables-1.10.6/plugin/js/dataTables.buttons.min.js}" > </script>
   	<script src="/static/assets/metisMenu/2.0.1/metisMenu.min.js" th:src="@{/static/assets/metisMenu/2.0.1/metisMenu.min.js}" > </script>
 	<script src="/static/assets/select2/4.0.1/js/select2.full.min.js" th:src="@{/static/assets/select2/4.0.1/js/select2.full.min.js}" > </script>
 	<script th:src="@{/static/assets/select2/4.0.1/js/i18n/__${#locale.language}__.js}" > </script>
@@ -165,7 +203,7 @@
 	<script src="/static/assets/bootstrap-table-filter-master/src/bootstrap-table-filter.js" th:src="@{/static/assets/bootstrap-table-filter-master/src/bootstrap-table-filter.js}" ></script>
 	<script src="/static/assets/my/my.js" th:src="@{/static/assets/my/my.js}" > </script>
 	<script src="/static/assets/extensions/bootstrap-timepicker/js/bootstrap-timepicker.js" th:src="@{/static/assets/extensions/bootstrap-timepicker/js/bootstrap-timepicker.js}" > </script>
-	<script src="/static/assets/moment-with-locales.js" th:src="@{/static/assets/moment-with-locales.js}" > </script>
+	<script src="/static/assets/moment-with-locales-2.13.0.js" th:src="@{/static/assets/moment-with-locales-2.13.0.js}" > </script>
 	<script src="/static/assets/extensions/bootstrap-datetimepicker-4.17.37/js/bootstrap-datetimepicker.min.js" th:src="@{/static/assets/extensions/bootstrap-datetimepicker-4.17.37/js/bootstrap-datetimepicker.min.js}" > </script>
 	<script src="/static/assets/startbootstrap/bower_components/raphael/raphael-min.js" th:src="@{/static/assets/startbootstrap/bower_components/raphael/raphael-min.js}" > </script>
 	<script src="/static/assets/startbootstrap/dist/js/sb-admin-2.js" th:src="@{/static/assets/startbootstrap/dist/js/sb-admin-2.js}" > </script>

@@ -7,20 +7,20 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeAddonModule;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeBlfSpeedDial;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomSipExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeExtMapStatus;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipExtMapStatus;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSpeedDial;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CucmPhoneType;
-//import ru.obelisk.cucmaxl.database.models.service.UserService;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.cme.CmeAddonModule;
+import ru.obelisk.database.models.entity.cme.CmeBlfSpeedDial;
+import ru.obelisk.database.models.entity.cme.CmeCustomExtension;
+import ru.obelisk.database.models.entity.cme.CmeCustomSipExtension;
+import ru.obelisk.database.models.entity.cme.CmeDevice;
+import ru.obelisk.database.models.entity.cme.CmeExtMapStatus;
+import ru.obelisk.database.models.entity.cme.CmeExtension;
+import ru.obelisk.database.models.entity.cme.CmeSipDevice;
+import ru.obelisk.database.models.entity.cme.CmeSipExtMapStatus;
+import ru.obelisk.database.models.entity.cme.CmeSipExtension;
+import ru.obelisk.database.models.entity.cme.CmeSpeedDial;
+import ru.obelisk.database.models.entity.enums.CucmPhoneType;
+//import ru.obelisk.database.models.service.UserService;
 
 @Component
 public class CucmMigrationUtils {

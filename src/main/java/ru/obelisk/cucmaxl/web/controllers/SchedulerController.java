@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.security.access.annotation.Secured;
-import ru.obelisk.cucmaxl.annotations.DatatableCriterias;
-import ru.obelisk.cucmaxl.database.models.entity.ScheduleJob;
-import ru.obelisk.cucmaxl.database.models.service.ScheduleJobService;
-import ru.obelisk.cucmaxl.database.models.views.View;
-import ru.obelisk.cucmaxl.web.ui.datatables.DataSet;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesCriterias;
-import ru.obelisk.cucmaxl.web.ui.datatables.DatatablesResponse;
-import ru.obelisk.cucmaxl.web.ui.select2.Select2Result;
+
+import ru.obelisk.database.models.entity.ScheduleJob;
+import ru.obelisk.database.models.service.ScheduleJobService;
+import ru.obelisk.database.models.views.View;
+import ru.obelisk.database.select2.Select2Result;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Controller
 @RequestMapping("/scheduler")
@@ -39,7 +38,7 @@ public class SchedulerController {
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody List<Select2Result> searchJobs(@RequestParam String searchString) {
 		logger.info("Requesting search scheduler jobs with term: {}",searchString);
-		return scheduleJobService.findScheduleJobByTerm(searchString);
+		return scheduleJobService.findByTerm(searchString);
 	}
 	
 	@RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
@@ -48,11 +47,11 @@ public class SchedulerController {
 		logger.info("Requesting  scheduler jobs page");
 		ScheduleJob scheduleJob = new ScheduleJob();
 		model.addAttribute("scheduleJob", scheduleJob);
-		model.addAttribute("scheduleJobAll", scheduleJobService.getAllScheduleJobs());
+		model.addAttribute("scheduleJobAll", scheduleJobService.findAll());
 		return "scheduler/index";
 	}
 	
-	@JsonView(value={View.ScheduleJob.class})
+	/*@JsonView(value={View.ScheduleJob.class})
 	@RequestMapping(value = {"/ajax/serverside/schedulerjob.json"}, method = RequestMethod.GET)
 	@Secured("ROLE_ADMIN")
 	public @ResponseBody DatatablesResponse<ScheduleJob> schedulerJobsDatatables(
@@ -72,6 +71,22 @@ public class SchedulerController {
 		logger.info("Requesting CUCM AXL port data for table on index page");
 		List<ScheduleJob> scheduleJobs = scheduleJobService.getAllScheduleJobs();
 		return DatatablesResponse.clientSideBuild(scheduleJobs);
+	}*/
+	
+	@JsonView(value={View.ScheduleJob.class})
+	@RequestMapping(value = {"/ajax/serverside/schedulerjob.json"}, method = RequestMethod.GET)
+	@Secured("ROLE_ADMIN")
+	public @ResponseBody DataTablesOutput<ScheduleJob> schedulerJobsDatatables(@Valid DataTablesInput input) {
+		DataTablesOutput<ScheduleJob> output = scheduleJobService.findAll(input);
+		output.setData(idGenerate(output.getData(),input.getStart()));
+		return output;
+	}
+		
+	private List<ScheduleJob> idGenerate(List<ScheduleJob> files, int start){
+		for(int i=0;i<files.size();i++){
+			files.get(i).setNumberLocalized(start+i+1);
+		}
+		return files;
 	}
 	
 	@RequestMapping(value = {"/create"}, method = RequestMethod.GET)
@@ -102,7 +117,7 @@ public class SchedulerController {
 	@Secured("ROLE_ADMIN")
 	public String viewUpdateScheduleJobPage(ModelMap model, @PathVariable(value = "id") int id) {
 		logger.info("Requesting update schedule job page");
-		ScheduleJob scheduleJob = scheduleJobService.getScheduleJobById(id);
+		ScheduleJob scheduleJob = scheduleJobService.findById(id);
 		model.addAttribute("scheduleJob", scheduleJob);
 		return "scheduler/update";
 	}

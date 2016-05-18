@@ -2,7 +2,7 @@ package ru.obelisk.cucmaxl.ldap.repository;
 
 import java.util.List;
 
-import ru.obelisk.cucmaxl.database.models.entity.LdapDirSyncParameters;
+import ru.obelisk.database.models.entity.LdapDirSyncParameters;
 import ru.obelisk.cucmaxl.ldap.entity.Person;
 
 public interface PersonRepo {

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import com.cisco.axlapiservice.AXLAPIService;
 import com.cisco.axlapiservice.AXLPort;
 
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.CucmAxlPort;
 
 
 @Component

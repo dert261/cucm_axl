@@ -1,15 +1,16 @@
 package ru.obelisk.cucmaxl.scheduler;
 
+import java.time.LocalDateTime;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.obelisk.cucmaxl.cucm.service.CucmWithDBService;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.enums.ResyncStatus;
-import ru.obelisk.cucmaxl.database.models.service.CucmAxlPortService;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.enums.ResyncStatus;
+import ru.obelisk.database.models.service.CucmAxlPortService;
+import ru.obelisk.module.utils.TimePeriod;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
 
 @Component
@@ -23,9 +24,9 @@ public class CucmAxlPortSyncUtils {
 		
 			logger.info("Requesting resync CUCM AXL port");
 			
-			CucmAxlPort axlPort = cucmAxlPortService.getCucmAxlPortById(axlPortId);
+			CucmAxlPort axlPort = cucmAxlPortService.findById(axlPortId);
 			if(axlPort!=null){
-				DateTime startDate = new DateTime();
+				LocalDateTime startDate = LocalDateTime.now();
 				axlPort.setResyncStatus(ResyncStatus.ACTIVE);
 				cucmAxlPortService.edit(axlPort);
 				logger.info("Start resync CUCM AXL Port at {}: {}",startDate, axlPort);
@@ -35,9 +36,9 @@ public class CucmAxlPortSyncUtils {
 				} catch (Exception e) {
 					logger.warn(ObeliskStringUtils.getTraceToLog(e));
 				}
-				DateTime stopDate = new DateTime();
+				LocalDateTime stopDate = LocalDateTime.now();
 				logger.info("Stop resync CUCM AXL Port at {}: {}",stopDate, axlPort);
-				Interval interval = new Interval(startDate, stopDate); 
+				TimePeriod interval = TimePeriod.getDateTimeDuration(startDate, stopDate); 
 				logger.info("Total work time is {}", interval);
 			}
 			axlPort.setResyncStatus(ResyncStatus.NONACTIVE);

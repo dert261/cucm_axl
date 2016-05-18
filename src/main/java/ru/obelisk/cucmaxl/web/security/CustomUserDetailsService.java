@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.obelisk.cucmaxl.database.models.entity.UserRole;
-//import ru.obelisk.cucmaxl.database.models.repository.UserRepository;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
+import ru.obelisk.database.models.entity.UserRole;
+//import ru.obelisk.database.models.repository.UserRepository;
+import ru.obelisk.database.models.service.UserService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,14 +32,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String username)
             throws UsernameNotFoundException {
 
-        ru.obelisk.cucmaxl.database.models.entity.User user = userService.getUserByUsername(username);
+        ru.obelisk.database.models.entity.User user = userService.getUserByUsername(username);
         //userRepository.findByUsername(username);
         
         List<GrantedAuthority> authorities = buildUserAuthority(new HashSet<UserRole>(user.getRoles()));
         return buildUserForAuthentication(user, authorities);
     }
 
-    private User buildUserForAuthentication(ru.obelisk.cucmaxl.database.models.entity.User user,
+    private User buildUserForAuthentication(ru.obelisk.database.models.entity.User user,
                                             List<GrantedAuthority> authorities) {
     	User authUser = new User(user.getLogin(), user.getPass(), authorities);
     	return authUser; 

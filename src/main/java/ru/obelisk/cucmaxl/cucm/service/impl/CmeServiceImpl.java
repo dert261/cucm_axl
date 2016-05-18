@@ -1,5 +1,6 @@
 package ru.obelisk.cucmaxl.cucm.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,38 +31,39 @@ import com.cisco.cme.custom.xml.SpeedDialItem;
 
 import lombok.extern.log4j.Log4j2;
 import ru.obelisk.cucmaxl.cucm.service.CmeService;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeAddonModule;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeBlfSpeedDial;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCallForward;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomSipDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeCustomSipExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeExtMapStatus;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeFastDial;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeGlobal;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeRouter;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipExtMapStatus;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipExtension;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipGlobal;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSpeedDial;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeUrlService;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeVoiceHuntGroup;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeVoiceHuntGroupNumber;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CmeRouterSyncStatus;
-import ru.obelisk.cucmaxl.database.models.entity.enums.CmeUserType;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeDeviceService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeExtensionService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeGlobalService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeRouterService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipDeviceService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipExtensionService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipGlobalService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeVoiceHuntGroupService;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
+
+import ru.obelisk.database.models.entity.cme.CmeAddonModule;
+import ru.obelisk.database.models.entity.cme.CmeBlfSpeedDial;
+import ru.obelisk.database.models.entity.cme.CmeCallForward;
+import ru.obelisk.database.models.entity.cme.CmeCustomDevice;
+import ru.obelisk.database.models.entity.cme.CmeCustomExtension;
+import ru.obelisk.database.models.entity.cme.CmeCustomSipDevice;
+import ru.obelisk.database.models.entity.cme.CmeCustomSipExtension;
+import ru.obelisk.database.models.entity.cme.CmeDevice;
+import ru.obelisk.database.models.entity.cme.CmeExtMapStatus;
+import ru.obelisk.database.models.entity.cme.CmeExtension;
+import ru.obelisk.database.models.entity.cme.CmeFastDial;
+import ru.obelisk.database.models.entity.cme.CmeGlobal;
+import ru.obelisk.database.models.entity.cme.CmeRouter;
+import ru.obelisk.database.models.entity.cme.CmeSipDevice;
+import ru.obelisk.database.models.entity.cme.CmeSipExtMapStatus;
+import ru.obelisk.database.models.entity.cme.CmeSipExtension;
+import ru.obelisk.database.models.entity.cme.CmeSipGlobal;
+import ru.obelisk.database.models.entity.cme.CmeSpeedDial;
+import ru.obelisk.database.models.entity.cme.CmeUrlService;
+import ru.obelisk.database.models.entity.cme.CmeVoiceHuntGroup;
+import ru.obelisk.database.models.entity.cme.CmeVoiceHuntGroupNumber;
+import ru.obelisk.database.models.entity.enums.CmeRouterSyncStatus;
+import ru.obelisk.database.models.entity.enums.CmeUserType;
+import ru.obelisk.database.models.service.cme.CmeDeviceService;
+import ru.obelisk.database.models.service.cme.CmeExtensionService;
+import ru.obelisk.database.models.service.cme.CmeGlobalService;
+import ru.obelisk.database.models.service.cme.CmeRouterService;
+import ru.obelisk.database.models.service.cme.CmeSipDeviceService;
+import ru.obelisk.database.models.service.cme.CmeSipExtensionService;
+import ru.obelisk.database.models.service.cme.CmeSipGlobalService;
+import ru.obelisk.database.models.service.cme.CmeVoiceHuntGroupService;
 
 @Component
 @Log4j2
@@ -659,7 +660,7 @@ public class CmeServiceImpl implements CmeService {
 								
 				cmeSipExtMapStatus.setLineId(extMapStatus.getLineId());
 				cmeSipExtMapStatus.setLineState(extMapStatus.getLineState());
-				cmeSipExtMapStatus.setSipDevice(cmeSipDevice);
+				cmeSipExtMapStatus.setDevice(cmeSipDevice);
 				cmeSipExtMapStatus.setExtension(cmeSipExtension);
 				cmeCmeSipExtMapStatuses.add(cmeSipExtMapStatus);
 			}

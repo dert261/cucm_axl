@@ -66,23 +66,23 @@ import ru.obelisk.cucmaxl.cucm.utils.CucmExportDevice;
 import ru.obelisk.cucmaxl.cucm.utils.CucmExtension;
 import ru.obelisk.cucmaxl.cucm.utils.CucmExportLine;
 import ru.obelisk.cucmaxl.cucm.utils.CucmMigrationUtils;
-import ru.obelisk.cucmaxl.cucm.utils.CucmRepo;
 import ru.obelisk.cucmaxl.cucm.utils.CucmRow;
 import ru.obelisk.cucmaxl.cucm.utils.CucmSpeedDial;
 import ru.obelisk.cucmaxl.cucm.utils.CucmUtils;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.CucmDevice;
-import ru.obelisk.cucmaxl.database.models.entity.CucmDeviceLine;
-import ru.obelisk.cucmaxl.database.models.entity.CucmLine;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeDevice;
-import ru.obelisk.cucmaxl.database.models.entity.cme.CmeSipDevice;
-import ru.obelisk.cucmaxl.database.models.service.CucmDeviceLineService;
-import ru.obelisk.cucmaxl.database.models.service.CucmDeviceService;
-import ru.obelisk.cucmaxl.database.models.service.CucmLineService;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeDeviceService;
-import ru.obelisk.cucmaxl.database.models.service.cme.CmeSipDeviceService;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.CucmDevice;
+import ru.obelisk.database.models.entity.CucmDeviceLine;
+import ru.obelisk.database.models.entity.CucmLine;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.cme.CmeDevice;
+import ru.obelisk.database.models.entity.cme.CmeSipDevice;
+import ru.obelisk.database.models.entity.utils.CucmRepo;
+import ru.obelisk.database.models.service.CucmDeviceLineService;
+import ru.obelisk.database.models.service.CucmDeviceService;
+import ru.obelisk.database.models.service.CucmLineService;
+import ru.obelisk.database.models.service.UserService;
+import ru.obelisk.database.models.service.cme.CmeDeviceService;
+import ru.obelisk.database.models.service.cme.CmeSipDeviceService;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
 import ru.obelisk.cucmaxl.web.controllers.cme.viewtypes.RouterExportDetail;
 import ru.obelisk.cucmaxl.web.controllers.utils.CsvChangeNumber;
@@ -107,7 +107,7 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 	private Map<String, User> usersRepo = new HashMap<String, User>();
 		
 	/* (non-Javadoc)
-	 * @see ru.obelisk.cucmaxl.cucm.service.impl.CucmWithDBService#cucmSQLQuery(ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort)
+	 * @see ru.obelisk.cucmaxl.cucm.service.impl.CucmWithDBService#cucmSQLQuery(ru.obelisk.database.models.entity.CucmAxlPort)
 	 */
 	
 	@Override
@@ -367,8 +367,13 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 			}
 		}
 		if(line==null){
-			line = new CucmLine();
-			line.setPkid(row.getLinePkid());
+			CucmLine dbLine = lineService.findByPkID(row.getLinePkid());
+			if(dbLine==null){
+				line = new CucmLine();
+				line.setPkid(row.getLinePkid());
+			} else {
+				line = dbLine;
+			}	
 			linesRepo.put(row.getLinePkid(), line);
 		}
 		line.setDescription(row.getLineDescription());

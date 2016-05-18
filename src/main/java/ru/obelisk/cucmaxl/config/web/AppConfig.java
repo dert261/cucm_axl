@@ -14,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.accept.ContentNegotiationManager;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -22,12 +21,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
-import ru.obelisk.cucmaxl.web.databinding.DatatableCriteriasHandlerMethodArgumentResolver;
-
 @Configuration 
 @EnableWebMvc
 @EnableAutoConfiguration
-@ComponentScan(basePackages = "ru.obelisk.cucmaxl.*")
+@ComponentScan(basePackages = {"ru.obelisk.cucmaxl.*", "ru.obelisk.database.*"})
 public class AppConfig extends WebMvcConfigurerAdapter {
     
 	@Value("${ssl.key.store}") private String sslKeyStore;
@@ -46,15 +43,9 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		}
 	}
 	
-	@Override
-	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-		argumentResolvers.add(new DatatableCriteriasHandlerMethodArgumentResolver());
-		// equivalent to <mvc:argument-resolvers>
-	}
-	
 	/**
-	    *  Total customization - see below for explanation.
-	    */
+	*  Total customization - see below for explanation.
+	*/
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 			
@@ -95,9 +86,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		systemProps.put("javax.net.ssl.trustStoreType", sslTrustStoreType);
 		System.setProperties(systemProps);
 	}
-	
-	
-	
-	
 }
 

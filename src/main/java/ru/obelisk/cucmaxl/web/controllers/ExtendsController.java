@@ -24,18 +24,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j2;
-import ru.obelisk.cucmaxl.backend.processors.JobProcessor;
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
-import ru.obelisk.cucmaxl.database.models.entity.Job;
-import ru.obelisk.cucmaxl.database.models.entity.UploadFile;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.entity.enums.JobFunction;
-import ru.obelisk.cucmaxl.database.models.entity.enums.JobStatus;
-import ru.obelisk.cucmaxl.database.models.entity.jobs.ChangeNumberDetail;
-import ru.obelisk.cucmaxl.database.models.service.CucmAxlPortService;
-import ru.obelisk.cucmaxl.database.models.service.JobService;
-import ru.obelisk.cucmaxl.database.models.service.UploadFileService;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
+import ru.obelisk.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.Job;
+import ru.obelisk.database.models.entity.UploadFile;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.entity.enums.JobFunction;
+import ru.obelisk.database.models.entity.enums.JobStatus;
+import ru.obelisk.database.models.entity.jobs.ChangeNumberDetail;
+import ru.obelisk.database.models.service.CucmAxlPortService;
+import ru.obelisk.database.models.service.JobService;
+import ru.obelisk.database.models.service.UploadFileService;
+import ru.obelisk.database.models.service.UserService;
+import ru.obelisk.cucmaxl.backend.processors.job.JobProcessor;
 import ru.obelisk.cucmaxl.web.controllers.utils.ChangeNumber;
 import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
 
@@ -67,7 +67,7 @@ public class ExtendsController {
 		log.info("Requesting changenum modal");
 		
 		Map<Integer, String> axlPortDestinations = new HashMap<Integer, String>();
-		List<CucmAxlPort> axlPorts = cucmAxlPortService.getAllCucmAxlPorts();
+		List<CucmAxlPort> axlPorts = cucmAxlPortService.findAll();
 		Iterator<CucmAxlPort> axlPortsIterator =axlPorts.iterator();
 		while(axlPortsIterator.hasNext()){
 			CucmAxlPort axlPort = axlPortsIterator.next();
@@ -108,7 +108,7 @@ public class ExtendsController {
 		
 		AjaxOperationResult ajaxOperationResult = new AjaxOperationResult();
 		changeNumber.setDatasource(uploadFileService.findById(changeNumber.getDatasource()!=null ? changeNumber.getDatasource().getId() : 0));
-		changeNumber.setDestination(cucmAxlPortService.getCucmAxlPortById(changeNumber.getDestination()!=null ? changeNumber.getDestination().getId() : 0));
+		changeNumber.setDestination(cucmAxlPortService.findById(changeNumber.getDestination()!=null ? changeNumber.getDestination().getId() : 0));
 		
 		if(changeNumber.getPartition()==null || changeNumber.getPartition().isEmpty()){
 			ajaxOperationResult.setStatus(-1);

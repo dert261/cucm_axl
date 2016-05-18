@@ -4,8 +4,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import ru.obelisk.cucmaxl.database.models.entity.User;
-import ru.obelisk.cucmaxl.database.models.service.UserService;
+import ru.obelisk.database.models.entity.User;
+import ru.obelisk.database.models.service.UserService;
 
 @Component
 public class LocalPrincipal {

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+				<div th:fragment="collectorFormContent" id="collectorFormContent" class="row">
+			    	<div class="col-lg-12">
+			    		<fieldset>
+							<legend>
+								<h1><th:block th:text="${collector.isNew()} ? #{collectors.title.create} : #{collectors.title.update}" /></h1>
+								<p class="note"><th:block th:text="#{field.required.start}" />	<span class="required" style="color:red">*</span>	<th:block th:text="#{field.required.end}" /></p>
+								
+								<!-- Errors alerts field -->					
+								<div class="alert alert-block alert-danger" th:if="${#fields.hasErrors('*')}"><p th:text="#{field.validation.error.global.message}" >Please fix the following input errors:</p>
+									<ul>
+		    							<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+			        						<span th:text="${e.global}? '*' : #{field}+' \''+#{collectors.field+'.'+${e.fieldName}} +'\''">The field name</span> 
+			        						<span th:text="#{${e.message}}">The error message</span>
+		    							</li>
+									</ul>
+								</div>
+							</legend>
+							
+							<input type="hidden" th:field="*{id}" />
+							
+							<div th:include="fragment/fielddefinition :: textFormField('name',true, text, 'collectors.field')">Name</div>
+							<div th:include="fragment/fielddefinition :: textFormField('description',false, text, 'collectors.field')">Description</div>
+														
+							<div	class="form-group" 
+									th:classappend="${#fields.hasErrors('sourceAxlPort')}? 'has-error'">
+								<label 	class="control-label"
+										th:classappend="${requiredFlag} ? 'required'"
+										th:class="${#fields.hasErrors('sourceAxlPort')}? 'control-label error' : 'control-label'" 
+										th:for="${sourceAxlPort}" 
+										th:inline="text">[[#{'collectors.field.sourceAxlPort'}]] <span th:if="true" class="required" style="color:red">*</span>
+								</label>
+								
+								<select class="form-control"
+										th:classappend="${#fields.hasErrors('sourceAxlPort')}? 'error'" 
+										th:field="*{sourceAxlPort.id}" 
+										th:id="sourceAxlPortId">
+								</select>
+								<div th:if="${#fields.hasErrors('sourceAxlPort')}" class="help-block error">
+									<ul>
+										<li th:each="err : ${#fields.errors('sourceAxlPort')}" th:text="#{${err}}" />
+									</ul>
+								</div>
+								<script th:inline="javascript">
+								/*<![CDATA[*/
+								           jQuery(function($) {
+												var axlPortsMap = [[${axlPortsMap}]];
+												var axlPortsData=[];
+												axlPortsData.push({"id":"0", "text":"Не задана"});
+												for(var k in axlPortsMap){
+													axlPortsData.push({"id":k, "text":axlPortsMap[k]});
+												}       
+											           
+												$axlPort = jQuery('#sourceAxlPortId');
+												$axlPort.select2({
+													allowClear:false,
+													width:'100%', 
+													multiple:false,
+													language: [[${#locale.language}]], 
+													data: axlPortsData
+												});
+												
+												var axlPortSelected = [[${collector.sourceAxlPort}]];
+												if(axlPortSelected.new==false){
+													$axlPort.val(axlPortSelected.id);
+													$axlPort.trigger('change');
+												}	
+																							
+								           });	
+								/*]]>*/
+								</script>
+							</div>
+							
+							<div th:include="fragment/fielddefinition :: selectEnumFormField('resourceSourceType', false, 'collectorResourceSourceTypes', 'collectors.field', *{resourceSourceType}, false, false)">Collector Resource Source Type</div>
+							
+							<div th:include="fragment/fielddefinition :: selectEnumFormField('type', true, 'collectorTypes', 'collectors.field', *{type}, false, false)">Collector Type</div>
+							
+							
+							<div class="panel panel-default">
+								<div class="panel-heading" th:text="#{collectors.form.tab.collectoptions.header}"> Collector options </div>
+								<div class="panel-body" th:object="${collector.collectorFtpConfig}">
+								
+									<input type="hidden" th:field="*{id}" />
+									<input type="hidden" th:field="*{collector.id}" />
+									<div class="row">
+										<div class="col-lg-6">
+											<div th:include="fragment/fielddefinition :: textFormField('host',true, text, 'ftpconfigs.field')">Ftp Host</div>
+										</div>	
+										<div class="col-lg-6">
+											<div th:include="fragment/fielddefinition :: textFormField('port',false, text, 'ftpconfigs.field')">Ftp port</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-6">		
+											<div th:include="fragment/fielddefinition :: textFormField('username',false, text, 'ftpconfigs.field')">Ftp username</div>
+										</div>	
+										<div class="col-lg-6">
+											<div th:include="fragment/fielddefinition :: textFormField('password',false, password, 'ftpconfigs.field')">Ftp password</div>
+										</div>	
+									</div>		
+									
+									
+									<div class="row">
+										<div class="col-lg-4">
+											<div th:include="fragment/fielddefinition :: textFormField('directory', false, text, 'ftpconfigs.field')">Ftp directory</div>
+										</div>
+										<div class="col-lg-4">
+											<div th:include="fragment/fielddefinition :: textFormField('consumerDelay', false, text, 'ftpconfigs.field')">Ftp directory</div>
+										</div>
+										<div class="col-lg-4">
+										<br/>
+											<div th:include="fragment/fielddefinition :: checkboxFormField('recursive', 'ftpconfigs.field')">Ftp recursive</div>
+										</div>
+									</div>		
+									
+									
+									<div class="row">
+										<div class="col-lg-6">		
+											<div th:include="fragment/fielddefinition :: textFormField('includePattern', false, text, 'ftpconfigs.field')">Ftp username</div>
+										</div>	
+										<div class="col-lg-6">
+											<div th:include="fragment/fielddefinition :: textFormField('excludePattern',false, text, 'ftpconfigs.field')">Ftp password</div>
+										</div>	
+									</div>		
+									
+									<!-- <div th:include="fragment/fielddefinition :: checkboxFormField('resyncFlag', 'cucmaxlport.field')">Sync flag</div>
+									<div class="row">
+										<div class="col-lg-3">
+											<div th:include="fragment/fielddefinition :: textFormField('resyncInterval',true, text, 'cucmaxlport.field')">Sync interval</div>
+										</div>	
+										<div class="col-lg-3">
+											<div th:include="fragment/fielddefinition :: selectEnumFormField('resyncUnit', false, 'resyncUnits', 'cucmaxlport.field', *{resyncUnit}, false, false)">Resync Unit</div>
+										</div>
+									</div>
+									<div>
+										<p th:text="#{cucmaxlport.form.tab.syncoptions.resync.info}+': '+${nextFireTime}">Next sync:</p>
+									</div> -->	
+								</div>
+							</div>			
+						</fieldset>
+						<div class="form-actions">
+            				<button class="btn btn-primary" type="submit" th:text="${collector.isNew()} ? #{collectors.form.button.create.submit} : #{collectors.form.button.update.submit}">Submit</button>
+            				<button class="btn btn-default" type="reset" th:text="#{collectors.form.button.reset}">Reset</button>
+            			</div>	
+					</div>
+				</div>	
+</html>	

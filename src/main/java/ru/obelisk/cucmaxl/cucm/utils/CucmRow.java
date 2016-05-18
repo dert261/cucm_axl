@@ -1,6 +1,6 @@
 package ru.obelisk.cucmaxl.cucm.utils;
 
-import ru.obelisk.cucmaxl.database.models.entity.CucmAxlPort;
+import ru.obelisk.database.models.entity.CucmAxlPort;
 
 public class CucmRow {
 	
