@@ -48,7 +48,7 @@
 			                <th th:text="#{cdrs.field.origCauseValue}">PK ID</th>
 			                <th th:text="#{cdrs.field.destCauseValue}">PK ID</th>
 			               			                
-			                <th th:text="#{cdrs.field.actions}">Actions</th>
+			                <!-- <th th:text="#{cdrs.field.actions}">Actions</th> -->
 			            </tr>
 			        </thead>
 			 
@@ -75,7 +75,7 @@
 			                <th th:text="#{cdrs.field.origCauseValue}">PK ID</th>
 			                <th th:text="#{cdrs.field.destCauseValue}">PK ID</th>
 			               			                
-			                <th th:text="#{cdrs.field.actions}">Actions</th>
+			                <!-- <th th:text="#{cdrs.field.actions}">Actions</th> -->
 			            </tr>
 			        </tfoot>
 			    </table>
@@ -141,8 +141,8 @@
 	    	            { "data": "dateTimeDisconnectDb" },
 	    	            { "data": "duration" },
 	    	            { "data": "origCauseValue" },
-	    	            { "data": "destCauseValue" },
-	    	           	{ "data": "id" }
+	    	            { "data": "destCauseValue" }/*,
+	    	           	{ "data": "id" }*/
 	    	        ],
 	    	
 	    	
@@ -166,8 +166,8 @@
 	    		},
 	    		{
 		         	"targets": [2],
-		         	"searchable": false,
-	    			"orderable": false,
+		         	"searchable": true,
+	    			"orderable": true,
 		            "data": "userA",
 		            "render": function (data, type, full, meta) {
 		            	return data!="null" ? data : "---";
@@ -204,8 +204,8 @@
 	           	},
 	    		{
 		         	"targets": [6],
-		         	"searchable": false,
-	    			"orderable": false,
+		         	"searchable": true,
+	    			"orderable": true,
 		            "data": "userB",
 		            "render": function (data, type, full, meta) {
 		            	return data!="null" ? data : "---";
@@ -269,7 +269,7 @@
 		            	var ret = '<p data-toggle="popover" data-content="'+codeEntry.popoverMessage+'" rel="popover" data-placement="bottom" data-original-title="'+codeEntry.popoverTitle+'" data-trigger="hover">'+codeEntry.textValue+'</p>';
 		            	return ret;
 	           		}
-	           	},
+	           	}/*,
 	           	{
 		         	"targets": [-1],
 		         	"searchable": false,
@@ -278,7 +278,7 @@
 		            "render": function (data, type, full, meta) {
 		            	return "";
 	           		}
-	           	}
+	           	}*/
 	        ]
 	    });
 		

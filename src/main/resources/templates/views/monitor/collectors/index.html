@@ -29,9 +29,9 @@
 			                <th th:text="#{collectors.field.sequence}">№ п/п</th>
 			                <th th:text="#{collectors.field.name}">Name</th>
 			                <th th:text="#{collectors.field.description}">Description</th>
-			                <th th:text="#{collectors.field.sourceAxlPort}">Phone station</th>
 			                <th th:text="#{collectors.field.resourceSourceType}">Collector Source Resource Type</th>
 			                <th th:text="#{collectors.field.type}">Collector type</th>
+			                <th th:text="#{collectors.field.launchMode}">Launch Mode</th>
 			                <th th:text="#{collectors.field.actions}">Actions</th>
 			            </tr>
 			        </thead>
@@ -41,9 +41,9 @@
 			                <th th:text="#{collectors.field.sequence}">№ п/п</th>
 			                <th th:text="#{collectors.field.name}">Name</th>
 			                <th th:text="#{collectors.field.description}">Description</th>
-			                <th th:text="#{collectors.field.sourceAxlPort}">Phone station</th>
 			                <th th:text="#{collectors.field.resourceSourceType}">Collector Source Resource Type</th>
 			                <th th:text="#{collectors.field.type}">Collector type</th>
+			                <th th:text="#{collectors.field.launchMode}">Launch Mode</th>
 			                <th th:text="#{collectors.field.actions}">Actions</th>
 			                
 			            </tr>
@@ -87,9 +87,9 @@
 	    	            { "data": "numberLocalized" },
 	    	            { "data": "name" },
 	    	            { "data": "description" },
-	    	            { "data": "sourceAxlPort.name" },
 	    	            { "data": "resourceSourceType" },
 	    	            { "data": "type" },
+	    	            { "data": "launchModeType" },
 	    	            { "data": "id" }
 	    	        ],
 	    	
@@ -111,12 +111,31 @@
 	    			"orderable": false,
 		            "data": "Actions",
 		            "render": function (data, type, full, meta) {
-		            	var updateField = '<a class="update" href="/monitor/collectors/update/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.edit}]]+'" data-original-title="'+[[#{ui.messages.table.edit}]]+'"> \
+		            	var isRunModuleField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		         		var runModuleField = isRunModuleField ? '<a class="runmodule" href="/monitor/collectors/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.run}]]+'" data-original-title="'+[[#{modules.ui.messages.table.run}]]+'"> \
+		         								<i class="glyphicon glyphicon-play"></i> </a>' : "";
+		         								
+		         		var isStopModuleField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
+		         		var stopModuleField = isStopModuleField ? '<a class="stopmodule" href="/monitor/collectors/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.stop}]]+'" data-original-title="'+[[#{modules.ui.messages.table.stop}]]+'"> \
+		         								<i class="glyphicon glyphicon-stop"></i> </a>' : "";						
+		         		
+		         		var operationModuleField = (full.currentRunStatus=='RUN' ? stopModuleField : runModuleField);
+		         		
+		         		var updateField = '<a class="update" href="/monitor/collectors/update/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.edit}]]+'" data-original-title="'+[[#{ui.messages.table.edit}]]+'"> \
 		     	 								<i class="glyphicon glyphicon-pencil"></i></a>';
 		     	 		var deleteField = '<a class="delete" href="/monitor/collectors/delete" data-delete="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.delete}]]+'" data-original-title="'+[[#{ui.messages.table.delete}]]+'"> \
 		         								<i class="glyphicon glyphicon-trash"></i> </a>'; 	
-		         		return "<center>"+updateField+"&nbsp;&nbsp;&nbsp;"+deleteField+"</center>";
+		         		return "<center>"+operationModuleField+"&nbsp;&nbsp;&nbsp;"+updateField+"&nbsp;&nbsp;&nbsp;"+deleteField+"</center>";
 	           		}
+	           	},
+	           	{
+		         	"targets": [-2],
+		         	"searchable": true,
+	    			"orderable": true,
+		            "data": "Launch Mode",
+		            "render": function (data, type, full, meta) {
+		        		return '<center><select class="sel2" id="launchModeFor'+full.id+'"> </select></center>';
+		            }	
 	           	}
 	        ]
 	    });
@@ -140,7 +159,109 @@
 			});
 				
 			return false;
-	    })
+	    });
+	    
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		
+		myTable.on('draw',function() {
+	   		jQuery.each(myTable.ajax.json().data, function(key, value){
+	   			select2Render(value.launchModeType, value.id);
+	   		});
+	   	});
+		
+		function select2Render(data, id){
+		
+			var collectorLaunchModeMap = [[${collectorLaunchModeMap}]];
+			var collectorLaunchModeData=[];
+			for(var k in collectorLaunchModeMap){
+				collectorLaunchModeData.push({"id":k, "text":collectorLaunchModeMap[k]});
+			}       
+					            			            			
+        	$select = $("#launchModeFor"+id).select2({
+				allowClear:false,
+				width:'100%', 
+				multiple:false,
+				language: [[${#locale.language}]],
+				data: collectorLaunchModeData
+			});
+        	
+        	var selected = data;
+			$select.val(selected);
+			$select.trigger('change');
+			
+			$select.on("select2:select", function (e) {
+				$tr = $select.closest("tr");
+				$tr.spin();
+				$.ajax({
+					type: 'POST',
+					url: "/monitor/collectors/change_launch_mode",
+					data: ({
+						id: id,
+						launchMode: e.target.value
+					}),
+				}).done(function(data) {
+					if(data.status!=0){
+						alert(data.message);
+					}
+					
+					$tr.spin(false);
+					
+				});
+			});
+		}
+		
+		myTable.on('click','a.runmodule',function() {
+			if(!confirm([[#{ui.messages.table.run.modules.confirmation}]])) return false;
+						
+			$('#collectorstable').spin();
+							
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-id'),
+					operation: 'RUN'
+				}),
+			}).done(function(data) {
+				if(data.status==0){
+					myTable.draw();
+					$(".sel2").select2("destroy").select2();
+				} else {
+					alert(data.message);
+				}
+			}).always(function() {
+				$('#collectorstable').spin(false);
+			});
+			
+			
+			return false;
+	   	});
+	   	
+		myTable.on('click','a.stopmodule',function() {
+			if(!confirm([[#{ui.messages.table.stop.modules.confirmation}]])) return false;
+			
+			$('#collectorstable').spin();
+			
+			$.ajax({
+				type: 'POST',
+				url: jQuery(this).attr('href'),
+				data: ({
+					id: jQuery(this).attr('data-id'),
+					operation: 'SHUTDOWN'
+				}),
+			}).done(function(data) {
+				if(data.status==0){
+					myTable.draw();
+					$(".sel2").select2("destroy").select2();
+				} else {
+					alert(data.message);
+				}
+			}).always(function() {
+				$('#collectorstable').spin(false);
+			});
+				
+			return false;
+	   	})
 	});
 	
 	/*]]>*/

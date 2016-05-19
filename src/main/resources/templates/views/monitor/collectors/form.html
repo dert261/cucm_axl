@@ -24,54 +24,7 @@
 							<div th:include="fragment/fielddefinition :: textFormField('name',true, text, 'collectors.field')">Name</div>
 							<div th:include="fragment/fielddefinition :: textFormField('description',false, text, 'collectors.field')">Description</div>
 														
-							<div	class="form-group" 
-									th:classappend="${#fields.hasErrors('sourceAxlPort')}? 'has-error'">
-								<label 	class="control-label"
-										th:classappend="${requiredFlag} ? 'required'"
-										th:class="${#fields.hasErrors('sourceAxlPort')}? 'control-label error' : 'control-label'" 
-										th:for="${sourceAxlPort}" 
-										th:inline="text">[[#{'collectors.field.sourceAxlPort'}]] <span th:if="true" class="required" style="color:red">*</span>
-								</label>
-								
-								<select class="form-control"
-										th:classappend="${#fields.hasErrors('sourceAxlPort')}? 'error'" 
-										th:field="*{sourceAxlPort.id}" 
-										th:id="sourceAxlPortId">
-								</select>
-								<div th:if="${#fields.hasErrors('sourceAxlPort')}" class="help-block error">
-									<ul>
-										<li th:each="err : ${#fields.errors('sourceAxlPort')}" th:text="#{${err}}" />
-									</ul>
-								</div>
-								<script th:inline="javascript">
-								/*<![CDATA[*/
-								           jQuery(function($) {
-												var axlPortsMap = [[${axlPortsMap}]];
-												var axlPortsData=[];
-												axlPortsData.push({"id":"0", "text":"Не задана"});
-												for(var k in axlPortsMap){
-													axlPortsData.push({"id":k, "text":axlPortsMap[k]});
-												}       
-											           
-												$axlPort = jQuery('#sourceAxlPortId');
-												$axlPort.select2({
-													allowClear:false,
-													width:'100%', 
-													multiple:false,
-													language: [[${#locale.language}]], 
-													data: axlPortsData
-												});
-												
-												var axlPortSelected = [[${collector.sourceAxlPort}]];
-												if(axlPortSelected.new==false){
-													$axlPort.val(axlPortSelected.id);
-													$axlPort.trigger('change');
-												}	
-																							
-								           });	
-								/*]]>*/
-								</script>
-							</div>
+							
 							
 							<div th:include="fragment/fielddefinition :: selectEnumFormField('resourceSourceType', false, 'collectorResourceSourceTypes', 'collectors.field', *{resourceSourceType}, false, false)">Collector Resource Source Type</div>
 							
