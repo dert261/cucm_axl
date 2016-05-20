@@ -19,7 +19,7 @@ public class HomeController {
 	private static Logger logger = LogManager.getLogger(HomeController.class);
 		
 	@RequestMapping(value = {"/", "index.html"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_MANAGER","ROLE_SECURITY"})
 	public String homePage(ModelMap model) {
 		logger.info("Requesting index page");
 		

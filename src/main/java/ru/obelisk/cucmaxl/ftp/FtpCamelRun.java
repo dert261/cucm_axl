@@ -52,7 +52,11 @@ public class FtpCamelRun {
 	
 	@PostConstruct
 	private void init(){
-		
+		collectorService.findAll().stream().filter((n)->n.getType()==CollectorType.FTP).forEach((n)->{
+			n.setCurrentRunStatus(CurrentRunStatus.STOP);
+			collectorService.edit(n);
+			
+		});
 	  	for (Collector collector : collectorService.findAllWithRelations()){
 	  		if(collector.getType()==CollectorType.FTP && collector.getLaunchModeType()==LaunchModeType.AUTORUN){
 				if(collector.getCollectorFtpConfig()!=null){
@@ -78,18 +82,16 @@ public class FtpCamelRun {
 	}
 	
 	public boolean runCollectorRoute(Collector collector){
+
 		if(camelContext==null) return false;
-		log.info("Start camel route for collector: {}", collector);
 		if(camelContext.getRoute(COLLECTOR_PREFIX_NAME+collector.getCollectorFtpConfig().getId())==null){
 			try {
-				log.info("Try to add route");
 				camelContext.addRoutes(createFtpRoute(collector));
-				log.info("Route added");
 			} catch (Exception e) { errorToLog(e); }
 		}
 		
 		ServiceStatus camelStatus = camelContext.getStatus();
-		if(camelStatus==null || (!camelStatus.isStarting() && !camelStatus.isStarted())){
+		if(!camelStatus.isStarting() && !camelStatus.isStarted()){
 			try {
 				camelContext.start();
 			} catch (Exception e) { errorToLog(e); }
@@ -125,29 +127,24 @@ public class FtpCamelRun {
 	}
 	
 	public boolean stopCollectorRoute(Collector collector){
-		if(camelContext==null || camelContext.getRoute(COLLECTOR_PREFIX_NAME+collector.getCollectorFtpConfig().getId())==null) return false;
+		if(camelContext==null || camelContext.getRoute(COLLECTOR_PREFIX_NAME+collector.getCollectorFtpConfig().getId())==null){
+			collector.setCurrentRunStatus(CurrentRunStatus.STOP);
+			collectorService.edit(collector);
+			return true; 
+		};
 		collector.setCurrentRunStatus(CurrentRunStatus.STOPING);
 		collectorService.edit(collector);
 		try {
 			ServiceStatus status = camelContext.getRouteStatus(COLLECTOR_PREFIX_NAME+collector.getCollectorFtpConfig().getId());
 			if(status.isStarting() || status.isStarted())
 				camelContext.stopRoute(COLLECTOR_PREFIX_NAME+collector.getCollectorFtpConfig().getId());
+				camelContext.removeRoute(COLLECTOR_PREFIX_NAME+collector.getCollectorFtpConfig().getId());
 			
 		} catch (Exception e) { errorToLog(e); }
-		
-		ServiceStatus status = camelContext.getRouteStatus(COLLECTOR_PREFIX_NAME+collector.getCollectorFtpConfig().getId());
-		switch (status) {
-			case Started: 		collector.setCurrentRunStatus(CurrentRunStatus.RUN);				break;
-			case Starting: 		collector.setCurrentRunStatus(CurrentRunStatus.RUNNING);			break;
-			case Stopped: 		collector.setCurrentRunStatus(CurrentRunStatus.STOP);				break;
-			case Stopping: 		collector.setCurrentRunStatus(CurrentRunStatus.STOPING);			break;
-			case Suspended: 	collector.setCurrentRunStatus(CurrentRunStatus.STOP);				break;
-			case Suspending:	collector.setCurrentRunStatus(CurrentRunStatus.STOPING);			break;
-			default: 			collector.setCurrentRunStatus(CurrentRunStatus.STOP);				break;
-		}
-		
+			
+		collector.setCurrentRunStatus(CurrentRunStatus.STOP);
 		collectorService.edit(collector);
-		return (status.isStopping() || status.isStopped());
+		return true;
 	}
 	
 	private void errorToLog(Exception e){
@@ -162,15 +159,15 @@ public class FtpCamelRun {
 		CollectorFtpConfig ftpConf = collector.getCollectorFtpConfig();
 		
 		heartbeatModule.setEventCount(5);
-		
-		
+				
 		StringBuilder routeBuilder = new StringBuilder();
 		routeBuilder.append( "ftp://");
 		routeBuilder.append( (ftpConf.getUsername()!=null && ftpConf.getUsername().length()>0) ? ftpConf.getUsername()+"@" : "" );
 		routeBuilder.append( ftpConf.getHost() );
 		routeBuilder.append( (ftpConf.getPort()>0 && ftpConf.getPort()!=21) ? ":"+ftpConf.getPort() : "" );
 		routeBuilder.append( (ftpConf.getDirectory()!=null && ftpConf.getDirectory().length()>0) ? ftpConf.getDirectory() : "/" );
-		routeBuilder.append( "?noop=true&ftpClient.dataTimeout=30000&stepwise=false&binary=true&disconnect=true&passiveMode=true" );
+		routeBuilder.append( "?noop=false&ftpClient.dataTimeout=30000&stepwise=false&binary=true&disconnect=true&passiveMode=true" );
+		routeBuilder.append( ftpConf.isDeleteFile() ? "&delete=true" : (!ftpConf.getDirectoryToMove().isEmpty() ? "&move="+ftpConf.getDirectoryToMove() : "") );
 		routeBuilder.append( ((ftpConf.getUsername()!=null && ftpConf.getUsername().length()>0) && (ftpConf.getPassword()!=null && ftpConf.getPassword().length()>0)) ? "&password="+ftpConf.getPassword() : "" );
 		routeBuilder.append( ftpConf.getConsumerDelay()>0 ? "&consumer.delay="+ftpConf.getConsumerDelay() : "" );
 		routeBuilder.append( "&recursive="+ftpConf.isRecursive() );
@@ -193,7 +190,7 @@ public class FtpCamelRun {
 		}
 		
 		final FtpProcessor<?> finalProcessor = processor;
-						
+		
 		return new RouteBuilder() {
 			
 			@Override

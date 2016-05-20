@@ -68,6 +68,14 @@
 										</div>
 									</div>		
 									
+									<div class="row">
+										<div class="col-lg-6">		
+											<div th:include="fragment/fielddefinition :: textFormField('directoryToMove', false, text, 'ftpconfigs.field')">File move after processing</div>
+										</div>	
+										<div class="col-lg-6">
+											<div th:include="fragment/fielddefinition :: checkboxFormField('deleteFile', 'ftpconfigs.field')">File delete</div>
+										</div>	
+									</div>	
 									
 									<div class="row">
 										<div class="col-lg-6">		
@@ -77,19 +85,6 @@
 											<div th:include="fragment/fielddefinition :: textFormField('excludePattern',false, text, 'ftpconfigs.field')">Ftp password</div>
 										</div>	
 									</div>		
-									
-									<!-- <div th:include="fragment/fielddefinition :: checkboxFormField('resyncFlag', 'cucmaxlport.field')">Sync flag</div>
-									<div class="row">
-										<div class="col-lg-3">
-											<div th:include="fragment/fielddefinition :: textFormField('resyncInterval',true, text, 'cucmaxlport.field')">Sync interval</div>
-										</div>	
-										<div class="col-lg-3">
-											<div th:include="fragment/fielddefinition :: selectEnumFormField('resyncUnit', false, 'resyncUnits', 'cucmaxlport.field', *{resyncUnit}, false, false)">Resync Unit</div>
-										</div>
-									</div>
-									<div>
-										<p th:text="#{cucmaxlport.form.tab.syncoptions.resync.info}+': '+${nextFireTime}">Next sync:</p>
-									</div> -->	
 								</div>
 							</div>			
 						</fieldset>

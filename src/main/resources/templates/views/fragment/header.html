@@ -127,7 +127,7 @@
 				                    </ul>	
 				                </li>
 				                        
-				                <li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
 			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-cubes fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cme}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>LDAP<span class="fa arrow"></span></a> 
 			                    	<ul class="nav nav-third-level">
 				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
@@ -150,18 +150,14 @@
 				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
 			                    	<a href="/jobs/" th:utext="'&lt;i class=\'fa fa-random fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.jobs}">Jobs</a>
 				                </li>
-				                
-				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
-			                    	<a href="/modules/" th:utext="'&lt;i class=\'fa fa-puzzle-piece fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.modules}">Modules</a>
-				                </li>
-				                
-				                <li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+				               				                
+				                <li sec:authorize="hasAnyRole('ROLE_SECURITY', 'ROLE_ADMIN')">
 			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-desktop fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>Monitor<span class="fa arrow"></span></a> 
 			                    	<ul class="nav nav-third-level">
 				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
 				                    		<a href="/monitor/collectors/" th:utext="'&lt;i class=\'fa fa-dot-circle-o fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor.collectors}">Collectors</a>
 				                    	</li>
-				                    	<li sec:authorize="hasRole('ROLE_ADMIN')">	
+				                    	<li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SECURITY')">	
 				                    		<a href="/monitor/cdrs/" th:utext="'&lt;i class=\'fa fa-search-plus fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.monitor.cdrs}">CDRs</a>
 				                    	</li>
 				                    </ul>	

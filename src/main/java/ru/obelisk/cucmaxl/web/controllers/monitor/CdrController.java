@@ -47,7 +47,7 @@ public class CdrController {
 		
 	@JsonView(View.CdrView.class)
 	@RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
-	@Secured("ROLE_ADMIN")
+	@Secured(value={"ROLE_ADMIN", "ROLE_SECURITY"})
 	public String indexPage(Model model, Locale locale) {
 		log.info("Requesting cdr page");
 		CdrSearchCriteria prereqSearch = new CdrSearchCriteria();
@@ -75,7 +75,7 @@ public class CdrController {
 		
 	@JsonView(View.CdrView.class)
 	@RequestMapping(value = "/ajax/serverside/cdrs.json", method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN"})
+	@Secured(value={"ROLE_ADMIN", "ROLE_SECURITY"})
 	public @ResponseBody DataTablesOutput<CallDetailRecord> getCollectors(@Valid DataTablesCdrInput input) {
 		log.info(input);			
 		DataTablesOutput<CallDetailRecord> output = cdrService.findAllWithRelations(input);
@@ -94,7 +94,7 @@ public class CdrController {
 	}
 	
 	@RequestMapping(value = {"/detail/{id}"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured(value={"ROLE_ADMIN", "ROLE_SECURITY"})
 	public String viewDetailCDRPage(ModelMap model, @PathVariable(value = "id") int id, Locale locale) {
 		log.info("Requesting detail CDR modal page");
 				

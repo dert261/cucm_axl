@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http
         	.csrf().disable()
         	.authorizeRequests()
-            	.antMatchers("/**").hasAnyRole("ADMIN","MANAGER")
+            	.antMatchers("/**").hasAnyRole("ADMIN","MANAGER","SECURITY","OPERATOR")
             	.antMatchers("/rest/*").hasRole("ADMIN")
             	.anyRequest().authenticated()
             	.and()
@@ -77,6 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .permitAll()
                 .and()
             .rememberMe()
+            	.rememberMeCookieName("obelisk-voip-ru-cucm-axl")
             	.tokenValiditySeconds(1209600)
             	.key("remember-me");
             	
