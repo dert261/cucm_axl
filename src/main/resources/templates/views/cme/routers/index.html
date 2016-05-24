@@ -106,14 +106,14 @@
 		            "data": "Actions",
 		            "render": function (data, type, full, meta) {
 		            	
-		            	var isImportField = /*[[${#authorization.expression("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")}]]*/ false;
+		            	var isImportField = /*[[${#authorization.expression("hasAnyRole('ROLE_ADMIN', 'ROLE_CMEADMIN')")}]]*/ false;
 		            	var importField = isImportField && full.syncStatus=="NONSYNC" ? '<a class="import" href="/cme/routers/import" data-import="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.import}]]+'" data-original-title="'+[[#{ui.messages.table.import}]]+'"> \
 												<i class="glyphicon glyphicon-import"></i></a>&nbsp;&nbsp;&nbsp;' : "";
 												
 						var isExportField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
 						var exportField = isExportField ? '<a class="export" href="/cme/routers/export/'+data+'" data-export="'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.export}]]+'" data-original-title="'+[[#{ui.messages.table.export}]]+'"> \
 												<i class="glyphicon glyphicon-export"></i></a>&nbsp;&nbsp;&nbsp;' : "";						
-						var isViewField = /*[[${#authorization.expression("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")}]]*/ false;						
+						var isViewField = /*[[${#authorization.expression("hasAnyRole('ROLE_ADMIN', 'ROLE_CMEADMIN')")}]]*/ false;						
 		            	var viewField = isViewField && full.sync ? '<a class="view" href="/cme/routers/view/'+data+'" data-toggle="tooltip" title="'+[[#{ui.messages.table.view}]]+'" data-original-title="'+[[#{ui.messages.table.view}]]+'"> \
 												<i class="glyphicon glyphicon-eye-open"></i></a>&nbsp;&nbsp;&nbsp;' : '';
 						var isUpdateField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;						

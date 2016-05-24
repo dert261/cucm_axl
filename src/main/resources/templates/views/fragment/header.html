@@ -127,13 +127,13 @@
 				                    </ul>	
 				                </li>
 				                        
-				                <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+				                <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CMEADMIN')">
 			                    	<a href="#" th:utext="'&lt;i class=\'fa fa-cubes fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cme}+' &lt;span class=\'fa arrow\'&gt;&lt;/span&gt;'"><i class="fa fa-table fa-fw"></i>LDAP<span class="fa arrow"></span></a> 
 			                    	<ul class="nav nav-third-level">
 				                		<li sec:authorize="hasRole('ROLE_ADMIN')">	
 				                    		<a href="/cme/locations/" th:utext="'&lt;i class=\'fa fa-map-marker fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cme.locations}">CME Locations</a>
 				                    	</li>
-				                    	<li sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+				                    	<li sec:authorize="hasAnyRole('ROLE_CMEADMIN', 'ROLE_ADMIN')">
 			                        		<a href="/cme/routers/" th:utext="'&lt;i class=\'fa fa-server fa-fw\'&gt;&lt;/i&gt; '+#{header.menu.left.settings.cme.routers}">CME Routers</a>
 			                            </li>
 			                        </ul>	

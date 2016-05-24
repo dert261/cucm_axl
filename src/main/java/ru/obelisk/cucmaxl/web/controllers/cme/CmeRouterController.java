@@ -87,14 +87,14 @@ public class CmeRouterController {
 	@Autowired private CucmMigrationUtils migrationUtils;
 	
 	@RequestMapping(value = {"/search"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public @ResponseBody List<Select2Result> searchCmeRouter(@RequestParam String searchString) {
 		logger.info("Requesting search CME router with term: {}",searchString);
 		return cmeRouterService.findByTerm(searchString);
 	}
 	
 	@RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public String indexPage(Model model) {
 		logger.info("Requesting CME router page");
 		model.addAttribute("cmeRouter", new CmeRouter());
@@ -164,7 +164,7 @@ public class CmeRouterController {
 	
 	@JsonView(View.CmeRouter.class)
 	@RequestMapping(value = {"/view/{id}"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public String viewDetailedCmeRouterPage(ModelMap model, Locale locale, @PathVariable(value = "id") int id) {
 		logger.info("Requesting detail view CME router page");
 		CmeRouter cmeRouter = cmeRouterService.findById(id);
@@ -173,7 +173,7 @@ public class CmeRouterController {
 	}
 	
 	@RequestMapping(value = {"/import"}, method = RequestMethod.POST)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public String importCmeRouter(int id, SessionStatus status) {
 		logger.info("Requesting import CME router");
 		cmeService.importCmeRouter(cmeRouterService.findById(id));
@@ -182,7 +182,7 @@ public class CmeRouterController {
 	}
 	
 	@JsonView(View.CmeRouter.class)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	@RequestMapping(value = "/ajax/serverside/cmerouters.json", method = RequestMethod.GET)
 	public @ResponseBody DataTablesOutput<CmeRouter> getRouters(@Valid DataTablesInput input) {
 		DataTablesOutput<CmeRouter> out = cmeRouterService.findAll(input);
@@ -201,7 +201,7 @@ public class CmeRouterController {
 	
 	
 	@JsonView(View.CmeVoiceHuntGroup.class)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	@RequestMapping(value = "/ajax/serverside/{cmeId}/cmehuntgroups.json", method = RequestMethod.GET)
 	public @ResponseBody DataTablesOutput<CmeVoiceHuntGroup> getRouterVoiceHuntGroups(@Valid DataTablesInput input, @PathVariable int cmeId) {
 		return cmeVoiceHuntGroupService.findAllByRouter(input, cmeRouterService.findById(cmeId));
@@ -209,7 +209,7 @@ public class CmeRouterController {
 	}
 	
 	@JsonView(View.CmeDevice.class)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	@RequestMapping(value = "/ajax/serverside/{cmeId}/cmesccpdevices.json", method = RequestMethod.GET)
 	public @ResponseBody DataTablesOutput<CmeDevice> getRouterSCCPDevices(@Valid DataTablesInput input, @PathVariable int cmeId) {
 		return cmeDeviceService.findAllByRouter(input, cmeRouterService.findById(cmeId));
@@ -217,7 +217,7 @@ public class CmeRouterController {
 	}
 	
 	@JsonView(View.CmeSipDevice.class)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	@RequestMapping(value = "/ajax/serverside/{cmeId}/cmesipdevices.json", method = RequestMethod.GET)
 	public @ResponseBody DataTablesOutput<CmeSipDevice> getRouterSIPDevices(@Valid DataTablesInput input, @PathVariable int cmeId, Locale locale) {
 		DataTablesOutput<CmeSipDevice> result = cmeSipDeviceService.findAllByRouter(input, cmeRouterService.findById(cmeId));
@@ -239,7 +239,7 @@ public class CmeRouterController {
 	
 	@JsonView(value={View.CmeDevice.class})
 	@RequestMapping(value = {"/phone/sccp/{id}"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public String viewSCCPPhonePage(ModelMap model, @PathVariable(value = "id") int id) {
 		logger.info("Requesting update SCCP PHONE page");
 		
@@ -273,7 +273,7 @@ public class CmeRouterController {
 	
 	@JsonView(value={View.CmeDevice.class})
 	@RequestMapping(value = {"/phone/sccp"}, method = RequestMethod.PUT, consumes="application/json")
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public @ResponseBody CmeDevice saveUpdateSCCPPhonePage(@RequestBody CmeDevice cmeDevice) {
 		logger.info("Requesting save custom SCCP phone method");
 		
@@ -340,7 +340,7 @@ public class CmeRouterController {
 	
 	@JsonView(value={View.CmeSipDevice.class})
 	@RequestMapping(value = {"/phone/sip/{id}"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public String viewSIPPhonePage(ModelMap model, @PathVariable(value = "id") int id, Locale locale) {
 		logger.info("Requesting update SIP PHONE page");
 		
@@ -385,7 +385,7 @@ public class CmeRouterController {
 	
 	@JsonView(value={View.CmeSipDevice.class})
 	@RequestMapping(value = {"/phone/sip"}, method = RequestMethod.PUT, consumes="application/json")
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public @ResponseBody CmeSipDevice saveUpdateSIPPhonePage(@RequestBody CmeSipDevice cmeSipDevice) {
 		logger.info("Requesting save custom SIP phone method");
 		

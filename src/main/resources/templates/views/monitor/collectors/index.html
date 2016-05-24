@@ -112,11 +112,11 @@
 		            "data": "Actions",
 		            "render": function (data, type, full, meta) {
 		            	var isRunModuleField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
-		         		var runModuleField = isRunModuleField ? '<a class="runmodule" href="/monitor/collectors/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.run}]]+'" data-original-title="'+[[#{modules.ui.messages.table.run}]]+'"> \
+		         		var runModuleField = isRunModuleField ? '<a class="runmodule" href="/monitor/collectors/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.run}]]+'" data-original-title="'+[[#{collectors.ui.messages.table.run}]]+'"> \
 		         								<i class="glyphicon glyphicon-play"></i> </a>' : "";
 		         								
 		         		var isStopModuleField = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ false;
-		         		var stopModuleField = isStopModuleField ? '<a class="stopmodule" href="/monitor/collectors/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.stop}]]+'" data-original-title="'+[[#{modules.ui.messages.table.stop}]]+'"> \
+		         		var stopModuleField = isStopModuleField ? '<a class="stopmodule" href="/monitor/collectors/change_status" data-id="'+data+'" data-toggle="tooltip" title="'+[[#{modules.ui.messages.table.stop}]]+'" data-original-title="'+[[#{collectors.ui.messages.table.stop}]]+'"> \
 		         								<i class="glyphicon glyphicon-stop"></i> </a>' : "";						
 		         		
 		         		var operationModuleField = (full.currentRunStatus=='RUN' ? stopModuleField : runModuleField);
@@ -211,7 +211,7 @@
 		}
 		
 		myTable.on('click','a.runmodule',function() {
-			if(!confirm([[#{ui.messages.table.run.modules.confirmation}]])) return false;
+			if(!confirm([[#{ui.messages.table.run.collectors.confirmation}]])) return false;
 						
 			$('#collectorstable').spin();
 							
@@ -238,7 +238,7 @@
 	   	});
 	   	
 		myTable.on('click','a.stopmodule',function() {
-			if(!confirm([[#{ui.messages.table.stop.modules.confirmation}]])) return false;
+			if(!confirm([[#{ui.messages.table.stop.collectors.confirmation}]])) return false;
 			
 			$('#collectorstable').spin();
 			

@@ -54,7 +54,7 @@ public class UsersController {
 	}
 	
 	@RequestMapping(value = {"/search/cucmusers"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
 	public @ResponseBody List<Select2Result> searchCucmUsers(@RequestParam String searchString) {
 		logger.info("Requesting search cucm users with term: {}", searchString);
 		return userService.findCucmUserByTerm(searchString);
