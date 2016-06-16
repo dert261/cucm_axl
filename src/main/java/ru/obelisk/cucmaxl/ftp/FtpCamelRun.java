@@ -29,6 +29,7 @@ import ru.obelisk.database.models.entity.Collector;
 import ru.obelisk.database.models.entity.CollectorFtpConfig;
 import ru.obelisk.database.models.entity.enums.CollectorType;
 import ru.obelisk.database.models.entity.enums.CurrentRunStatus;
+import ru.obelisk.database.models.entity.enums.FtpType;
 import ru.obelisk.database.models.entity.enums.LaunchModeType;
 import ru.obelisk.database.models.service.CollectorService;
 
@@ -161,12 +162,28 @@ public class FtpCamelRun {
 		heartbeatModule.setEventCount(5);
 				
 		StringBuilder routeBuilder = new StringBuilder();
-		routeBuilder.append( "ftp://");
+		switch (ftpConf.getFtpType()){
+			case FTP:	routeBuilder.append( "ftp://");
+						break;
+			case FTPS:	routeBuilder.append( "ftps://");
+						break;
+			case SFTP:	routeBuilder.append( "sftp://");
+						break;
+			default:	routeBuilder.append( "ftp://");
+						break;
+		}
+		
 		routeBuilder.append( (ftpConf.getUsername()!=null && ftpConf.getUsername().length()>0) ? ftpConf.getUsername()+"@" : "" );
 		routeBuilder.append( ftpConf.getHost() );
-		routeBuilder.append( (ftpConf.getPort()>0 && ftpConf.getPort()!=21) ? ":"+ftpConf.getPort() : "" );
+		routeBuilder.append( ":"+ftpConf.getPort() );
 		routeBuilder.append( (ftpConf.getDirectory()!=null && ftpConf.getDirectory().length()>0) ? ftpConf.getDirectory() : "/" );
-		routeBuilder.append( "?noop=false&ftpClient.dataTimeout=30000&stepwise=false&binary=true&disconnect=true&passiveMode=true" );
+		routeBuilder.append( "?noop=false&stepwise=false&binary=true&disconnect=true" );
+		routeBuilder.append( (ftpConf.getFtpType()==FtpType.FTP || ftpConf.getFtpType()==FtpType.FTPS) ? "&ftpClient.dataTimeout=30000&passiveMode=true" : "");
+		
+		//routeBuilder.append( ftpConf.getFtpType()==FtpType.SFTP ? "&useUserKnownHostsFile=true" : ""); //Become with version 2.18
+		routeBuilder.append( ftpConf.getFtpType()==FtpType.SFTP ? "&knownHostsFile="+System.getProperty("user.home")+"/.ssh/known_hosts" : "");
+			
+		
 		routeBuilder.append( ftpConf.isDeleteFile() ? "&delete=true" : (!ftpConf.getDirectoryToMove().isEmpty() ? "&move="+ftpConf.getDirectoryToMove() : "") );
 		routeBuilder.append( ((ftpConf.getUsername()!=null && ftpConf.getUsername().length()>0) && (ftpConf.getPassword()!=null && ftpConf.getPassword().length()>0)) ? "&password="+ftpConf.getPassword() : "" );
 		routeBuilder.append( ftpConf.getConsumerDelay()>0 ? "&consumer.delay="+ftpConf.getConsumerDelay() : "" );

@@ -47,7 +47,7 @@ public class UsersController {
 	private static Logger logger = LogManager.getLogger(UsersController.class);
 	
 	@RequestMapping(value = {"/search/users"}, method = RequestMethod.GET)
-	@Secured({"ROLE_ADMIN","ROLE_MANAGER"})
+	@Secured({"ROLE_ADMIN","ROLE_MANAGER","ROLE_SECURITY"})
 	public @ResponseBody List<Select2Result> searchUsers(@RequestParam String searchString) {
 		logger.info("Requesting search users with term: {}",searchString);
 		return userService.findUserByTerm(searchString);

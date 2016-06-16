@@ -210,8 +210,13 @@
 					id: jQuery(this).attr('data-import'),
 					_method: 'POST'
 				}),
-				}).done(function() {
-					
+			}).done(function(data) {
+				if(data.status==0){
+					alert("Import successful complete!")
+					myTable.draw();
+				} else {
+					alert(data.message);
+				}
 			});
 				
 			return false;

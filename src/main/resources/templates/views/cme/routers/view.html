@@ -479,7 +479,7 @@
 	           	},
 	           	{
 	           		"targets": [-5],
-		         	"searchable": true,
+		         	"searchable": false,
 	    			"orderable": false,
 		            "data": "customDevice.enable",
 	           		"render": function (data, type, full, meta) {
@@ -548,7 +548,7 @@
 	    	"columns": [
 	    	            { "data": "name" },
 	    	            { "data": "customSipDevice.phoneType" },
-	    	            { "data": "lines" },
+	    	            { "data": "lines.extension.number" },
 	    	            { "data": "customSipDevice.enable" },
 	    	            { "data": "lines.extension.customSipExtension.number" },
 	    	            { "data": "lines.extension.customSipExtension.externalPhoneNumberMask" },
@@ -619,7 +619,7 @@
 	           		"targets": [-4],
 		         	"searchable": true,
 	    			"orderable": false,
-		            "data": "extension.customSipExtension.number",
+		            "data": "lines.extension.customSipExtension.number",
 	           		"render": function (data, type, full, meta) {
 	           			var returnStatement="";
 	           			full.lines.forEach(function(entry){
@@ -632,7 +632,7 @@
 	           	},
 	           	{
 	           		"targets": [-5],
-		         	"searchable": true,
+		         	"searchable": false,
 	    			"orderable": false,
 		            "data": "customDevice.enable",
 	           		"render": function (data, type, full, meta) {
@@ -644,12 +644,12 @@
 	           	
 	           	{
 	           		"targets": [-6],
-		         	"searchable": false,
+		         	"searchable": true,
 	    			"orderable": false,
 		            "data": "lines",
 	           		"render": function (data, type, full, meta) {
 	           			var returnStatement="";
-	           			data.forEach(function(entry){
+	           			full.lines.forEach(function(entry){
 	           				returnStatement=returnStatement+entry.lineId+". "+entry.extension.number+"<br>";
 	           			});
 	           			return returnStatement.substring(0,returnStatement.length-4);

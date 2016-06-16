@@ -32,7 +32,7 @@ import com.cisco.cme.custom.xml.SpeedDialItem;
 import lombok.extern.log4j.Log4j2;
 import ru.obelisk.cucmaxl.cucm.service.CmeService;
 import ru.obelisk.cucmaxl.utils.ObeliskStringUtils;
-
+import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
 import ru.obelisk.database.models.entity.cme.CmeAddonModule;
 import ru.obelisk.database.models.entity.cme.CmeBlfSpeedDial;
 import ru.obelisk.database.models.entity.cme.CmeCallForward;
@@ -81,235 +81,231 @@ public class CmeServiceImpl implements CmeService {
 	
 	@Autowired private CmeVoiceHuntGroupService cmeVoiceHuntGroupService;
 	
-	public void importCmeRouter(CmeRouter router){
-		synchronized(router) {		
-			log.info("Import CME router: {}", router);
-			router.setSyncStatus(CmeRouterSyncStatus.SYNC_GLOBAL_STATUS);
-			cmeRouterService.edit(router);
-			log.info("Get global SCCP information from router: {}", importGlobalState(router));
+	public AjaxOperationResult importCmeRouter(CmeRouter router){
+		synchronized(router) {
+			AjaxOperationResult ajaxResult = new AjaxOperationResult();
+			ajaxResult.setMessage("All is OK!!!");
+			ajaxResult.setStatus(0);
+		
+			try {
+				log.info("Import CME router: {}", router);
+				router.setSyncStatus(CmeRouterSyncStatus.SYNC_GLOBAL_STATUS);
+				cmeRouterService.edit(router);
+				log.info("Get global SCCP information from router: {}", importGlobalState(router));
+				
+				router.setSyncStatus(CmeRouterSyncStatus.SYNC_SIP_GLOBAL_STATUS);
+				cmeRouterService.edit(router);
+				log.info("Get global SIP information from router: {}", importSipGlobalState(router));
+				
+				router.setSyncStatus(CmeRouterSyncStatus.SYNC_SCCP_DEVICES);
+				cmeRouterService.edit(router);
+				log.info("Get SCCP devices from router: {}", importDevices(router));
+				
+				router.setSyncStatus(CmeRouterSyncStatus.SYNC_SIP_DEVICES);
+				cmeRouterService.edit(router);
+				log.info("Get SIP devices from router: {}", importSipDevices(router));
+				
+				router.setSyncStatus(CmeRouterSyncStatus.SYNC_HUNT_GROUPS);
+				cmeRouterService.edit(router);
+				log.info("Get voice hunt group from router: {}", importHuntGroups(router));
+				
+				if(!router.isSync()) router.setSync(true);
+			} catch (Exception e) {
+				log.warn(ObeliskStringUtils.getTraceToLog(e));
+				ajaxResult.setMessage(e.getMessage());
+				ajaxResult.setStatus(-1);
+			}	
 			
-			router.setSyncStatus(CmeRouterSyncStatus.SYNC_SIP_GLOBAL_STATUS);
-			cmeRouterService.edit(router);
-			log.info("Get global SIP information from router: {}", importSipGlobalState(router));
-			
-			router.setSyncStatus(CmeRouterSyncStatus.SYNC_SCCP_DEVICES);
-			cmeRouterService.edit(router);
-			log.info("Get SCCP devices from router: {}", importDevices(router));
-			
-			router.setSyncStatus(CmeRouterSyncStatus.SYNC_SIP_DEVICES);
-			cmeRouterService.edit(router);
-			log.info("Get SIP devices from router: {}", importSipDevices(router));
-			
-			router.setSyncStatus(CmeRouterSyncStatus.SYNC_HUNT_GROUPS);
-			cmeRouterService.edit(router);
-			log.info("Get voice hunt group from router: {}", importHuntGroups(router));
-			
-			if(!router.isSync()) router.setSync(true);
 			router.setSyncStatus(CmeRouterSyncStatus.NONSYNC);
 			router.setLastUpdateTime(LocalDateTime.now());
 			cmeRouterService.edit(router);
+			return ajaxResult;
 		}
 	}
 	
 	
-	public Set<CmeVoiceHuntGroup> importHuntGroups(CmeRouter router){
+	public Set<CmeVoiceHuntGroup> importHuntGroups(CmeRouter router) throws Exception{
 		Response response;
 		CmeXmlHttp cme_http = new CmeXmlHttp(router.getIpAddress(), router.getUsername(), router.getPassword());
 			
 		Set<CmeVoiceHuntGroup> cmeHuntGroups = new HashSet<CmeVoiceHuntGroup>(0);
 		
-		try {
-			response = cme_http.getAllVoiceHuntGroups();
-			Iterator<ISVoiceHuntGroup> voiceHuntGroupIterator = response.getISVoiceHuntGroups().getISVoiceHuntGroup().iterator();
-			while(voiceHuntGroupIterator.hasNext()){
-				ISVoiceHuntGroup voiceHuntGroup = voiceHuntGroupIterator.next();
-				CmeVoiceHuntGroup cmeVHG = cmeVoiceHuntGroupService.findByPilotNumberAndRouter(voiceHuntGroup.getISVoiceHuntGroupPilotNumber(), router);
-				if(cmeVHG == null){
-					cmeVHG = new CmeVoiceHuntGroup();
-					cmeVHG.setRouter(router);
-					cmeVHG.setPilotNumber(voiceHuntGroup.getISVoiceHuntGroupPilotNumber());
-				}
+		response = cme_http.getAllVoiceHuntGroups();
+		Iterator<ISVoiceHuntGroup> voiceHuntGroupIterator = response.getISVoiceHuntGroups().getISVoiceHuntGroup().iterator();
+		while(voiceHuntGroupIterator.hasNext()){
+			ISVoiceHuntGroup voiceHuntGroup = voiceHuntGroupIterator.next();
+			CmeVoiceHuntGroup cmeVHG = cmeVoiceHuntGroupService.findByPilotNumberAndRouter(voiceHuntGroup.getISVoiceHuntGroupPilotNumber(), router);
+			if(cmeVHG == null){
+				cmeVHG = new CmeVoiceHuntGroup();
+				cmeVHG.setRouter(router);
+				cmeVHG.setPilotNumber(voiceHuntGroup.getISVoiceHuntGroupPilotNumber());
+			}
+			
+			
+			cmeVHG.setFinalNum(voiceHuntGroup.getISVoiceHuntGroupFinalNum());
+			cmeVHG.setGroupID(voiceHuntGroup.getISVoiceHuntGroupID());
+			cmeVHG.setHops(voiceHuntGroup.getISVoiceHuntGroupHops());
+			cmeVHG.setListSize(voiceHuntGroup.getISVoiceHuntGroupListSize());
+			
+			int numIndex = 0;
+			List<CmeVoiceHuntGroupNumber> cmeVoiceHuntGroupNumbers = new ArrayList<CmeVoiceHuntGroupNumber>();
+			Iterator<String> voiceHuntGroupNumberItemIterator = voiceHuntGroup.getISVoiceHuntGroupListNums().getISVoiceHuntGroupListNum().iterator();
+			while(voiceHuntGroupNumberItemIterator.hasNext()){
+				String number = voiceHuntGroupNumberItemIterator.next();
+				CmeVoiceHuntGroupNumber cmeNumber = new CmeVoiceHuntGroupNumber();
 				
-				
-				cmeVHG.setFinalNum(voiceHuntGroup.getISVoiceHuntGroupFinalNum());
-				cmeVHG.setGroupID(voiceHuntGroup.getISVoiceHuntGroupID());
-				cmeVHG.setHops(voiceHuntGroup.getISVoiceHuntGroupHops());
-				cmeVHG.setListSize(voiceHuntGroup.getISVoiceHuntGroupListSize());
-				
-				int numIndex = 0;
-				List<CmeVoiceHuntGroupNumber> cmeVoiceHuntGroupNumbers = new ArrayList<CmeVoiceHuntGroupNumber>();
-				Iterator<String> voiceHuntGroupNumberItemIterator = voiceHuntGroup.getISVoiceHuntGroupListNums().getISVoiceHuntGroupListNum().iterator();
-				while(voiceHuntGroupNumberItemIterator.hasNext()){
-					String number = voiceHuntGroupNumberItemIterator.next();
-					CmeVoiceHuntGroupNumber cmeNumber = new CmeVoiceHuntGroupNumber();
-					
-					if(!cmeVHG.isNew()){
-						Iterator<CmeVoiceHuntGroupNumber> cmeVoiceHuntGroupNumberIterator = cmeVHG.getNumbers().iterator();
-						while(cmeVoiceHuntGroupNumberIterator.hasNext()){
-							CmeVoiceHuntGroupNumber cmeNum = cmeVoiceHuntGroupNumberIterator.next();
-							if(cmeNum.getNumber().equals(number)){
-								cmeNumber = cmeNum;
-							}
+				if(!cmeVHG.isNew()){
+					Iterator<CmeVoiceHuntGroupNumber> cmeVoiceHuntGroupNumberIterator = cmeVHG.getNumbers().iterator();
+					while(cmeVoiceHuntGroupNumberIterator.hasNext()){
+						CmeVoiceHuntGroupNumber cmeNum = cmeVoiceHuntGroupNumberIterator.next();
+						if(cmeNum.getNumber().equals(number)){
+							cmeNumber = cmeNum;
 						}
 					}
-					cmeNumber.setIndex(numIndex++);
-					cmeNumber.setNumber(number);
-					
-					cmeNumber.setSccpNumber(cmeExtensionService.findByNumberAndRouter(number, router));
-					cmeNumber.setSipNumber(cmeSipExtensionService.findByNumberAndRouter(number, router));
-					
-					cmeNumber.setVoiceHuntGroup(cmeVHG);
-					cmeVoiceHuntGroupNumbers.add(cmeNumber);
 				}
-				cmeVHG.setNumbers(cmeVoiceHuntGroupNumbers);
-								
-				cmeVHG.setPilotPeerTag(voiceHuntGroup.getISVoiceHuntGroupPilotPeerTag());
-				cmeVHG.setPilotPreference(voiceHuntGroup.getISVoiceHuntGroupPilotPreference());
-				cmeVHG.setSecPilotNumber(voiceHuntGroup.getISVoiceHuntGroupSecPilotNumber());
-				cmeVHG.setSecPilotPeerTag(voiceHuntGroup.getISVoiceHuntGroupSecPilotPeerTag());
-				cmeVHG.setSecPilotPreference(voiceHuntGroup.getISVoiceHuntGroupSecPilotPreference());
-				cmeVHG.setTimeout(voiceHuntGroup.getISVoiceHuntGroupTimeout());
-				cmeVHG.setType(voiceHuntGroup.getISVoiceHuntGroupType());
+				cmeNumber.setIndex(numIndex++);
+				cmeNumber.setNumber(number);
 				
-				if(cmeVHG.isNew()){
-					cmeVoiceHuntGroupService.add(cmeVHG);
-				} else {
-					cmeVoiceHuntGroupService.edit(cmeVHG);
-				}	
+				cmeNumber.setSccpNumber(cmeExtensionService.findByNumberAndRouter(number, router));
+				cmeNumber.setSipNumber(cmeSipExtensionService.findByNumberAndRouter(number, router));
 				
-				cmeHuntGroups.add(cmeVHG);
+				cmeNumber.setVoiceHuntGroup(cmeVHG);
+				cmeVoiceHuntGroupNumbers.add(cmeNumber);
 			}
-		} catch (Exception e) {
-			log.warn(e.getMessage());
+			cmeVHG.setNumbers(cmeVoiceHuntGroupNumbers);
+							
+			cmeVHG.setPilotPeerTag(voiceHuntGroup.getISVoiceHuntGroupPilotPeerTag());
+			cmeVHG.setPilotPreference(voiceHuntGroup.getISVoiceHuntGroupPilotPreference());
+			cmeVHG.setSecPilotNumber(voiceHuntGroup.getISVoiceHuntGroupSecPilotNumber());
+			cmeVHG.setSecPilotPeerTag(voiceHuntGroup.getISVoiceHuntGroupSecPilotPeerTag());
+			cmeVHG.setSecPilotPreference(voiceHuntGroup.getISVoiceHuntGroupSecPilotPreference());
+			cmeVHG.setTimeout(voiceHuntGroup.getISVoiceHuntGroupTimeout());
+			cmeVHG.setType(voiceHuntGroup.getISVoiceHuntGroupType());
+			
+			if(cmeVHG.isNew()){
+				cmeVoiceHuntGroupService.add(cmeVHG);
+			} else {
+				cmeVoiceHuntGroupService.edit(cmeVHG);
+			}	
+			
+			cmeHuntGroups.add(cmeVHG);
 		}
+		
 		return cmeHuntGroups;
 	}
 	
-	public CmeSipGlobal importSipGlobalState(CmeRouter router){
+	public CmeSipGlobal importSipGlobalState(CmeRouter router) throws Exception {
 		CmeSipGlobal cmeSipGlobal = router.getCmeSipGlobal();
 		if(cmeSipGlobal==null) cmeSipGlobal = new CmeSipGlobal();
 		
 		Response response;
 		CmeXmlHttp cme_http = new CmeXmlHttp(router.getIpAddress(), router.getUsername(), router.getPassword());
-						
-		try {
-			response = cme_http.getGlobalSipSettings();
-			ISSipGlobal globalState = response.getISSipGlobal();
-			cmeSipGlobal.setAddress(globalState.getISAddress());
-			cmeSipGlobal.setCmeRouter(router);
-			cmeSipGlobal.setMaxDN(globalState.getISMaxDN());
-			cmeSipGlobal.setMaxPool(globalState.getISMaxPool());
-			cmeSipGlobal.setMaxRedirect(globalState.getISMaxRedirect());
-			cmeSipGlobal.setMode(globalState.getISMode());
-			cmeSipGlobal.setPortNumber(globalState.getISPortNumber());
-			cmeSipGlobal.setVersion(globalState.getISVersion());
-			router.setCmeSipGlobal(cmeSipGlobal);
-			cmeSipGlobal.setCmeRouter(router);
-			if(cmeSipGlobal.isNew()){
-				cmeSipGlobalService.add(cmeSipGlobal);
-			} else {
-				cmeSipGlobalService.edit(cmeSipGlobal);
-			}
-			
-		} catch (Exception e) {
-			log.warn(e.getMessage());
+					
+		response = cme_http.getGlobalSipSettings();
+		ISSipGlobal globalState = response.getISSipGlobal();
+		cmeSipGlobal.setAddress(globalState.getISAddress());
+		cmeSipGlobal.setCmeRouter(router);
+		cmeSipGlobal.setMaxDN(globalState.getISMaxDN());
+		cmeSipGlobal.setMaxPool(globalState.getISMaxPool());
+		cmeSipGlobal.setMaxRedirect(globalState.getISMaxRedirect());
+		cmeSipGlobal.setMode(globalState.getISMode());
+		cmeSipGlobal.setPortNumber(globalState.getISPortNumber());
+		cmeSipGlobal.setVersion(globalState.getISVersion());
+		router.setCmeSipGlobal(cmeSipGlobal);
+		cmeSipGlobal.setCmeRouter(router);
+		if(cmeSipGlobal.isNew()){
+			cmeSipGlobalService.add(cmeSipGlobal);
+		} else {
+			cmeSipGlobalService.edit(cmeSipGlobal);
 		}
+				
 		return cmeSipGlobal;
 	}
 	
-	public CmeGlobal importGlobalState(CmeRouter router){
+	public CmeGlobal importGlobalState(CmeRouter router) throws Exception {
 		CmeGlobal cmeGlobal = router.getCmeGlobal();
 		if(cmeGlobal==null) cmeGlobal = new CmeGlobal();
 		
 		Response response;
 		CmeXmlHttp cme_http = new CmeXmlHttp(router.getIpAddress(), router.getUsername(), router.getPassword());
-						
-		try {
-			response = cme_http.getGlobalSettings();
-			ISGlobal globalState = response.getISGlobal();
-			cmeGlobal.setAddress(globalState.getISAddress());
-			cmeGlobal.setConfiguredDevice(globalState.getISConfiguredDevice());
-			cmeGlobal.setConfiguredExtension(globalState.getISConfiguredExtension());
-			cmeGlobal.setDeviceRegistered(globalState.getISDeviceRegistered());
-			cmeGlobal.setKeepAliveInterval(globalState.getISKeepAliveInterval());
-			cmeGlobal.setMaxConference(globalState.getISMaxConference());
-			cmeGlobal.setMaxDN(globalState.getISMaxDN());
-			cmeGlobal.setMaxEphone(globalState.getISMaxEphone());
-			cmeGlobal.setMaxRedirect(globalState.getISMaxRedirect());
-			cmeGlobal.setMode(globalState.getISMode());
-			cmeGlobal.setName(globalState.getISName());
-			cmeGlobal.setPeakDeviceRegistered(globalState.getISPeakDeviceRegistered());
-			cmeGlobal.setPeakDeviceRegisteredTime(globalState.getISPeakDeviceRegisteredTime());
-			cmeGlobal.setPortNumber(globalState.getISPortNumber());
-			cmeGlobal.setServiceEngine(globalState.getISServiceEngine());
-			
-			Set<CmeUrlService> cmeUrlServices = new HashSet<CmeUrlService>();
-			Iterator<ISUrlService> ISUrlServiceIterator = globalState.getISUrlServices().getISUrlService().iterator();
-			while(ISUrlServiceIterator.hasNext()){
-				ISUrlService ISurlService = ISUrlServiceIterator.next();
-				CmeUrlService urlService = new CmeUrlService();
-				urlService.setUrlLink(ISurlService.getISUrlLink());
-				urlService.setUrlType(ISurlService.getISUrlType());
-				cmeUrlServices.add(urlService);
-			}
-			
-			cmeGlobal.setUrlServices(cmeUrlServices);
-			cmeGlobal.setVersion(globalState.getISVersion());
-			cmeGlobal.setVoiceMail(globalState.getISVoiceMail());
-			
-			router.setCmeGlobal(cmeGlobal);
-			cmeGlobal.setCmeRouter(router);
-			if(cmeGlobal.isNew()){
-				cmeGlobalService.add(cmeGlobal);
-			} else {
-				cmeGlobalService.edit(cmeGlobal);
-			}
-			
-		} catch (Exception e) {
-			log.warn(e.getMessage());
+		
+		response = cme_http.getGlobalSettings();
+					
+		ISGlobal globalState = response.getISGlobal();
+		cmeGlobal.setAddress(globalState.getISAddress());
+		cmeGlobal.setConfiguredDevice(globalState.getISConfiguredDevice());
+		cmeGlobal.setConfiguredExtension(globalState.getISConfiguredExtension());
+		cmeGlobal.setDeviceRegistered(globalState.getISDeviceRegistered());
+		cmeGlobal.setKeepAliveInterval(globalState.getISKeepAliveInterval());
+		cmeGlobal.setMaxConference(globalState.getISMaxConference());
+		cmeGlobal.setMaxDN(globalState.getISMaxDN());
+		cmeGlobal.setMaxEphone(globalState.getISMaxEphone());
+		cmeGlobal.setMaxRedirect(globalState.getISMaxRedirect());
+		cmeGlobal.setMode(globalState.getISMode());
+		cmeGlobal.setName(globalState.getISName());
+		cmeGlobal.setPeakDeviceRegistered(globalState.getISPeakDeviceRegistered());
+		cmeGlobal.setPeakDeviceRegisteredTime(globalState.getISPeakDeviceRegisteredTime());
+		cmeGlobal.setPortNumber(globalState.getISPortNumber());
+		cmeGlobal.setServiceEngine(globalState.getISServiceEngine());
+		
+		Set<CmeUrlService> cmeUrlServices = new HashSet<CmeUrlService>();
+		Iterator<ISUrlService> ISUrlServiceIterator = globalState.getISUrlServices().getISUrlService().iterator();
+		while(ISUrlServiceIterator.hasNext()){
+			ISUrlService ISurlService = ISUrlServiceIterator.next();
+			CmeUrlService urlService = new CmeUrlService();
+			urlService.setUrlLink(ISurlService.getISUrlLink());
+			urlService.setUrlType(ISurlService.getISUrlType());
+			cmeUrlServices.add(urlService);
+		}
+		
+		cmeGlobal.setUrlServices(cmeUrlServices);
+		cmeGlobal.setVersion(globalState.getISVersion());
+		cmeGlobal.setVoiceMail(globalState.getISVoiceMail());
+		
+		router.setCmeGlobal(cmeGlobal);
+		cmeGlobal.setCmeRouter(router);
+		if(cmeGlobal.isNew()){
+			cmeGlobalService.add(cmeGlobal);
+		} else {
+			cmeGlobalService.edit(cmeGlobal);
 		}
 		return cmeGlobal;
 	}
 		
-	public Set<CmeSipExtension> importSipExtensions(CmeRouter router){
+	public Set<CmeSipExtension> importSipExtensions(CmeRouter router) throws Exception {
 		CmeXmlHttp cme_http = new CmeXmlHttp(router.getIpAddress(), router.getUsername(), router.getPassword());
 		Response sipExtensionResponse;
 		
 		Set<CmeSipExtension> cmeSipExtensions = new HashSet<CmeSipExtension>(0);
 				
-		try {
-			sipExtensionResponse = cme_http.getAllSipExtensions();
+		sipExtensionResponse = cme_http.getAllSipExtensions();
+		
+		if(sipExtensionResponse.getISError()!=null){
+			log.trace("Error code: {}",sipExtensionResponse.getISError().getISErrorCode());
+			log.trace("Error message: {}",sipExtensionResponse.getISError().getISErrorMsg());
 			
-			if(sipExtensionResponse.getISError()!=null){
-				log.trace("Error code: {}",sipExtensionResponse.getISError().getISErrorCode());
-				log.trace("Error message: {}",sipExtensionResponse.getISError().getISErrorMsg());
+			Response sipExtensionTagResponse = cme_http.getAllSipExtensionsByTag();
+			Iterator<ISSipExtension> sipExtensionTagIterator = sipExtensionTagResponse.getISSipExtensions().getISSipExtension().iterator();
+			while(sipExtensionTagIterator.hasNext()){
+				Response sipExtensionByTagResponse = cme_http.getSipExtensionById(sipExtensionTagIterator.next().getISVoiceRegDNID());
+				ISSipExtension sipExtension = sipExtensionByTagResponse.getISSipExtensions().getISSipExtension().get(0);
+				CmeSipExtension cmeSipExtension = getCmeSipExtension(sipExtension, router);
+				if(cmeSipExtension!=null) cmeSipExtensions.add(cmeSipExtension);
+			}
+		} else {
+			log.trace("Error code is null");
+			Iterator<ISSipExtension> sipExtensionIterator = sipExtensionResponse.getISSipExtensions().getISSipExtension().iterator();
+			while(sipExtensionIterator.hasNext()){
+				ISSipExtension sipExtension = sipExtensionIterator.next();
+				CmeSipExtension cmeSipExtension = getCmeSipExtension(sipExtension, router);
+				if(cmeSipExtension!=null) cmeSipExtensions.add(cmeSipExtension);
+			}
+		}	
 				
-				Response sipExtensionTagResponse = cme_http.getAllSipExtensionsByTag();
-				Iterator<ISSipExtension> sipExtensionTagIterator = sipExtensionTagResponse.getISSipExtensions().getISSipExtension().iterator();
-				while(sipExtensionTagIterator.hasNext()){
-					Response sipExtensionByTagResponse = cme_http.getSipExtensionById(sipExtensionTagIterator.next().getISVoiceRegDNID());
-					ISSipExtension sipExtension = sipExtensionByTagResponse.getISSipExtensions().getISSipExtension().get(0);
-					CmeSipExtension cmeSipExtension = getCmeSipExtension(sipExtension, router);
-					if(cmeSipExtension!=null) cmeSipExtensions.add(cmeSipExtension);
-				}
-			} else {
-				log.trace("Error code is null");
-				Iterator<ISSipExtension> sipExtensionIterator = sipExtensionResponse.getISSipExtensions().getISSipExtension().iterator();
-				while(sipExtensionIterator.hasNext()){
-					ISSipExtension sipExtension = sipExtensionIterator.next();
-					CmeSipExtension cmeSipExtension = getCmeSipExtension(sipExtension, router);
-					if(cmeSipExtension!=null) cmeSipExtensions.add(cmeSipExtension);
-				}
-			}	
-			
-			
-		} catch (Exception e) {
-			log.warn(e.getMessage());
-		}
 		return cmeSipExtensions;
 	}
 	
-	public Set<CmeSipDevice> importSipDevices(CmeRouter router){
+	public Set<CmeSipDevice> importSipDevices(CmeRouter router) throws Exception {
 		CmeXmlHttp cme_http = new CmeXmlHttp(router.getIpAddress(), router.getUsername(), router.getPassword());
 		Response sipDeviceResponse;
 		Set<CmeSipDevice> cmeSipDevices = new HashSet<CmeSipDevice>(0);
@@ -323,78 +319,69 @@ public class CmeServiceImpl implements CmeService {
 			CmeSipExtension sipExtension = sipExtensionIterator.next();
 			cmeSipExtensionMap.put(sipExtension.getExtCmeID(), sipExtension);
 		}
-		
-		try {
-			sipDeviceResponse = cme_http.getAllSipDevices();
-			
-			if(sipDeviceResponse.getISError()!=null){
-				log.trace("Error code: {}",sipDeviceResponse.getISError().getISErrorCode());
-				log.trace("Error message: {}",sipDeviceResponse.getISError().getISErrorMsg());
 				
-				Response sipDeviceTagResponse = cme_http.getAllSipDevicesByTag();
-				Iterator<ISSipDevice> sipDeviceTagIterator = sipDeviceTagResponse.getISSipDevices().getISSipDevice().iterator();
-				while(sipDeviceTagIterator.hasNext()){
-					Response sipDeviceByTagResponse = cme_http.getSipDeviceById(sipDeviceTagIterator.next().getISPoolID());
-					ISSipDevice sipDevice = sipDeviceByTagResponse.getISSipDevices().getISSipDevice().get(0);
-					CmeSipDevice cmeSipDevice = getCmeSipDevice(sipDevice, router, cmeSipExtensionMap);
-					cmeSipDevice.setRouter(router);
-					cmeSipDevices.add(cmeSipDevice);
-				}
-			} else {
-				log.trace("Error code is null");
-				Iterator<ISSipDevice> sipDeviceIterator = sipDeviceResponse.getISSipDevices().getISSipDevice().iterator();
-				while(sipDeviceIterator.hasNext()){
-					ISSipDevice sipDevice = sipDeviceIterator.next();
-					CmeSipDevice cmeSipDevice = getCmeSipDevice(sipDevice, router, cmeSipExtensionMap);
-					cmeSipDevice.setRouter(router);
-					cmeSipDevices.add(cmeSipDevice);
-				}
-			}	
-		} catch (Exception e) {
-			log.warn(e.getMessage());
-		}
+		sipDeviceResponse = cme_http.getAllSipDevices();
+		
+		if(sipDeviceResponse.getISError()!=null){
+			log.trace("Error code: {}",sipDeviceResponse.getISError().getISErrorCode());
+			log.trace("Error message: {}",sipDeviceResponse.getISError().getISErrorMsg());
+			
+			Response sipDeviceTagResponse = cme_http.getAllSipDevicesByTag();
+			Iterator<ISSipDevice> sipDeviceTagIterator = sipDeviceTagResponse.getISSipDevices().getISSipDevice().iterator();
+			while(sipDeviceTagIterator.hasNext()){
+				Response sipDeviceByTagResponse = cme_http.getSipDeviceById(sipDeviceTagIterator.next().getISPoolID());
+				ISSipDevice sipDevice = sipDeviceByTagResponse.getISSipDevices().getISSipDevice().get(0);
+				CmeSipDevice cmeSipDevice = getCmeSipDevice(sipDevice, router, cmeSipExtensionMap);
+				cmeSipDevice.setRouter(router);
+				cmeSipDevices.add(cmeSipDevice);
+			}
+		} else {
+			log.trace("Error code is null");
+			Iterator<ISSipDevice> sipDeviceIterator = sipDeviceResponse.getISSipDevices().getISSipDevice().iterator();
+			while(sipDeviceIterator.hasNext()){
+				ISSipDevice sipDevice = sipDeviceIterator.next();
+				CmeSipDevice cmeSipDevice = getCmeSipDevice(sipDevice, router, cmeSipExtensionMap);
+				cmeSipDevice.setRouter(router);
+				cmeSipDevices.add(cmeSipDevice);
+			}
+		}	
 		return cmeSipDevices;
 	}
 	
-	public Set<CmeExtension> importExtensions(CmeRouter router){
+	public Set<CmeExtension> importExtensions(CmeRouter router) throws Exception {
 		CmeXmlHttp cme_http = new CmeXmlHttp(router.getIpAddress(), router.getUsername(), router.getPassword());
 		Response extensionResponse;
 		
 		Set<CmeExtension> cmeExtensions = new HashSet<CmeExtension>(0);
 				
-		try {
-			extensionResponse = cme_http.getAllExtensions();
+		extensionResponse = cme_http.getAllExtensions();
+		
+		if(extensionResponse!=null && extensionResponse.getISError()!=null){
+			log.trace("Error code: {}",extensionResponse.getISError().getISErrorCode());
+			log.trace("Error message: {}",extensionResponse.getISError().getISErrorMsg());
 			
-			if(extensionResponse.getISError()!=null){
-				log.trace("Error code: {}",extensionResponse.getISError().getISErrorCode());
-				log.trace("Error message: {}",extensionResponse.getISError().getISErrorMsg());
+			Response extensionTagResponse = cme_http.getAllExtensionsByTag();
+			Iterator<ISExtension> extensionTagIterator = extensionTagResponse.getISExtensions().getISExtension().iterator();
+			while(extensionTagIterator.hasNext()){
+				Response extensionByTagResponse = cme_http.getExtensionById(extensionTagIterator.next().getISExtID());
+				ISExtension extension = extensionByTagResponse.getISExtensions().getISExtension().get(0);
+				CmeExtension cmeExtension = getCmeExtension(extension, router);
 				
-				Response extensionTagResponse = cme_http.getAllExtensionsByTag();
-				Iterator<ISExtension> extensionTagIterator = extensionTagResponse.getISExtensions().getISExtension().iterator();
-				while(extensionTagIterator.hasNext()){
-					Response extensionByTagResponse = cme_http.getExtensionById(extensionTagIterator.next().getISExtID());
-					ISExtension extension = extensionByTagResponse.getISExtensions().getISExtension().get(0);
-					CmeExtension cmeExtension = getCmeExtension(extension, router);
-					
-					if(cmeExtension!=null) cmeExtensions.add(cmeExtension);
-				}
-			} else {
-				log.trace("Error code is null");
-				Iterator<ISExtension> extensionIterator = extensionResponse.getISExtensions().getISExtension().iterator();
-				while(extensionIterator.hasNext()){
-					ISExtension extension = extensionIterator.next();
-					CmeExtension cmeExtension = getCmeExtension(extension, router);
-					if(cmeExtension!=null) cmeExtensions.add(cmeExtension);
-				}
-			}	
-			
-		} catch (Exception e) {
-			log.warn(ObeliskStringUtils.getTraceToLog(e));
-		}
+				if(cmeExtension!=null) cmeExtensions.add(cmeExtension);
+			}
+		} else {
+			log.trace("Error code is null");
+			Iterator<ISExtension> extensionIterator = extensionResponse.getISExtensions().getISExtension().iterator();
+			while(extensionIterator.hasNext()){
+				ISExtension extension = extensionIterator.next();
+				CmeExtension cmeExtension = getCmeExtension(extension, router);
+				if(cmeExtension!=null) cmeExtensions.add(cmeExtension);
+			}
+		}	
 		return cmeExtensions;
 	}
 	
-	public Set<CmeDevice> importDevices(CmeRouter router){
+	public Set<CmeDevice> importDevices(CmeRouter router) throws Exception {
 		CmeXmlHttp cme_http = new CmeXmlHttp(router.getIpAddress(), router.getUsername(), router.getPassword());
 		Response deviceResponse;
 		Set<CmeDevice> cmeDevices = new HashSet<CmeDevice>(0);
@@ -409,50 +396,41 @@ public class CmeServiceImpl implements CmeService {
 			cmeExtensionMap.put(extension.getExtCmeID(), extension);
 		}
 		
-		try {
-			deviceResponse = cme_http.getAllDevices();
+		deviceResponse = cme_http.getAllDevices();
+		
+		if(deviceResponse!=null && deviceResponse.getISError()!=null){
+			log.trace("Error code: {}",deviceResponse.getISError().getISErrorCode());
+			log.trace("Error message: {}",deviceResponse.getISError().getISErrorMsg());
 			
-			if(deviceResponse.getISError()!=null){
-				log.trace("Error code: {}",deviceResponse.getISError().getISErrorCode());
-				log.trace("Error message: {}",deviceResponse.getISError().getISErrorMsg());
-				
-				Response deviceTagResponse = cme_http.getAllDevicesByTag();
-				Iterator<ISDevice> deviceTagIterator = deviceTagResponse.getISDevices().getISDevice().iterator();
-				while(deviceTagIterator.hasNext()){
-					ISDevice tag = deviceTagIterator.next();
-					log.trace("Tag ISDevID: {}", tag.getISDevID());
-					Response deviceByTagResponse = cme_http.getDeviceById(tag.getISDevID());
-					log.trace("DeviceByTagResponse: {}", deviceByTagResponse);
-					if(deviceByTagResponse.getISDevices()!=null){
-						ISDevice device = deviceByTagResponse.getISDevices().getISDevice().get(0);
-						CmeDevice cmeDevice = getCmeDevice(device, router, cmeExtensionMap);
-						cmeDevices.add(cmeDevice);
-					} else {
-						log.trace("DeviceByTagResponse not contain object with this key: {}", tag.getISDevID());
-					}
-				}
-			} else {
-				log.trace("Error code is null");
-				Iterator<ISDevice> deviceIterator = deviceResponse.getISDevices().getISDevice().iterator();
-				while(deviceIterator.hasNext()){
-					ISDevice device = deviceIterator.next();
+			Response deviceTagResponse = cme_http.getAllDevicesByTag();
+			Iterator<ISDevice> deviceTagIterator = deviceTagResponse.getISDevices().getISDevice().iterator();
+			while(deviceTagIterator.hasNext()){
+				ISDevice tag = deviceTagIterator.next();
+				log.trace("Tag ISDevID: {}", tag.getISDevID());
+				Response deviceByTagResponse = cme_http.getDeviceById(tag.getISDevID());
+				log.trace("DeviceByTagResponse: {}", deviceByTagResponse);
+				if(deviceByTagResponse.getISDevices()!=null){
+					ISDevice device = deviceByTagResponse.getISDevices().getISDevice().get(0);
 					CmeDevice cmeDevice = getCmeDevice(device, router, cmeExtensionMap);
-										
-					
 					cmeDevices.add(cmeDevice);
+				} else {
+					log.trace("DeviceByTagResponse not contain object with this key: {}", tag.getISDevID());
 				}
-			}	
-			
-			
-		} catch (Exception e) {
-			log.warn(ObeliskStringUtils.getTraceToLog(e));
-		}
+			}
+		} else {
+			log.trace("Error code is null");
+			Iterator<ISDevice> deviceIterator = deviceResponse.getISDevices().getISDevice().iterator();
+			while(deviceIterator.hasNext()){
+				ISDevice device = deviceIterator.next();
+				CmeDevice cmeDevice = getCmeDevice(device, router, cmeExtensionMap);
+									
+				
+				cmeDevices.add(cmeDevice);
+			}
+		}	
 		return cmeDevices;
 	}
-	
-	
-	
-	
+		
 	private CmeDevice getCmeDevice(ISDevice device, CmeRouter router, Map<String, CmeExtension> cmeExtensionMap){
 		CmeDevice cmeDevice = cmeDeviceService.findByNameAndRouter(device.getISDevName(), router);
 		if(cmeDevice == null){

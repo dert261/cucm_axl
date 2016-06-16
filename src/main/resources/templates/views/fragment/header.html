@@ -77,12 +77,12 @@
                     <a 	class="dropdown-toggle" 
                     	data-toggle="dropdown" 
                     	href="#"
-                    	th:utext="'&lt;i class=\'fa fa-user fa-fw\'&gt;&lt;/i&gt; '+(${myuser} ? ${myuser.fname}+' '+${myuser.lname})+' &lt;i class=\'fa fa-caret-down\'&gt;&lt;/i&gt;'">
-                    		<i class="fa fa-user fa-fw"></i> User <i class="fa fa-caret-down"></i>
+                    	th:utext="'&lt;i class=\'fa fa-user fa-fw\'&gt;&lt;/i&gt; '+(${@localPrincipal.getUser()}!=null ? (${@localPrincipal.getUser().getFname()}+' '+${@localPrincipal.getUser().getLname()}) : '')+' &lt;i class=\'fa fa-caret-down\'&gt;&lt;/i&gt;'">
+                    		
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                     	<li>
-                        	<a href="/login.html" th:utext="'&lt;i class=\'fa fa-sign-out fa-fw\'&gt;&lt;/i&gt; '+#{header.top.logout}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        	<a href="/logout" th:utext="'&lt;i class=\'fa fa-sign-out fa-fw\'&gt;&lt;/i&gt; '+#{header.top.logout}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->

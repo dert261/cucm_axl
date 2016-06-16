@@ -26,9 +26,9 @@
 														
 							
 							
-							<div th:include="fragment/fielddefinition :: selectEnumFormField('resourceSourceType', false, 'collectorResourceSourceTypes', 'collectors.field', *{resourceSourceType}, false, false)">Collector Resource Source Type</div>
+							<div th:include="fragment/fielddefinition :: selectEnumFormField('resourceSourceType', false, 'collectorResourceSourceTypes', 'collectors.field', false, false)">Collector Resource Source Type</div>
 							
-							<div th:include="fragment/fielddefinition :: selectEnumFormField('type', true, 'collectorTypes', 'collectors.field', *{type}, false, false)">Collector Type</div>
+							<div th:include="fragment/fielddefinition :: selectEnumFormField('type', true, 'collectorTypes', 'collectors.field', false, false)">Collector Type</div>
 							
 							
 							<div class="panel panel-default">
@@ -38,10 +38,28 @@
 									<input type="hidden" th:field="*{id}" />
 									<input type="hidden" th:field="*{collector.id}" />
 									<div class="row">
+										<div class="col-lg-2">
+											<div th:include="fragment/fielddefinition :: selectEnumFormField('ftpType', true, 'ftpTypes', 'ftpconfigs.field', false, false)">Collector Type</div>
+											<script th:inline="javascript">
+											/*<![CDATA[*/
+											$('#ftpType').on("change", function(e) {
+										    	var portNum;
+										    	switch(this.value){
+										    		case "FTP"	: portNum=21; break;	
+										    		case "SFTP"	: portNum=22; break;
+										    		case "FTPS"	: portNum=21; break;
+										    		default		: portNum=21; break;
+										    	}
+										    	$('#collectorFtpConfig\\.port').val(portNum);
+										    	return false;
+										    });
+										    /*]]>*/
+											</script>
+										</div>
 										<div class="col-lg-6">
 											<div th:include="fragment/fielddefinition :: textFormField('host',true, text, 'ftpconfigs.field')">Ftp Host</div>
 										</div>	
-										<div class="col-lg-6">
+										<div class="col-lg-4">
 											<div th:include="fragment/fielddefinition :: textFormField('port',false, text, 'ftpconfigs.field')">Ftp port</div>
 										</div>
 									</div>

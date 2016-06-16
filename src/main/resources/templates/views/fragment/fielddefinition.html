@@ -317,7 +317,7 @@
 </div>
 
 <!-- DROPDOWN ENUM (SELECT) FIELD TEMPLATE -->
-<div th:fragment="selectEnumFormField(fieldName, requiredFlag, dataSet, i18nName, activeValue, multipleFlag, allowClearFlag)" th:remove="all">
+<div th:fragment="selectEnumFormField(fieldName, requiredFlag, dataSet, i18nName, multipleFlag, allowClearFlag)" th:remove="all">
 	<div	class="form-group" 
 			th:classappend="${#fields.hasErrors(fieldName)}? 'has-error'">
 		<label 	class="control-label"
@@ -329,7 +329,8 @@
 		
 		
 		<select th:if="${multipleFlag}"
-				th:field="*{__${fieldName}__}" 
+				th:field="*{__${fieldName}__}"
+				th:id="${fieldName}" 
 				class="select2-chosen"
 				multiple="multiple" 
 				placeholder="select value"
@@ -342,6 +343,7 @@
 		
 		<select th:unless="${multipleFlag}"
 				th:field="*{__${fieldName}__}" 
+				th:id="${fieldName}"
 				class="select2-chosen"
 				data-placeholder="select value"
 				th:attr="data-placeholder=#{${i18nName}+'.'+${fieldName}}">
@@ -358,15 +360,15 @@
 	</div>
 	<script th:inline="javascript">
 	/*<![CDATA[*/
-		jQuery(function($) {
-    		jQuery([['#'+${fieldName}]]).select2({
+	    jQuery(function($) {
+	    	jQuery([['#'+${fieldName}]]).select2({
     			'allowClear':[[${allowClearFlag}]],
     			'width':'100%',
     			'placeholder': {
     			    'id': "",
     			    'placeholder': [[#{${i18nName}+'.'+${fieldName}}]]
     			},
-    		})//.select2('val', [[${activeValue}]]);
+    		})
     	});  
 	/*]]>*/
 	</script>

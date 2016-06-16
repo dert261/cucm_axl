@@ -46,7 +46,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	/**
 	*  Total customization - see below for explanation.
 	*/
-	@Override
+/*	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 			
 		configurer.favorPathExtension(true).
@@ -60,10 +60,10 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	        mediaType("html", MediaType.TEXT_HTML);
 	}
 	
-	@Autowired
+/*	@Autowired
 	private ThymeleafConfig thymeleafConfig;
 	
-	@Bean
+/*	@Bean
 	public ViewResolver contentNegotiatingViewResolver(ContentNegotiationManager manager) {
 	    // Define the view resolvers
 	    List<ViewResolver> resolvers = new ArrayList<ViewResolver>();
@@ -73,7 +73,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	    resolver.setContentNegotiationManager(manager);
 	    return resolver;
 	}
-	
+*/	
 	@PostConstruct
 	public void setEnviroment(){
 		Properties systemProps = System.getProperties();

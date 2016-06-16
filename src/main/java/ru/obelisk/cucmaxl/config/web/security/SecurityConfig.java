@@ -1,8 +1,12 @@
 package ru.obelisk.cucmaxl.config.web.security;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -10,45 +14,42 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.savedrequest.NullRequestCache;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-	public NullRequestCache sds;
+	@Autowired private DataSource dataSource;
+	@Autowired private UserDetailsService userDetailsService;
 	
-	/*@Autowired
-    private UserDetailsService customUserDetailsService;*/
+	@Autowired private AuthenticationProvider dbLdapAuthenticationProvider;
 	
-	@Autowired
-	@Qualifier("dbLdapAuthenticationProvider2")
-    private AuthenticationProvider dbLdapAuthenticationProvider;
-	
-
 	@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(dbLdapAuthenticationProvider).
-			inMemoryAuthentication().withUser("admin").password("system").roles("ADMIN");
+		auth.authenticationProvider(dbLdapAuthenticationProvider);/*.
+			inMemoryAuthentication().withUser("admin").password("system").roles("ADMIN");*/
 	}
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web
 			.ignoring()
-	    		.antMatchers("/downloads/**")
+				.antMatchers("/downloads/**")
 	    		.antMatchers("/static/**")
 	    		.antMatchers("/resources/**")
 	        	.antMatchers("/assets/**")
-	        	.antMatchers("/dandelion/**")
-	        	.antMatchers("/dandelion-assets/**")
 	        	.antMatchers("/css/**")
-	        	.antMatchers("/webjars/**")
 	        	.antMatchers("/images/**")
 	        	.antMatchers("/error*")
 	        	.antMatchers("/login*")
-	        	.antMatchers("/logout*")
+	        	.antMatchers("/access_denied")
 	        	.antMatchers("/favicon.ico");
 	}
 	
@@ -57,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http
         	.csrf().disable()
         	.authorizeRequests()
-            	.antMatchers("/**").hasAnyRole("ADMIN","MANAGER","SECURITY","OPERATOR","CMEADMIN")
+        		.antMatchers("/**").hasAnyRole("ADMIN","MANAGER","SECURITY","OPERATOR","CMEADMIN")
             	.antMatchers("/rest/*").hasRole("ADMIN")
             	.anyRequest().authenticated()
             	.and()
@@ -65,22 +66,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .loginPage("/login")
                 .failureUrl("/login?failed")
                 .loginProcessingUrl("/authentication")
+                .passwordParameter("password")
+                .usernameParameter("username")
                 .defaultSuccessUrl("/", false)
-                .successHandler(new SuccessHandler())
                 .permitAll()
                 .and()
             .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
+            	.logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .deleteCookies("JSESSIONID", "remember-me")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
                 .permitAll()
                 .and()
-            .rememberMe()
-            	.rememberMeCookieName("obelisk-voip-ru-cucm-axl")
-            	.tokenValiditySeconds(1209600)
-            	.key("remember-me");
-            	
+        	.rememberMe()
+        		.rememberMeServices(tokenService())
+        		.key("3edh2uklashuio23");
+    }
+    
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepositoryImpl = new JdbcTokenRepositoryImpl();
+    	tokenRepositoryImpl.setDataSource(dataSource);
+        return tokenRepositoryImpl;
+    }
+    
+    @Bean
+    public RememberMeServices tokenService() {
+    	return new PersistentTokenBasedRememberMeServices("3edh2uklashuio23", userDetailsService, persistentTokenRepository());
     }
 }
 
