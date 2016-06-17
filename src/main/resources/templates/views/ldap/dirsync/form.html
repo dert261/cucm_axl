@@ -76,7 +76,7 @@
 				
 				<div th:include="fragment/fielddefinition :: textFormField('countOnResultPage', true, text, 'ldapdirsync.field')">Count on result page</div>
 				
-				<div th:include="fragment/fielddefinition :: selectEnumFormField('phoneBookSyncSource', false, 'phoneBookSyncSources', 'ldapdirsync.field', *{phoneBookSyncSource}, false, false)">Resync Unit</div>
+				<div th:include="fragment/fielddefinition :: selectEnumFormField('phoneBookSyncSource', false, 'phoneBookSyncSources', 'ldapdirsync.field', false, false)">Resync Unit</div>
 						
 				<div class="panel panel-default">
 					<div class="panel-heading" th:text="#{ldapdirsync.form.tab.syncoptions.header}"> Sync options </div>
@@ -87,7 +87,7 @@
 								<div th:include="fragment/fielddefinition :: textFormField('resyncInterval',true, text, 'ldapdirsync.field')">Sync interval</div>
 							</div>	
 							<div class="col-lg-3">
-								<div th:include="fragment/fielddefinition :: selectEnumFormField('resyncUnit', false, 'resyncUnits', 'ldapdirsync.field', *{resyncUnit}, false, false)">Resync Unit</div>
+								<div th:include="fragment/fielddefinition :: selectEnumFormField('resyncUnit', false, 'resyncUnits', 'ldapdirsync.field', false, false)">Resync Unit</div>
 							</div>
 						</div>	
 						<div>

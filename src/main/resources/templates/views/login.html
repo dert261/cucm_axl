@@ -8,28 +8,27 @@
 		<div class="col-md-4 col-md-offset-4">
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Введите имя пользователя и пароль</h3>
+					<h3 class="panel-title" th:text="#{login.message.entercredential}">Enter credentials</h3>
 				</div>
 				<div class="panel-body">
-					<form role="form" action="authentication" th:action="@{/authentication}" method="post">
+					<form role="form" action="/authentication" th:action="@{/authentication}" method="post">
 						<fieldset>
 							<div class="form-group">
 								<input id="username" name="username"
 	                   				type="text" required="required" autofocus="autofocus" class="form-control"
-	                    			placeholder="Ваш логин..."/>
+	                    			th:placeholder="#{login.field.placeholder.username}"/>
 							</div>
 							<div class="form-group">
 								<input id="password" name="password"
                   					type="password" required="required" class="form-control"
-                    				placeholder="Ваш пароль..."/>
+                    				th:placeholder="#{login.field.placeholder.password}"/>
                     		</div>
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" value="Remember Me" name="remember-me" />
-									Запомнить меня
+									<input type="checkbox" name="remember-me" th:text="#{login.field.rememberme}" > Remember me </input>
 								</label>
 							</div>
-							<button type="submit" class="btn btn-lg btn-success btn-block" >Вход</button>  
+							<button type="submit" class="btn btn-lg btn-success btn-block" th:text="#{login.button.login}">Login</button>  
 						</fieldset>
 					</form>
 				</div>

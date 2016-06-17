@@ -65,6 +65,7 @@ import ru.obelisk.database.models.service.cme.CmeVoiceHuntGroupService;
 import ru.obelisk.database.models.views.View;
 import ru.obelisk.database.select2.Select2Result;
 import ru.obelisk.cucmaxl.web.controllers.cme.viewtypes.RouterExportDetail;
+import ru.obelisk.cucmaxl.web.databinding.AjaxOperationResult;
 
 @Controller
 @RequestMapping("/cme/routers")
@@ -174,11 +175,9 @@ public class CmeRouterController {
 	
 	@RequestMapping(value = {"/import"}, method = RequestMethod.POST)
 	@Secured({"ROLE_ADMIN","ROLE_CMEADMIN"})
-	public String importCmeRouter(int id, SessionStatus status) {
+	public @ResponseBody AjaxOperationResult importCmeRouter(int id, SessionStatus status) {
 		logger.info("Requesting import CME router");
-		cmeService.importCmeRouter(cmeRouterService.findById(id));
-		status.setComplete();
-		return "redirect:/cme/routers/";
+		return cmeService.importCmeRouter(cmeRouterService.findById(id));
 	}
 	
 	@JsonView(View.CmeRouter.class)
@@ -221,18 +220,20 @@ public class CmeRouterController {
 	@RequestMapping(value = "/ajax/serverside/{cmeId}/cmesipdevices.json", method = RequestMethod.GET)
 	public @ResponseBody DataTablesOutput<CmeSipDevice> getRouterSIPDevices(@Valid DataTablesInput input, @PathVariable int cmeId, Locale locale) {
 		DataTablesOutput<CmeSipDevice> result = cmeSipDeviceService.findAllByRouter(input, cmeRouterService.findById(cmeId));
-		Iterator<CmeSipDevice> sipDevicesIterator = result.getData().iterator();
-		while(sipDevicesIterator.hasNext()){
-			CmeSipDevice sipDevice = sipDevicesIterator.next();
-			
-			String phoneTypeLocalized = "";
-			if(sipDevice.getCustomSipDevice()!=null){
-				if(sipDevice.getCustomSipDevice().getPhoneType()!=null){
-					phoneTypeLocalized=messageSource.getMessage(sipDevice.getCustomSipDevice().getPhoneType().toString(), null, locale);
+		if(result.getData()!=null){
+			Iterator<CmeSipDevice> sipDevicesIterator = result.getData().iterator();
+			while(sipDevicesIterator.hasNext()){
+				CmeSipDevice sipDevice = sipDevicesIterator.next();
+				
+				String phoneTypeLocalized = "";
+				if(sipDevice.getCustomSipDevice()!=null){
+					if(sipDevice.getCustomSipDevice().getPhoneType()!=null){
+						phoneTypeLocalized=messageSource.getMessage(sipDevice.getCustomSipDevice().getPhoneType().toString(), null, locale);
+					}
+					sipDevice.getCustomSipDevice().setPhoneTypeLocalized(phoneTypeLocalized);
 				}
-				sipDevice.getCustomSipDevice().setPhoneTypeLocalized(phoneTypeLocalized);
+			
 			}
-		
 		}
 		return result;
 	}

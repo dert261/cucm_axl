@@ -33,6 +33,7 @@ import ru.obelisk.database.models.entity.CucmAxlPort;
 import ru.obelisk.database.models.entity.enums.CollectorResourceSourceType;
 import ru.obelisk.database.models.entity.enums.CollectorType;
 import ru.obelisk.database.models.entity.enums.CurrentRunStatus;
+import ru.obelisk.database.models.entity.enums.FtpType;
 import ru.obelisk.database.models.entity.enums.LaunchModeType;
 import ru.obelisk.database.models.service.CollectorService;
 import ru.obelisk.database.models.service.CucmAxlPortService;
@@ -86,6 +87,7 @@ public class CollectorController {
 		collector.setCollectorFtpConfig(collectorFtpConfig);
 		model.addAttribute("collector", collector);
 		model.addAttribute("collectorTypes", Arrays.asList(CollectorType.values()));
+		model.addAttribute("ftpTypes", Arrays.asList(FtpType.values()));
 		
 		model.addAttribute("collectorResourceSourceTypes", Arrays.asList(CollectorResourceSourceType.values()));
 		
@@ -111,6 +113,7 @@ public class CollectorController {
 		
 		if(bindingResult.hasErrors()){
 			model.addAttribute("collectorTypes", Arrays.asList(CollectorType.values()));
+			model.addAttribute("ftpTypes", Arrays.asList(FtpType.values()));
 			model.addAttribute("collectorResourceSourceTypes", Arrays.asList(CollectorResourceSourceType.values()));
 			Map<Integer, String> axlPortsMap = new HashMap<Integer, String>();
 			List<CucmAxlPort> cucmAxlPorts = axlPortService.findAll();
@@ -142,6 +145,7 @@ public class CollectorController {
 		model.addAttribute("collector", collector);
 		log.info(collector);
 		model.addAttribute("collectorTypes", Arrays.asList(CollectorType.values()));
+		model.addAttribute("ftpTypes", Arrays.asList(FtpType.values()));
 		model.addAttribute("collectorResourceSourceTypes", Arrays.asList(CollectorResourceSourceType.values()));
 		
 		Map<Integer, String> axlPortsMap = new HashMap<Integer, String>();
@@ -164,6 +168,7 @@ public class CollectorController {
 		if(bindingResult.hasErrors()){
 			
 			model.addAttribute("collectorTypes", Arrays.asList(CollectorType.values()));
+			model.addAttribute("ftpTypes", Arrays.asList(FtpType.values()));
 			model.addAttribute("collectorResourceSourceTypes", Arrays.asList(CollectorResourceSourceType.values()));
 			Map<Integer, String> axlPortsMap = new HashMap<Integer, String>();
 			List<CucmAxlPort> cucmAxlPorts = axlPortService.findAll();

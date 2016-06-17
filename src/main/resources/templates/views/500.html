@@ -12,6 +12,9 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<h1 class="page-header" th:text="#{errorpage.message.error}">Something went wrong!</h1>
+						<p><b>Failed URL:</b> <span th:text="${url}"></span></p>
+						<p><b>Exception:</b> <span th:text="${exception}"></span></p>
+						<span th:each="stack : ${exception.stackTrace}" th:utext="'&nbsp;&nbsp;&nbsp;&nbsp;'+${stack}+'&lt;/br&gt;'"></span>
 					</div>
 				</div>
 			</div>
