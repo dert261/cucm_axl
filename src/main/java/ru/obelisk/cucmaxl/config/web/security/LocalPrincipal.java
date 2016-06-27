@@ -1,12 +1,14 @@
 package ru.obelisk.cucmaxl.config.web.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.obelisk.database.models.entity.User;
 import ru.obelisk.database.models.service.UserService;
 
 @Component
+@Scope(value="session")
 public class LocalPrincipal {
 	private User user = null;
 	@Autowired private UserService userService;
