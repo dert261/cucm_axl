@@ -462,28 +462,29 @@ public class CmeServiceImpl implements CmeService {
 		Iterator<ExtMapStatus> extMapStatusIterator = device.getISPhoneLineList().getExtMapStatus().iterator();
 		while(extMapStatusIterator.hasNext()){
 			ExtMapStatus extMapStatus = extMapStatusIterator.next();
-			
-			if(cmeExtensionMap.containsKey(extMapStatus.getExtId())){
-				CmeExtension cmeExtension = cmeExtensionMap.get(extMapStatus.getExtId());
-				
-				CmeExtMapStatus cmeExtMapStatus = null;
-				if(!cmeExtension.isNew() && !cmeDevice.isNew()){
-					Iterator<CmeExtMapStatus> cmeExtMapStatusIterator = cmeDevice.getLines().iterator();
-					while(cmeExtMapStatusIterator.hasNext()){
-						CmeExtMapStatus mapStat = cmeExtMapStatusIterator.next();
-						if(mapStat.getExtension().getId()==cmeExtension.getId()){
-							cmeExtMapStatus = mapStat;
+			if(extMapStatus!=null){
+				if(cmeExtensionMap.containsKey(extMapStatus.getExtId())){
+					CmeExtension cmeExtension = cmeExtensionMap.get(extMapStatus.getExtId());
+					
+					CmeExtMapStatus cmeExtMapStatus = null;
+					if(!cmeExtension.isNew() && !cmeDevice.isNew()){
+						Iterator<CmeExtMapStatus> cmeExtMapStatusIterator = cmeDevice.getLines().iterator();
+						while(cmeExtMapStatusIterator.hasNext()){
+							CmeExtMapStatus mapStat = cmeExtMapStatusIterator.next();
+							if(mapStat.getExtension().getId()==cmeExtension.getId()){
+								cmeExtMapStatus = mapStat;
+							}
 						}
-					}
-				} else {
-					cmeExtMapStatus = new CmeExtMapStatus();
-				}			
-								
-				cmeExtMapStatus.setLineId(extMapStatus.getLineId());
-				cmeExtMapStatus.setLineState(extMapStatus.getLineState());
-				cmeExtMapStatus.setDevice(cmeDevice);
-				cmeExtMapStatus.setExtension(cmeExtension);
-				cmeCmeExtMapStatuses.add(cmeExtMapStatus);
+					} else {
+						cmeExtMapStatus = new CmeExtMapStatus();
+					}			
+					log.info("cmeExtMapStatus: {}\t\textMapStatus: {}",cmeExtMapStatus,extMapStatus);				
+					cmeExtMapStatus.setLineId(extMapStatus.getLineId());
+					cmeExtMapStatus.setLineState(extMapStatus.getLineState());
+					cmeExtMapStatus.setDevice(cmeDevice);
+					cmeExtMapStatus.setExtension(cmeExtension);
+					cmeCmeExtMapStatuses.add(cmeExtMapStatus);
+				}
 			}
 		}
 		cmeDevice.setLines(cmeCmeExtMapStatuses);
