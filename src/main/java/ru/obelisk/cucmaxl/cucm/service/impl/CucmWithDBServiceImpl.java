@@ -15,7 +15,6 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -285,7 +284,7 @@ public class CucmWithDBServiceImpl implements CucmWithDBService {
 					lineService.editLine(refreshLine);
 				}catch(Exception e){
 					buff.append(refreshLine.getId()+", ");
-					Log.info(ObeliskStringUtils.getTraceToLog(e));
+					logger.info(ObeliskStringUtils.getTraceToLog(e));
 				}
 				
 			}

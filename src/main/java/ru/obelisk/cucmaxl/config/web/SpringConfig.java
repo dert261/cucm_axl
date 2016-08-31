@@ -25,6 +25,7 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 import ru.obelisk.cucmaxl.config.DataConfig;
 
+@SuppressWarnings("deprecation")
 @Configuration
 public class SpringConfig{
 	

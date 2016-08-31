@@ -407,14 +407,18 @@ public class CmeServiceImpl implements CmeService {
 			while(deviceTagIterator.hasNext()){
 				ISDevice tag = deviceTagIterator.next();
 				log.trace("Tag ISDevID: {}", tag.getISDevID());
-				Response deviceByTagResponse = cme_http.getDeviceById(tag.getISDevID());
-				log.trace("DeviceByTagResponse: {}", deviceByTagResponse);
-				if(deviceByTagResponse.getISDevices()!=null){
-					ISDevice device = deviceByTagResponse.getISDevices().getISDevice().get(0);
-					CmeDevice cmeDevice = getCmeDevice(device, router, cmeExtensionMap);
-					cmeDevices.add(cmeDevice);
-				} else {
-					log.trace("DeviceByTagResponse not contain object with this key: {}", tag.getISDevID());
+				try{
+					Response deviceByTagResponse = cme_http.getDeviceById(tag.getISDevID());
+					log.trace("DeviceByTagResponse: {}", deviceByTagResponse);
+					if(deviceByTagResponse.getISDevices()!=null){
+						ISDevice device = deviceByTagResponse.getISDevices().getISDevice().get(0);
+						CmeDevice cmeDevice = getCmeDevice(device, router, cmeExtensionMap);
+						cmeDevices.add(cmeDevice);
+					} else {
+						log.trace("DeviceByTagResponse not contain object with this key: {}", tag.getISDevID());
+					}
+				} catch (Exception e){
+					log.warn("Get exception: {}", ObeliskStringUtils.getTraceToLog(e));
 				}
 			}
 		} else {
@@ -462,28 +466,31 @@ public class CmeServiceImpl implements CmeService {
 		Iterator<ExtMapStatus> extMapStatusIterator = device.getISPhoneLineList().getExtMapStatus().iterator();
 		while(extMapStatusIterator.hasNext()){
 			ExtMapStatus extMapStatus = extMapStatusIterator.next();
-			
-			if(cmeExtensionMap.containsKey(extMapStatus.getExtId())){
-				CmeExtension cmeExtension = cmeExtensionMap.get(extMapStatus.getExtId());
-				
-				CmeExtMapStatus cmeExtMapStatus = null;
-				if(!cmeExtension.isNew() && !cmeDevice.isNew()){
-					Iterator<CmeExtMapStatus> cmeExtMapStatusIterator = cmeDevice.getLines().iterator();
-					while(cmeExtMapStatusIterator.hasNext()){
-						CmeExtMapStatus mapStat = cmeExtMapStatusIterator.next();
-						if(mapStat.getExtension().getId()==cmeExtension.getId()){
-							cmeExtMapStatus = mapStat;
+			if(extMapStatus!=null){
+				if(cmeExtensionMap.containsKey(extMapStatus.getExtId())){
+					CmeExtension cmeExtension = cmeExtensionMap.get(extMapStatus.getExtId());
+					
+					CmeExtMapStatus cmeExtMapStatus = null;
+					if(!cmeExtension.isNew() && !cmeDevice.isNew()){
+						Iterator<CmeExtMapStatus> cmeExtMapStatusIterator = cmeDevice.getLines().iterator();
+						while(cmeExtMapStatusIterator.hasNext()){
+							CmeExtMapStatus mapStat = cmeExtMapStatusIterator.next();
+							if(mapStat.getExtension().getId()==cmeExtension.getId()){
+								cmeExtMapStatus = mapStat;
+							}
 						}
+					} else {
+						cmeExtMapStatus = new CmeExtMapStatus();
+					}			
+					log.info("cmeExtMapStatus: {}\t\textMapStatus: {}",cmeExtMapStatus,extMapStatus);		
+					if(cmeExtMapStatus!=null){
+						cmeExtMapStatus.setLineId(extMapStatus.getLineId());
+						cmeExtMapStatus.setLineState(extMapStatus.getLineState());
+						cmeExtMapStatus.setDevice(cmeDevice);
+						cmeExtMapStatus.setExtension(cmeExtension);
+						cmeCmeExtMapStatuses.add(cmeExtMapStatus);
 					}
-				} else {
-					cmeExtMapStatus = new CmeExtMapStatus();
-				}			
-								
-				cmeExtMapStatus.setLineId(extMapStatus.getLineId());
-				cmeExtMapStatus.setLineState(extMapStatus.getLineState());
-				cmeExtMapStatus.setDevice(cmeDevice);
-				cmeExtMapStatus.setExtension(cmeExtension);
-				cmeCmeExtMapStatuses.add(cmeExtMapStatus);
+				}
 			}
 		}
 		cmeDevice.setLines(cmeCmeExtMapStatuses);
